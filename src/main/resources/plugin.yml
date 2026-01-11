@@ -1,0 +1,4 @@
+name: FaUtilities
+version: '1.0-SNAPSHOT'
+main: com.wenkrang.faUtilities.FaUtilities
+api-version: '1.21'
