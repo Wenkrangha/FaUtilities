@@ -12,50 +12,126 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import static com.wenkrang.faUtilities.Helper.i18nHelper.t;
+import static org.bukkit.Bukkit.getLogger;
+
+/**
+ * CommandManager 类用于管理 Bukkit 插件中的命令注册、分发和补全功能。
+ * 通过反射获取 Bukkit 的 CommandMap 实例，并提供一系列方法来操作命令。
+ */
 public class CommandManager {
 
-    private CommandMap commandMap;
 
+    private  CommandMap commandMap;
+
+    /**
+     * 构造函数，通过反射获取 Bukkit 的 CommandMap 实例。
+     */
     public CommandManager() {
         try {
             // 获取 CommandMap
             final Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
             bukkitCommandMap.setAccessible(true);
             commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
-        }catch (NoSuchFieldException | IllegalAccessException e) {
-
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            getLogger().warning(t("FaCommand.Error.FaCommand.CommandMap.NotFound"));
         }
     }
+
+    /**
+     * 获取 CommandMap 实例。
+     *
+     * @return CommandMap 实例
+     */
+    public CommandMap getCommandMap() {
+        return commandMap;
+    }
+
+    /**
+     * 注册多个命令到指定的前缀下。
+     *
+     * @param fallbackPrefix 命令的备用前缀
+     * @param commands       要注册的命令列表
+     */
     public void registerAll(@NotNull String fallbackPrefix, @NotNull List<Command> commands) {
         commandMap.registerAll(fallbackPrefix, commands);
     }
 
+    /**
+     * 注册单个命令到指定的标签和前缀下。
+     *
+     * @param label         命令的标签
+     * @param fallbackPrefix 命令的备用前缀
+     * @param command       要注册的命令
+     * @return 如果注册成功则返回 true，否则返回 false
+     */
     public boolean register(@NotNull String label, @NotNull String fallbackPrefix, @NotNull Command command) {
         return commandMap.register(label, fallbackPrefix, command);
     }
 
+    /**
+     * 注册单个命令到指定的前缀下。
+     *
+     * @param fallbackPrefix 命令的备用前缀
+     * @param command       要注册的命令
+     * @return 如果注册成功则返回 true，否则返回 false
+     */
     public boolean register(@NotNull String fallbackPrefix, @NotNull Command command) {
         return commandMap.register(fallbackPrefix, command);
     }
 
+    /**
+     * 分发命令给指定的发送者。
+     *
+     * @param sender   命令的发送者
+     * @param cmdLine  要执行的命令行
+     * @return 如果命令成功执行则返回 true，否则抛出 CommandException
+     * @throws CommandException 如果命令执行失败
+     */
     public boolean dispatch(@NotNull CommandSender sender, @NotNull String cmdLine) throws CommandException {
         return commandMap.dispatch(sender, cmdLine);
     }
 
+    /**
+     * 清除所有已注册的命令。
+     */
     public void clearCommands() {
         commandMap.clearCommands();
     }
 
+    /**
+     * 根据名称获取已注册的命令。
+     *
+     * @param name 命令的名称
+     * @return 如果找到命令则返回该命令，否则返回 null
+     */
     @Nullable
     public Command getCommand(@NotNull String name) {
         return commandMap.getCommand(name);
     }
 
+    /**
+     * 为指定的命令行提供自动补全建议。
+     *
+     * @param sender  命令的发送者
+     * @param cmdLine 要补全的命令行
+     * @return 补全建议列表，如果无建议则返回 null
+     * @throws IllegalArgumentException 如果参数无效
+     */
     @Nullable
     public List<String> tabComplete(@NotNull CommandSender sender, @NotNull String cmdLine) throws IllegalArgumentException {
         return commandMap.tabComplete(sender, cmdLine);
     }
 
+    /**
+     * 为指定的命令行和位置提供自动补全建议。
+     *
+     * @param sender   命令的发送者
+     * @param cmdLine  要补全的命令行
+     * @param location 发送者的位置（可为空）
+     * @return 补全建议列表，如果无建议则返回 null
+     * @throws IllegalArgumentException 如果参数无效
+     */
     @Nullable
     public List<String> tabComplete(@NotNull CommandSender sender, @NotNull String cmdLine, @Nullable Location location) throws IllegalArgumentException {
         return commandMap.tabComplete(sender, cmdLine, location);
