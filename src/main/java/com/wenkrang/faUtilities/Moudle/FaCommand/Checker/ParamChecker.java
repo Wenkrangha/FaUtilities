@@ -5,4 +5,5 @@ import java.lang.reflect.Type;
 public interface ParamChecker {
     Type getType();
     boolean check(String param);
+    Object convert(String param);
 }

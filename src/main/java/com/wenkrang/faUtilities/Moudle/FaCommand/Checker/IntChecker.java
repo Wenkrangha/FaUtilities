@@ -18,4 +18,9 @@ public class IntChecker implements ParamChecker{
             return false;
         }
     }
+
+    @Override
+    public Object convert(String param) {
+        return Integer.parseInt(param);
+    }
 }

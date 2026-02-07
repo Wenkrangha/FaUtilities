@@ -12,4 +12,9 @@ public class StringChecker implements ParamChecker{
     public boolean check(String param) {
         return true;
     }
+
+    @Override
+    public Object convert(String param) {
+        return param;
+    }
 }

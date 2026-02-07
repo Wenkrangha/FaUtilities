@@ -36,7 +36,7 @@ public class CmdNodeHandler implements FaAnnotationHandler {
             //进行泛命令加载
             command.setNode(node);
         }else {
-            getLogger().warning(t("FaCommand.Error.FaCommand.Interpreter.CantUnderstand"));
+            getLogger().warning(t("FaCommand.Error.Interpreter.CantUnderstand"));
         }
     }
 

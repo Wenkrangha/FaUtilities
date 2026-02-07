@@ -19,4 +19,9 @@ public class DecimalsChecker implements ParamChecker{
             return false; // 无法解析为数字时返回 false
         }
     }
+
+    @Override
+    public Object convert(String param) {
+        return Double.parseDouble(param);
+    }
 }

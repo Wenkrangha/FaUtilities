@@ -71,7 +71,7 @@ public class CmdNodeHelper {
      */
     public static String formNode(ArrayList<String> strings) {
         StringBuilder stringBuilder = new StringBuilder();
-        String node = "";
+        String node;
 
         for (String s : strings) {
             stringBuilder.append(s).append(".");
@@ -82,6 +82,10 @@ public class CmdNodeHelper {
         return node;
     }
 
+
+    public static ArrayList<String> removeNode(String node, ArrayList<String> args) {
+        return (ArrayList<String>) args.stream().skip(separateNode(node).size()).toList();
+    }
 
     /**
      * 分割命令节点

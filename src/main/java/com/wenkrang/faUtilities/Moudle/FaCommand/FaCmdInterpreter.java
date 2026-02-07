@@ -8,14 +8,17 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
 import static com.wenkrang.faUtilities.Helper.FaCmd.CmdHandleHelper.handleRootCommand;
+import static com.wenkrang.faUtilities.Helper.i18nHelper.t;
 
 public class FaCmdInterpreter {
     private final FaCmdInstance faCmdInstance;
@@ -68,41 +71,11 @@ public class FaCmdInterpreter {
         }
     }
 
-    /**
-     * 检查节点的参数是否少于实际所给参数
-     * 一般来说，如果命令节点的参数少于实际所给参数，那么该节点不是所需节点
-     *
-     * @param args 实际参数
-     * @param node 节点
-     * @return 节点是否是所需节点
-     */
-    public boolean isInsufficientParameters(@NotNull ArrayList<String> args, String node) {
-        return faCmdInstance.getFaCmd(node).getMethods()
-                .stream().anyMatch(i -> i.getParameters().length < args.size() - 1);
-    }
-
-    public ArrayList<String> basicGuessNodes(@NotNull ArrayList<String> args) {
-        return (ArrayList<String>) faCmdInstance.getNodes().stream()
-                .filter(i -> args.getFirst().equals(CmdNodeHelper.getRootCommand(i)))
-                .filter(i -> !isInsufficientParameters(args, i)).toList();
-    }
-
-    public boolean ParamCheck(Method method, @NotNull ArrayList<String> args) {
-        List<ArrayList<Type>> propertyTypes = args.stream().skip(1).map(i -> new FaChecker().check(i)).toList();
-        Parameter[] parameters = method.getParameters();
 
 
 
-        return false;
-    }
-
-    public String[] guessNodes(@NotNull ArrayList<String> args) {
-        basicGuessNodes(args)
-                .stream().filter(i -> CmdNodeHelper.formNode(args).startsWith(i));
 
 
-        return null;
-    }
 
     public boolean interpret(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
         try {
@@ -112,8 +85,35 @@ public class FaCmdInterpreter {
             params.addAll(List.of(args));
 
             //解析命令节点
-            String[] Nodes = guessNodes(params);
+            FaGuesser faGuesser = new FaGuesser(faCmdInstance);
 
+            //猜测节点
+            ArrayList<String> arrayArgs = new ArrayList<>(Arrays.asList(args));
+            ArrayList<String> Nodes = (ArrayList<String>) faGuesser.guessNodes(arrayArgs, args.length);
+
+            if (Nodes.size() > 1) {
+                Logger.getGlobal().warning(t("FaCommand.Error.Interpreter.Conflict"));
+                return false;
+            }
+
+            String node = Nodes.getFirst();
+
+            //传递参数
+            FaCmd faCmd = faCmdInstance.getFaCmd(node);
+            Method method = faCmd.getMethods().stream().filter(i -> faGuesser.ParamCheck(node, i, params, args.length)).findFirst().orElse(null);
+
+            FaChecker faChecker = new FaChecker();
+            ArrayList<String> realArgs = CmdNodeHelper.removeNode(node, params);
+
+            if (method != null) {
+                ArrayList<Object> convertedArgs = new ArrayList<>();
+
+                for (int i = 0;i < method.getParameters().length;i++) {
+                    convertedArgs.add(faChecker.parse(realArgs.get(i), method.getParameters()[i].getType()));
+                }
+
+                method.invoke(faCmd.getCommand(), convertedArgs.toArray());
+            }
 
             return true;
         }catch (Exception e) {

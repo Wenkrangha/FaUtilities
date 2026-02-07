@@ -34,7 +34,7 @@ public class CommandManager {
             bukkitCommandMap.setAccessible(true);
             commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            getLogger().warning(t("FaCommand.Error.FaCommand.CommandMap.NotFound"));
+            getLogger().warning(t("FaCommand.Error.CommandMap.NotFound"));
         }
     }
 

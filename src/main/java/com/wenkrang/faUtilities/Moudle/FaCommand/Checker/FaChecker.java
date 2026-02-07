@@ -32,4 +32,13 @@ public class FaChecker {
         return types;
     }
 
+    public Object parse(String param, Type type) {
+        for (ParamChecker paramChecker : paramCheckers) {
+            if (paramChecker.getClass().equals(type)) {
+                return paramChecker.convert(param);
+            }
+        }
+        return null;
+    }
+
 }
