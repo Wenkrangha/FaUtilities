@@ -61,8 +61,10 @@ public class FaGuesser {
         List<ArrayList<Type>> propertyTypes = strings.stream().map(faChecker::check).toList();
         Parameter[] parameters = method.getParameters();
 
-        if (args.size() == max) {
-            for (int i = 0; i < max; i++) {
+        int limit = Math.min(max, args.size());
+
+        if (args.size() == limit) {
+            for (int i = 0; i < limit - CmdNodeHelper.separateNode(node).size(); i++) {
                 if (!propertyTypes.get(i).contains(parameters[i].getType())) {
                     return false;
                 }

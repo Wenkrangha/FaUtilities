@@ -100,7 +100,9 @@ public class FaCmdInterpreter {
 
             //传递参数
             FaCmd faCmd = faCmdInstance.getFaCmd(node);
-            Method method = faCmd.getMethods().stream().filter(i -> faGuesser.ParamCheck(node, i, params, args.length)).findFirst().orElse(null);
+            Method method = faCmd.getMethods().stream()
+                    .filter(i -> faGuesser.ParamCheck(node, i, params, args.length))
+                    .findFirst().orElse(null);
 
             FaChecker faChecker = new FaChecker();
             ArrayList<String> realArgs = CmdNodeHelper.removeNode(node, params);

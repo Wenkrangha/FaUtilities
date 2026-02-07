@@ -75,9 +75,9 @@ public class FaCmdInstance implements AutoCloseable {
         }
     }
 
-    public void enableFor(Class... commandClasses) {
-        for (Class commandClass : commandClasses) {
-            final Method[] methods = commandClasses.getClass().getMethods();
+    public void enableFor(Class<?>... commandClasses) {
+        for (Class<?> commandClass : commandClasses) {
+            final Method[] methods = commandClass.getMethods();
             for (Method method : methods) {
                 faCmdInterpreter.initialize(method);
             }
