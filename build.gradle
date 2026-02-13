@@ -4,8 +4,8 @@ plugins {
     id("maven-publish")
 }
 
-group = 'com.github.Wenkrangha.FaUtilities'
-version = '1.0-SNAPSHOT'
+group = 'com.github.Wenkrangha'
+version = '1.0'
 
 publishing {
     repositories {
