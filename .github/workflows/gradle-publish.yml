@@ -21,12 +21,12 @@ jobs:
     - name: Setup Java - Gradle
       uses: yumemi-inc/setup-java-gradle@v3.0.0
     - name: Build with Gradle
-      run: gradlew build
+      run: chmod +x ./gradlew && ./gradlew build
 
     # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
     # the publishing section of your build.gradle
     - name: Publish to GitHub Packages
-      run: gradlew publish
+      run: ./gradlew publish
       env:
         USERNAME: ${{ github.actor }}
         TOKEN: ${{ secrets.GITHUB_TOKEN }}
