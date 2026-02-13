@@ -9,7 +9,6 @@ import java.util.ArrayList;
 public class FaCmdInstance implements AutoCloseable {
     private final CommandManager commandManager;
     private final Plugin plugin;
-    private ArrayList<Class<?>> commandClasses;
     private ArrayList<String> nodes = new ArrayList<>();
     private ArrayList<FaCmd> faCmds = new ArrayList<>();
     private FaCmdInterpreter faCmdInterpreter;
