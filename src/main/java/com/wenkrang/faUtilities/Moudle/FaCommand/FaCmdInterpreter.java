@@ -8,10 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -126,5 +123,9 @@ public class FaCmdInterpreter {
 
     public FaCmdInstance getFaCmdInstance() {
         return faCmdInstance;
+    }
+
+    public Plugin getPlugin() {
+        return plugin;
     }
 }

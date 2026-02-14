@@ -14,14 +14,24 @@ public class i18nHelper {
         resourceBundle = ResourceBundle.getBundle("language", locale, this.getClass().getClassLoader());
     }
 
+    @SuppressWarnings("unused")
     public i18nHelper(Locale locale, ResourceBundle resourceBundle) {
         this.locale = locale;
         this.resourceBundle = resourceBundle;
     }
 
     //获取i18n文本
+    //pt = private text
     public String pt(String Message) {
         return resourceBundle.getString(Message);
+    }
+
+    public String pft(String Message, Object... args) {
+        return String.format(t(Message), args);
+    }
+
+    public static String ft(String Message, Object... args) {
+        return new i18nHelper().pft(Message, args);
     }
 
     //获取i18n文本

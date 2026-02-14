@@ -1,12 +1,13 @@
 package com.wenkrang.faUtilities.Moudle.FaCommand;
 
+import com.wenkrang.faUtilities.Helper.ClassHelper;
 import com.wenkrang.faUtilities.Manager.CommandManager;
 import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-public class FaCmdInstance implements AutoCloseable {
+public class FaCmdInstance {
     private final CommandManager commandManager;
     private final Plugin plugin;
     private ArrayList<String> nodes = new ArrayList<>();
@@ -67,7 +68,6 @@ public class FaCmdInstance implements AutoCloseable {
         return faCmdInstance;
     }
 
-    @Override
     public void close() {
         for (FaCmd faCmd : faCmds) {
             if (faCmd.getCommand().isRegistered()) faCmd.getCommand().unregister(commandManager.getCommandMap());
@@ -78,18 +78,24 @@ public class FaCmdInstance implements AutoCloseable {
         for (Class<?> commandClass : commandClasses) {
             final Method[] methods = commandClass.getMethods();
             for (Method method : methods) {
+                System.out.println(method.getName());
                 faCmdInterpreter.initialize(method);
             }
         }
     }
 
     public void enableForAll(Plugin plugin) {
-        for (Class<?> clazz : plugin.getClass().getClasses()) {
+        for (Class<?> clazz : ClassHelper.getClasses(plugin.getClass())) {
+            System.out.println(clazz.getName());
             enableFor(clazz);
         }
     }
 
     public CommandManager getCommandManager() {
         return commandManager;
+    }
+
+    public Plugin getPlugin() {
+        return plugin;
     }
 }
