@@ -6,7 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class FaUtilities extends JavaPlugin {
 
-    FaCmdInstance faCmdInstance;
+    public static FaCmdInstance faCmdInstance;
 
     @Override
     public void onEnable() {
@@ -21,8 +21,5 @@ public final class FaUtilities extends JavaPlugin {
         faCmdInstance.close();
     }
 
-    @CmdNodeHandler.CmdNode("ft.regen")
-    public void regenChunk (int x,int y) {
-        System.out.println(x + y);
-    }
+
 }

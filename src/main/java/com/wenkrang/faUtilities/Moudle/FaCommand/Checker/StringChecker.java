@@ -1,11 +1,12 @@
 package com.wenkrang.faUtilities.Moudle.FaCommand.Checker;
 
 import java.lang.reflect.Type;
+import java.util.Set;
 
 public class StringChecker implements ParamChecker{
     @Override
-    public Type getType() {
-        return String.class;
+    public Set<Type> getType() {
+        return Set.of(String.class);
     }
 
     @Override

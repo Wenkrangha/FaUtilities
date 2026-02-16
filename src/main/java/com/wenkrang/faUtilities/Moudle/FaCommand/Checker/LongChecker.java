@@ -1,18 +1,19 @@
 package com.wenkrang.faUtilities.Moudle.FaCommand.Checker;
 
 import java.lang.reflect.Type;
+import java.util.Set;
 
-public class DecimalsChecker implements ParamChecker{
+public class LongChecker implements ParamChecker{
     @Override
-    public Type getType() {
-        return Double.class; // 返回小数对应的类型
+    public Set<Type> getType() {
+        return Set.of(Long.class, long.class); // 返回小数对应的类型
     }
 
     @Override
     public boolean check(String param) {
         try {
             // 尝试解析为 double
-            double value = Double.parseDouble(param);
+            double value = Long.parseLong(param);
             // 排除整数情况（即没有小数部分）
             return value != (int) value;
         } catch (NumberFormatException e) {
@@ -22,6 +23,6 @@ public class DecimalsChecker implements ParamChecker{
 
     @Override
     public Object convert(String param) {
-        return Double.parseDouble(param);
+        return Long.parseLong(param);
     }
 }

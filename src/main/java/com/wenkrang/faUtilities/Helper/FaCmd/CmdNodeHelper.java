@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class CmdNodeHelper {
     /**
@@ -83,8 +84,8 @@ public class CmdNodeHelper {
     }
 
 
-    public static ArrayList<String> removeNode(String node, ArrayList<String> args) {
-        return (ArrayList<String>) args.stream().skip(separateNode(node).size()).toList();
+    public static List<String> removeNode(String node, ArrayList<String> args) {
+        return args.stream().skip(separateNode(node).size()).toList();
     }
 
     /**

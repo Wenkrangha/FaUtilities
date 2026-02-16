@@ -2,6 +2,7 @@ package com.wenkrang.faUtilities.Moudle.FaCommand;
 
 import com.wenkrang.faUtilities.Helper.ClassHelper;
 import com.wenkrang.faUtilities.Manager.CommandManager;
+import com.wenkrang.faUtilities.Moudle.FaCommand.AnnotationHandler.CmdNodeHandler;
 import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Method;
@@ -63,7 +64,8 @@ public class FaCmdInstance {
     public static FaCmdInstance create(Plugin plugin) {
         FaCmdInstance faCmdInstance = new FaCmdInstance(plugin);
         faCmdInstance.faCmdInterpreter = new FaCmdInterpreter(faCmdInstance, plugin);
-        faCmdInstance.faCmdInterpreter.setAnnotationHandlers(new ArrayList<>());
+
+        faCmdInstance.faCmdInterpreter.addAnnotationHandlers(new CmdNodeHandler());
 
         return faCmdInstance;
     }
@@ -78,7 +80,6 @@ public class FaCmdInstance {
         for (Class<?> commandClass : commandClasses) {
             final Method[] methods = commandClass.getMethods();
             for (Method method : methods) {
-                System.out.println(method.getName());
                 faCmdInterpreter.initialize(method);
             }
         }
@@ -86,7 +87,6 @@ public class FaCmdInstance {
 
     public void enableForAll(Plugin plugin) {
         for (Class<?> clazz : ClassHelper.getClasses(plugin.getClass())) {
-            System.out.println(clazz.getName());
             enableFor(clazz);
         }
     }

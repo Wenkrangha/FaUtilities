@@ -6,11 +6,12 @@ import com.wenkrang.faUtilities.Moudle.FaCommand.AnnotationHandler.FaAnnotationH
 import com.wenkrang.faUtilities.Moudle.FaCommand.Checker.FaChecker;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -44,12 +45,11 @@ public class FaCmdInterpreter {
     public void initialize(@NotNull Method method) {
         if (!CmdNodeHelper.isCmdNode(method)) return;
 
-        FaCmd faCmd = new FaCmd();
+        FaCmd faCmd = new FaCmd(this);
 
         annotationHandlers.stream()
                 .filter(i -> method.isAnnotationPresent(i.getAnnotationClass()))
-                .forEach(i ->
-                        i.handle(faCmd, method));
+                .forEach(i -> i.handle(faCmd, method));
 
         register(faCmd);
     }
@@ -68,57 +68,76 @@ public class FaCmdInterpreter {
         }
     }
 
-
-
-
-
-
-
+    /**
+     * 解析并执行命令
+     * 
+     * @param sender 命令发送者，不能为空
+     * @param commandLabel 命令标签，不能为空
+     * @param args 命令参数数组，不能为空
+     * @return 执行成功返回true，失败返回false
+     */
     public boolean interpret(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
-        try {
-            //还原参数
-            ArrayList<String> params = new ArrayList<>();
-            params.add(commandLabel);
-            params.addAll(List.of(args));
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                try {
 
-            //解析命令节点
-            FaGuesser faGuesser = new FaGuesser(faCmdInstance);
+                    // 还原完整的命令参数列表
+                    ArrayList<String> params = new ArrayList<>();
+                    params.add(commandLabel);
+                    params.addAll(List.of(args));
 
-            //猜测节点
-            ArrayList<String> arrayArgs = new ArrayList<>(Arrays.asList(args));
-            ArrayList<String> Nodes = (ArrayList<String>) faGuesser.guessNodes(arrayArgs, args.length);
+                    // 创建命令节点解析器
+                    FaGuesser faGuesser = new FaGuesser(faCmdInstance);
 
-            if (Nodes.size() > 1) {
-                Logger.getGlobal().warning(t("FaCommand.Error.Interpreter.Conflict"));
-                return false;
-            }
+                    // 猜测可能的命令节点
+                    ArrayList<String> Nodes = new ArrayList<>(faGuesser.guessNodes(params, params.size()));
 
-            String node = Nodes.getFirst();
+                    // 检查是否存在命令冲突（多个匹配节点）
+                    if (Nodes.size() > 1) {
+                        Logger.getGlobal().warning(t("FaCommand.Error.Interpreter.Conflict"));
+                    }
 
-            //传递参数
-            FaCmd faCmd = faCmdInstance.getFaCmd(node);
-            Method method = faCmd.getMethods().stream()
-                    .filter(i -> faGuesser.ParamCheck(node, i, params, args.length))
-                    .findFirst().orElse(null);
+                    if (Nodes.isEmpty()) return;
 
-            FaChecker faChecker = new FaChecker();
-            ArrayList<String> realArgs = CmdNodeHelper.removeNode(node, params);
+                    String node = Nodes.getFirst();
 
-            if (method != null) {
-                ArrayList<Object> convertedArgs = new ArrayList<>();
+                    // 获取对应的命令处理器和匹配的方法
+                    FaCmd faCmd = faCmdInstance.getFaCmd(node);
+                    Method method = faGuesser.getMethod(params, node, params.size()).getFirst();
 
-                for (int i = 0;i < method.getParameters().length;i++) {
-                    convertedArgs.add(faChecker.parse(realArgs.get(i), method.getParameters()[i].getType()));
+                    // 准备参数转换器和实际参数
+                    FaChecker faChecker = new FaChecker();
+                    List<String> realArgs = CmdNodeHelper.removeNode(node, params);
+
+                    // 执行匹配到的方法
+                    if (method != null) {
+                        ArrayList<Object> convertedArgs = new ArrayList<>();
+
+                        // 转换参数类型
+                        for (int i = 0;i < method.getParameters().length;i++) {
+                            convertedArgs.add(faChecker.parse(realArgs.get(i), method.getParameters()[i].getType()));
+                        }
+
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    method.invoke(this,convertedArgs.toArray());
+                                } catch (IllegalAccessException | InvocationTargetException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                        }.runTask(plugin);
+                    }
+
+                }catch (Exception e) {
+                    e.printStackTrace();
+//            Logger.getGlobal().warning(e.getMessage());
                 }
-
-                method.invoke(faCmd.getCommand(), convertedArgs.toArray());
             }
-
-            return true;
-        }catch (Exception e) {
-            Logger.getGlobal().warning(e.getMessage());
-            return false;
-        }
+        }.runTaskAsynchronously(faCmdInstance.getPlugin());
+        return true;
     }
 
     public FaCmdInstance getFaCmdInstance() {

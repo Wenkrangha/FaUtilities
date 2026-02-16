@@ -22,7 +22,7 @@ import static org.bukkit.Bukkit.getLogger;
 public class CommandManager {
 
 
-    private  CommandMap commandMap;
+    private CommandMap commandMap;
 
     /**
      * 构造函数，通过反射获取 Bukkit 的 CommandMap 实例。

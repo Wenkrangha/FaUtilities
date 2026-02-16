@@ -1,13 +1,21 @@
 package com.wenkrang.faUtilities.Moudle.FaCommand.Checker;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class FaChecker {
     private final ArrayList<ParamChecker> paramCheckers = new ArrayList<>();
 
     public FaChecker() {
         paramCheckers.add(new StringChecker());
+        paramCheckers.add(new DoubleChecker());
+        paramCheckers.add(new IntChecker());
+        paramCheckers.add(new FloatChecker());
+        paramCheckers.add(new LongChecker());
     }
 
     /**
@@ -16,7 +24,7 @@ public class FaChecker {
      * @param param 待检查的字符串参数
      * @return 包含所有匹配检查器类型的ArrayList，如果没有任何匹配则返回空列表
      */
-    public ArrayList<Type> check(String param) {
+    public Set<Type> check(@NotNull String param) {
         // 初始化一个用于存储匹配检查器类型的列表
         ArrayList<Type> types = new ArrayList<>();
 
@@ -24,17 +32,17 @@ public class FaChecker {
         for (ParamChecker paramChecker : paramCheckers) {
             // 如果当前检查器匹配参数，则将其类型添加到结果列表中
             if (paramChecker.check(param)) {
-                types.add(paramChecker.getClass());
+                types.addAll(paramChecker.getType());
             }
         }
 
         // 返回包含所有匹配检查器类型的列表
-        return types;
+        return new HashSet<>(types);
     }
 
-    public Object parse(String param, Type type) {
+    public Object parse(@NotNull String param,@NotNull Type type) {
         for (ParamChecker paramChecker : paramCheckers) {
-            if (paramChecker.getClass().equals(type)) {
+            if (paramChecker.getType().contains(type)) {
                 return paramChecker.convert(param);
             }
         }
