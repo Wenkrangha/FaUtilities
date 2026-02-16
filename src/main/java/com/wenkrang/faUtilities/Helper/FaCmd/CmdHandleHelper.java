@@ -5,7 +5,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 public class CmdHandleHelper {
@@ -37,6 +36,8 @@ public class CmdHandleHelper {
                     return command.getInterpreter().interpret(sender, commandLabel, args);
                 }
             };
+
+
 
             // 注册新命令到命令映射中
             command.getCommandMap().register(rootCommand, newCommand);

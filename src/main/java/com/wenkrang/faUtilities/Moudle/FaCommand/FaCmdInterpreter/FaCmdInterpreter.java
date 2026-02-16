@@ -1,9 +1,10 @@
-package com.wenkrang.faUtilities.Moudle.FaCommand;
+package com.wenkrang.faUtilities.Moudle.FaCommand.FaCmdInterpreter;
 
 import com.wenkrang.faUtilities.Helper.FaCmd.CmdHandleHelper;
 import com.wenkrang.faUtilities.Helper.FaCmd.CmdNodeHelper;
 import com.wenkrang.faUtilities.Moudle.FaCommand.AnnotationHandler.FaAnnotationHandler;
-import com.wenkrang.faUtilities.Moudle.FaCommand.Checker.FaChecker;
+import com.wenkrang.faUtilities.Moudle.FaCommand.FaCmd;
+import com.wenkrang.faUtilities.Moudle.FaCommand.FaCmdInstance;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -40,6 +41,14 @@ public class FaCmdInterpreter {
 
     public ArrayList<FaAnnotationHandler> getAnnotationHandlers() {
         return annotationHandlers;
+    }
+
+    /**
+     * 命令输入句柄
+     * @param sender 命令发送者
+     * @param args 命令参数
+     */
+    public record FaCmdContext(CommandSender sender, String[] args) {
     }
 
     public void initialize(@NotNull Method method) {
@@ -81,11 +90,8 @@ public class FaCmdInterpreter {
             @Override
             public void run() {
                 try {
-
-                    // 还原完整的命令参数列表
-                    ArrayList<String> params = new ArrayList<>();
-                    params.add(commandLabel);
-                    params.addAll(List.of(args));
+                    // 获取完整参数列表
+                    ArrayList<String> params = FaParamHandler.getCompleteParam(sender,commandLabel,args);
 
                     // 创建命令节点解析器
                     FaGuesser faGuesser = new FaGuesser(faCmdInstance);
@@ -103,21 +109,11 @@ public class FaCmdInterpreter {
                     String node = Nodes.getFirst();
 
                     // 获取对应的命令处理器和匹配的方法
-                    FaCmd faCmd = faCmdInstance.getFaCmd(node);
                     Method method = faGuesser.getMethod(params, node, params.size()).getFirst();
-
-                    // 准备参数转换器和实际参数
-                    FaChecker faChecker = new FaChecker();
-                    List<String> realArgs = CmdNodeHelper.removeNode(node, params);
 
                     // 执行匹配到的方法
                     if (method != null) {
-                        ArrayList<Object> convertedArgs = new ArrayList<>();
-
-                        // 转换参数类型
-                        for (int i = 0;i < method.getParameters().length;i++) {
-                            convertedArgs.add(faChecker.parse(realArgs.get(i), method.getParameters()[i].getType()));
-                        }
+                        List<Object> convertedArgs = FaParamHandler.convertParams(sender, method, args);
 
                         new BukkitRunnable() {
                             @Override
@@ -132,12 +128,25 @@ public class FaCmdInterpreter {
                     }
 
                 }catch (Exception e) {
-                    e.printStackTrace();
-//            Logger.getGlobal().warning(e.getMessage());
+                    Logger.getGlobal().warning(e.getMessage());
                 }
             }
         }.runTaskAsynchronously(faCmdInstance.getPlugin());
         return true;
+    }
+
+    public List<String> tabComplete(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
+        // 获取完整参数列表
+        ArrayList<String> params = FaParamHandler.getCompleteParam(sender, commandLabel, args);
+
+        // 创建命令节点解析器
+        FaGuesser faGuesser = new FaGuesser(faCmdInstance);
+
+        // 猜测可能的命令节点
+        ArrayList<String> Nodes = new ArrayList<>(faGuesser.guessNodes(params, params.size() - 1));
+
+
+        return null;
     }
 
     public FaCmdInstance getFaCmdInstance() {

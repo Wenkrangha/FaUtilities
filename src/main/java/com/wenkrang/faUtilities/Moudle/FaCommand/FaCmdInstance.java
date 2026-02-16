@@ -3,6 +3,7 @@ package com.wenkrang.faUtilities.Moudle.FaCommand;
 import com.wenkrang.faUtilities.Helper.ClassHelper;
 import com.wenkrang.faUtilities.Manager.CommandManager;
 import com.wenkrang.faUtilities.Moudle.FaCommand.AnnotationHandler.CmdNodeHandler;
+import com.wenkrang.faUtilities.Moudle.FaCommand.FaCmdInterpreter.FaCmdInterpreter;
 import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Method;
@@ -12,7 +13,7 @@ public class FaCmdInstance {
     private final CommandManager commandManager;
     private final Plugin plugin;
     private ArrayList<String> nodes = new ArrayList<>();
-    private ArrayList<FaCmd> faCmds = new ArrayList<>();
+    private final ArrayList<FaCmd> faCmds = new ArrayList<>();
     private FaCmdInterpreter faCmdInterpreter;
 
     public ArrayList<String> getNodes() {

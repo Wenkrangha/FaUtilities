@@ -1,18 +1,18 @@
-package com.wenkrang.faUtilities.Moudle.FaCommand;
+package com.wenkrang.faUtilities.Moudle.FaCommand.FaCmdInterpreter;
 
 import com.wenkrang.faUtilities.Helper.FaCmd.CmdNodeHelper;
 import com.wenkrang.faUtilities.Moudle.FaCommand.Checker.FaChecker;
-import com.wenkrang.faUtilities.Moudle.FaCommand.Checker.ParamChecker;
+import com.wenkrang.faUtilities.Moudle.FaCommand.FaCmdInstance;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 /**
  * FaGuesser 类用于根据给定的参数猜测匹配的命令节点。
@@ -70,11 +70,13 @@ public class FaGuesser {
         // 遍历所有方法，筛选出参数类型匹配的方法
         for (Method method : methods) {
             // 如果方法参数数量与输入参数数量不一致，则跳过
-            if (method.getParameterCount() != probableTypes.size()) continue;
-
             Parameter[] parameters = method.getParameters();
             List<Type> methodTypes = Arrays.stream(parameters)
-                    .map(i -> (Type) i.getType()).toList();
+                    .map(i -> (Type) i.getType())
+                    .filter(i -> !i.equals(FaCmdInterpreter.FaCmdContext.class))
+                    .toList();
+
+            if (methodTypes.size() != probableTypes.size()) continue;
 
             // 检查每个参数的类型是否匹配
             if (ParamCheck(probableTypes, methodTypes)) probableMethods.add(method);
