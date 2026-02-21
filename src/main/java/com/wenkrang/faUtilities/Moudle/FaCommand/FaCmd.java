@@ -5,7 +5,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 
 public class FaCmd {
@@ -16,35 +15,26 @@ public class FaCmd {
     protected String description;
     private String permission;
     private FaCmdInterpreter interpreter;
-    private String Node;
-    private ArrayList<Method> methods;
+    private String node;
+    private Method method;
 
     public FaCmd(FaCmdInterpreter faCmdInterpreter) {
         interpreter = faCmdInterpreter;
         commandMap = faCmdInterpreter.getFaCmdInstance().getCommandManager().getCommandMap();
-        methods = new ArrayList<>();
     }
 
-    public void removeMethod(Method method) {methods.remove(method);}
+    public void setMethod(Method m) {method = m;}
 
-    public ArrayList<Method> getMethods() {
-        return methods;
+    public Method getMethod() {
+        return method;
     }
-
-    @Deprecated
-    private void setMethods(ArrayList<Method> methods) {
-        this.methods = methods;
-    }
-
-    public void addMethod(Method method) {this.methods.add(method);}
-
 
     public String getNode() {
-        return Node;
+        return node;
     }
 
     public void setNode(String node) {
-        Node = node;
+        this.node = node;
     }
 
     public FaCmdInterpreter getInterpreter() {

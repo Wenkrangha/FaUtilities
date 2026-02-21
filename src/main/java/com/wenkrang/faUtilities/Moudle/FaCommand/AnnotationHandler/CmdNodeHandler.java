@@ -1,8 +1,8 @@
 package com.wenkrang.faUtilities.Moudle.FaCommand.AnnotationHandler;
 
-import com.wenkrang.faUtilities.Helper.FaCmd.CmdNodeHelper;
+import com.wenkrang.faUtilities.Moudle.FaCommand.Helper.CmdNodeHelper;
+import com.wenkrang.faUtilities.Moudle.FaCommand.Annotation.CmdNode;
 import com.wenkrang.faUtilities.Moudle.FaCommand.FaCmd;
-import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.*;
 import java.lang.reflect.Method;
@@ -13,14 +13,6 @@ import static com.wenkrang.faUtilities.Helper.i18nHelper.t;
 import static org.bukkit.Bukkit.getLogger;
 
 public class CmdNodeHandler implements FaAnnotationHandler {
-    @Target(ElementType.METHOD)
-    @Retention(RetentionPolicy.RUNTIME)
-    @Documented
-    @Inherited
-    public @interface CmdNode {
-        @NotNull String value();
-    }
-
     @Override
     public void handle(FaCmd command, Method method) {
         CmdNode cmdNode = method.getAnnotation(CmdNode.class); // 获取命令节点

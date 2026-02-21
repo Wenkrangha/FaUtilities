@@ -1,9 +1,9 @@
-package com.wenkrang.faUtilities.Moudle.FaCommand.Checker;
+package com.wenkrang.faUtilities.Moudle.FaCommand.ParamHandler;
 
 import java.lang.reflect.Type;
 import java.util.Set;
 
-public class FloatChecker implements ParamChecker{
+public class FloatParam implements ParamParam {
     @Override
     public Set<Type> getType() {
         return Set.of(Float.class, float.class); // 返回小数对应的类型

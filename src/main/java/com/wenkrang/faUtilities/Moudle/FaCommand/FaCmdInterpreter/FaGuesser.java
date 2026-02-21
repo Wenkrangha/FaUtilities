@@ -1,8 +1,9 @@
 package com.wenkrang.faUtilities.Moudle.FaCommand.FaCmdInterpreter;
 
-import com.wenkrang.faUtilities.Helper.FaCmd.CmdNodeHelper;
-import com.wenkrang.faUtilities.Moudle.FaCommand.Checker.FaChecker;
+import com.wenkrang.faUtilities.Moudle.FaCommand.FaCmd;
+import com.wenkrang.faUtilities.Moudle.FaCommand.Helper.CmdNodeHelper;
 import com.wenkrang.faUtilities.Moudle.FaCommand.FaCmdInstance;
+import com.wenkrang.faUtilities.Moudle.FaCommand.ParamHandler.FaParam;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
@@ -18,16 +19,13 @@ import java.util.stream.IntStream;
  * FaGuesser 类用于根据给定的参数猜测匹配的命令节点。
  * 它通过过滤和验证参数来确定哪些节点是有效的候选节点。
  */
-public class FaGuesser {
-    private final FaCmdInstance faCmdInstance;
-
+public record FaGuesser(FaCmdInstance faCmdInstance) {
     /**
      * 构造函数，初始化 FaGuesser 实例。
      *
      * @param faCmdInstance 命令实例对象，用于获取节点和方法信息
      */
-    public FaGuesser(FaCmdInstance faCmdInstance) {
-        this.faCmdInstance = faCmdInstance;
+    public FaGuesser {
     }
 
     /**
@@ -35,70 +33,109 @@ public class FaGuesser {
      *
      * @return 当前实例中的命令实例对象
      */
-    public FaCmdInstance getFaCmdInstance() {
+    @Override
+    public FaCmdInstance faCmdInstance() {
         return faCmdInstance;
     }
 
-    public boolean ParamCheck(List<Set<Type>> expect, List<Type> got) {
-        return IntStream.range(0, Math.min(got.size(), expect.size()))
-                .allMatch(i -> expect.get(i).contains(got.get(i)));
-    }
-    
 
-    /**
-     * 根据给定的参数、节点和最大参数数，筛选出可能匹配的方法。
-     *
-     * @param args 实际参数列表，不能为空
-     * @param node 命令节点字符串
-     * @param max  截至参数数量限制
-     * @return 符合条件的方法列表
-     */
-    public List<Method> getMethod(@NotNull ArrayList<String> args, String node, int max) {
-        ArrayList<Method> probableMethods = new ArrayList<>();
-
-        // 初始化参数类型检查器并获取参数的可能类型集合
-        final FaChecker faChecker = new FaChecker();
-        final List<Set<Type>> probableTypes = CmdNodeHelper.removeNode(node, args)
-                .stream()
-                .limit(max - node.split("\\.").length)
-                .map(faChecker::check)
-                .toList();
-
-        // 获取指定节点下的所有方法
-        final List<Method> methods = faCmdInstance.getFaCmd(node).getMethods();
-
-        // 遍历所有方法，筛选出参数类型匹配的方法
-        for (Method method : methods) {
-            // 如果方法参数数量与输入参数数量不一致，则跳过
-            Parameter[] parameters = method.getParameters();
-            List<Type> methodTypes = Arrays.stream(parameters)
-                    .map(i -> (Type) i.getType())
-                    .filter(i -> !i.equals(FaCmdInterpreter.FaCmdContext.class))
-                    .toList();
-
-            if (methodTypes.size() != probableTypes.size()) continue;
-
-            // 检查每个参数的类型是否匹配
-            if (ParamCheck(probableTypes, methodTypes)) probableMethods.add(method);
-        }
-
-        return probableMethods;
-    }
 
 
     /**
-     * 根据参数和最大参数数筛选出最终的候选节点列表。
+     * 根据参数筛选出最终的候选命令列表。
      *
      * @param args 实际参数列表
-     * @param max  截至参数数量
-     * @return 符合条件的节点列表
+     * @return 符合条件的命令列表
      */
-    public ArrayList<String> guessNodes(@NotNull ArrayList<String> args, int max) {
-        // 获取命中节点
-        return new ArrayList<>(faCmdInstance
-                .getNodes().stream()
-                .filter(i -> CmdNodeHelper.formNode(args).startsWith(i))
-                .filter(i -> !getMethod(args, i, max).isEmpty())
-                .toList());
+    public List<FaCmd> guessFaCmd(@NotNull List<String> args,guessMode mode) {
+        // 猜测节点
+        // 首先分出参数中的命令节点和参数
+        // 命令节点是主命令和子命令，参数是方法参数
+
+        // 考虑三种可空性
+        // 主命令空，子命令空，参数空
+
+        // 1.主命令空
+        // 由于主命令是空的，所以全部匹配，没必要浪费算力
+        if (args.isEmpty())
+            return mode.equals(guessMode.fuzzy) ?
+                new ArrayList<>(faCmdInstance.getFaCmds())
+                :
+                null;
+
+        // 2.子命令空（不完整）
+        // 所有参数拼在一起
+        String convertedArgs = CmdNodeHelper.formNode(args);
+
+        // 匹配分为两个阶段，命令阶段和参数阶段，每个阶段都可空，所以需要边界检查
+
+
+        int counter = 0;
+        while (counter < convertedArgs.length()) {
+            // 逐个进行检测，直到没有匹配的命令，即进入参数阶段
+            int finalCounter = counter;
+            if (faCmdInstance.getNodes().stream().noneMatch(i -> i.startsWith(convertedArgs.substring(0, finalCounter)))) {
+                break;
+            }
+
+            counter++;
+        }
+        
+        counter -= 1;
+
+        // 这里获取结果
+        String prefix = convertedArgs.substring(0, counter);
+        if (prefix.charAt(prefix.length() - 1) == '.') prefix = prefix.substring(0, prefix.length() - 1);
+
+        // 真正的参数
+        List<String> realArgs = CmdNodeHelper.removeNode(prefix, args);
+
+        // 到这里，我们就获得到了节点和参数
+        // 3.如果没有参数
+        final String finalPrefix = prefix;
+        if (realArgs.isEmpty()) {
+            // 模糊模式这里就可以返回了
+            if (mode.equals(guessMode.fuzzy))
+                return faCmdInstance.getFaCmds().stream().filter(i -> i.getNode().startsWith(finalPrefix)).toList();
+        }
+
+        // 参数匹配
+        // 我认为如果都进参数匹配阶段了，那么参数之前的都应该是匹配的
+        List<FaCmd> faCmds = faCmdInstance.getFaCmds().stream().filter(i -> i.getNode().equals(finalPrefix)).toList();
+
+        ArrayList<FaCmd> result = new ArrayList<>();
+        for (FaCmd cmd : faCmds) {
+            Method method = cmd.getMethod();
+
+            // 如果精确匹配的话，后面可以省了
+            if (method.getParameterCount() != realArgs.size() && mode.equals(guessMode.full)) continue;
+
+            Parameter[] parameters = method.getParameters();
+            FaParam faParam = new FaParam();
+            // 这里显式转换，因为没法静态猜测
+            // 方法的参数类型
+            List<Type> methodParamTypes = Arrays.stream(parameters).map(i -> (Type) i.getType()).toList();
+            // 输入的参数类型
+            List<Set<Type>> argsTypes = realArgs.stream().map(faParam::check).toList();
+
+            if(IntStream.range(0,Math.min(parameters.length,realArgs.size()))
+                    .allMatch(i -> argsTypes.get(i).contains(methodParamTypes.get(i)))) {
+                result.add(cmd);
+            }
+        }
+
+
+        return result;
+    }
+
+    public static enum guessMode {
+        /**
+         * 完全匹配
+         */
+        full,
+        /**
+         * 模糊匹配
+         */
+        fuzzy
     }
 }

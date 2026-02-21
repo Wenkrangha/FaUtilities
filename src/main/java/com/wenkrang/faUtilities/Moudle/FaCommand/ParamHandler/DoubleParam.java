@@ -1,9 +1,9 @@
-package com.wenkrang.faUtilities.Moudle.FaCommand.Checker;
+package com.wenkrang.faUtilities.Moudle.FaCommand.ParamHandler;
 
 import java.lang.reflect.Type;
 import java.util.Set;
 
-public class DoubleChecker implements ParamChecker{
+public class DoubleParam implements ParamParam {
     @Override
     public Set<Type> getType() {
         return Set.of(Double.class, double.class); // 返回小数对应的类型

@@ -1,9 +1,9 @@
-package com.wenkrang.faUtilities.Moudle.FaCommand.Checker;
+package com.wenkrang.faUtilities.Moudle.FaCommand.ParamHandler;
 
 import java.lang.reflect.Type;
 import java.util.Set;
 
-public class LongChecker implements ParamChecker{
+public class LongParam implements ParamParam {
     @Override
     public Set<Type> getType() {
         return Set.of(Long.class, long.class); // 返回小数对应的类型

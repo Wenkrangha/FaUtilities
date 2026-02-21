@@ -4,6 +4,8 @@ import com.wenkrang.faUtilities.Helper.ClassHelper;
 import com.wenkrang.faUtilities.Manager.CommandManager;
 import com.wenkrang.faUtilities.Moudle.FaCommand.AnnotationHandler.CmdNodeHandler;
 import com.wenkrang.faUtilities.Moudle.FaCommand.FaCmdInterpreter.FaCmdInterpreter;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Method;
@@ -77,19 +79,19 @@ public class FaCmdInstance {
         }
     }
 
-    public void enableFor(Class<?>... commandClasses) {
+    public void enableFor(Class<?>[] commandClasses) {
         for (Class<?> commandClass : commandClasses) {
             final Method[] methods = commandClass.getMethods();
             for (Method method : methods) {
-                faCmdInterpreter.initialize(method);
+                Bukkit.getScheduler().runTask(plugin, () -> {faCmdInterpreter.initialize(method);});
             }
         }
+        // 刷新指令
+        Bukkit.getOnlinePlayers().forEach(Player::updateCommands);
     }
 
     public void enableForAll(Plugin plugin) {
-        for (Class<?> clazz : ClassHelper.getClasses(plugin.getClass())) {
-            enableFor(clazz);
-        }
+        enableFor(ClassHelper.getClasses(plugin.getClass()).toArray(Class[]::new));
     }
 
     public CommandManager getCommandManager() {

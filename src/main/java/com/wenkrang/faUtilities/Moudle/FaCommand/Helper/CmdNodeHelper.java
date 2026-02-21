@@ -1,6 +1,6 @@
-package com.wenkrang.faUtilities.Helper.FaCmd;
+package com.wenkrang.faUtilities.Moudle.FaCommand.Helper;
 
-import com.wenkrang.faUtilities.Moudle.FaCommand.AnnotationHandler.CmdNodeHandler;
+import com.wenkrang.faUtilities.Moudle.FaCommand.Annotation.CmdNode;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
@@ -61,7 +61,7 @@ public class CmdNodeHelper {
      * @return 如果方法被CmdNode注解标记则返回true，否则返回false
      */
     public static boolean isCmdNode(Method method) {
-        return method.getAnnotation(CmdNodeHandler.CmdNode.class) != null;
+        return method.getAnnotation(CmdNode.class) != null;
     }
 
     /**
@@ -70,7 +70,7 @@ public class CmdNodeHelper {
      * @param strings 待转换的松散字符串
      * @return 转换后的命令节点
      */
-    public static String formNode(ArrayList<String> strings) {
+    public static String formNode(List<String> strings) {
         StringBuilder stringBuilder = new StringBuilder();
         String node;
 
@@ -83,8 +83,18 @@ public class CmdNodeHelper {
         return node;
     }
 
+    /**
+     * 将松散字符串转换为命令节点
+     *
+     * @param strings 待转换的松散字符串
+     * @return 转换后的命令节点
+     */
+    public static String formNode(String[] strings) {
+        return formNode(new ArrayList<>(Arrays.asList(strings)));
+    }
 
-    public static List<String> removeNode(String node, ArrayList<String> args) {
+
+    public static List<String> removeNode(String node, List<String> args) {
         return args.stream().skip(separateNode(node).size()).toList();
     }
 

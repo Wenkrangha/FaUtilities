@@ -1,9 +1,9 @@
-package com.wenkrang.faUtilities.Moudle.FaCommand.Checker;
+package com.wenkrang.faUtilities.Moudle.FaCommand.ParamHandler;
 
 import java.lang.reflect.Type;
 import java.util.Set;
 
-public class IntChecker implements ParamChecker{
+public class IntParam implements ParamParam {
 
     @Override
     public Set<Type> getType() {

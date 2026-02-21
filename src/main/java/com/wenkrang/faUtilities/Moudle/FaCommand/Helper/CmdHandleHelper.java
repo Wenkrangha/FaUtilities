@@ -1,4 +1,4 @@
-package com.wenkrang.faUtilities.Helper.FaCmd;
+package com.wenkrang.faUtilities.Moudle.FaCommand.Helper;
 
 import com.wenkrang.faUtilities.Moudle.FaCommand.FaCmd;
 import org.bukkit.Bukkit;
@@ -6,6 +6,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class CmdHandleHelper {
 
@@ -35,6 +37,12 @@ public class CmdHandleHelper {
                     //调用解释器处理
                     return command.getInterpreter().interpret(sender, commandLabel, args);
                 }
+
+                @Override
+                public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args) throws IllegalArgumentException {
+                    //调用解释器处理
+                    return command.getInterpreter().tabComplete(sender, alias, args);
+                }
             };
 
 
@@ -45,8 +53,7 @@ public class CmdHandleHelper {
             // 设置命令对象的内部命令引用
             command.setCommand(newCommand);
 
-            // 刷新指令
-            Bukkit.getOnlinePlayers().forEach(Player::updateCommands);
+
         } else {
             // 如果命令已存在，则直接获取现有命令
             command.setCommand(Bukkit.getPluginCommand(rootCommand));
