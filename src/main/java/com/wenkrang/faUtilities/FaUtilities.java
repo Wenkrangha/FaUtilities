@@ -23,20 +23,20 @@ public final class FaUtilities extends JavaPlugin {
         faCmdInstance.close();
     }
 
-    @CmdNode("test.test")
-    public static void test(FaCmdContext faCmdContext) {
+    @CmdNode("fautilities.HelloWorld")
+    public static void helloWorld(FaCmdContext faCmdContext,String name) {
         System.out.println("Hello World!");
+        System.out.println(faCmdContext.sender().getName());
+        System.out.println(name);
     }
-    @CmdNode("test.test1")
-    public static void test1(FaCmdContext faCmdContext) {
+
+    @CmdNode("fautilities.HelloWorld2")
+    public static void helloWorld(FaCmdContext faCmdContext,String name,int age) {
         System.out.println("Hello World!");
+        System.out.println(faCmdContext.sender().getName());
+        System.out.println(name);
+        System.out.println(age);
     }
-    @CmdNode("test.test.test")
-    public static void test2(FaCmdContext faCmdContext, String test) {
-        System.out.println(test);
-    }
-    @CmdNode("test.test.test")
-    public static void test3(FaCmdContext faCmdContext, String test, int a) {
-        System.out.println(test + a);
-    }
+
+
 }

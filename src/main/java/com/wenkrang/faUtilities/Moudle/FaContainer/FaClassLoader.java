@@ -1,6 +1,7 @@
 package com.wenkrang.faUtilities.Moudle.FaContainer;
 
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,7 +30,7 @@ public class FaClassLoader extends ClassLoader{
      *
      * @param classDir 类文件所在的目录路径
      */
-    public FaClassLoader(String classDir, Plugin plugin) {
+    public FaClassLoader(String classDir, @NotNull Plugin plugin) {
         super(plugin.getClass().getClassLoader()); // 设置父类加载器
         this.classDir = classDir;
     }
@@ -43,7 +44,7 @@ public class FaClassLoader extends ClassLoader{
      * @throws ClassNotFoundException 类未找到异常
      */
     @Override
-    protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+    protected Class<?> loadClass(@NotNull String name, boolean resolve) throws ClassNotFoundException {
         Class<?> clazz;
         // 1. 优先尝试当前ClassLoader加载（关键：确保依赖类也通过当前ClassLoader加载）
         try {
@@ -69,7 +70,7 @@ public class FaClassLoader extends ClassLoader{
      * @throws ClassNotFoundException 类未找到异常
      */
     @Override
-    protected Class<?> findClass(String name) throws ClassNotFoundException {
+    protected Class<?> findClass(@NotNull String name) throws ClassNotFoundException {
         // 1. 检查是否已缓存
         Class<?> cached = loadedClasses.get(name);
         if (cached != null) {

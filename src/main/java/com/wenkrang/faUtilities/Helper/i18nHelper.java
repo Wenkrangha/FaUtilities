@@ -1,5 +1,7 @@
 package com.wenkrang.faUtilities.Helper;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
@@ -41,7 +43,7 @@ public class i18nHelper {
      */
     //获取i18n文本
     //pt = private text
-    public String pt(String Message) {
+    public @NotNull String pt(@NotNull String Message) {
         return resourceBundle.getString(Message);
     }
 
@@ -51,7 +53,7 @@ public class i18nHelper {
      * @param args 格式化参数
      * @return 格式化后的本地化字符串
      */
-    public String pft(String Message, Object... args) {
+    public @NotNull String pft(@NotNull String Message, Object... args) {
         return String.format(t(Message), args);
     }
 
@@ -61,7 +63,7 @@ public class i18nHelper {
      * @param args 格式化参数
      * @return 格式化后的本地化字符串
      */
-    public static String ft(String Message, Object... args) {
+    public static String ft(@NotNull String Message, Object... args) {
         return new i18nHelper().pft(Message, args);
     }
 
@@ -71,7 +73,7 @@ public class i18nHelper {
      * @return 对应的本地化字符串
      */
     //获取i18n文本
-    public static String t(String Message) {
+    public static String t(@NotNull String Message) {
         return new i18nHelper().pt(Message);
     }
     
@@ -79,25 +81,25 @@ public class i18nHelper {
      * 记录警告日志（私有实例方法）
      * @param Message 资源键名
      */
-    public void pw(String Message) {Logger.getGlobal().warning(pt(Message));}
+    public void pw(@NotNull String Message) {Logger.getGlobal().warning(pt(Message));}
     
     /**
      * 记录警告日志（公共静态方法）
      * @param Message 资源键名
      */
-    public static void w(String Message) {Logger.getGlobal().warning(new i18nHelper().pt(Message));}
+    public static void w(@NotNull String Message) {Logger.getGlobal().warning(new i18nHelper().pt(Message));}
 
     /**
      * 记录格式化警告日志（私有实例方法）
      * @param Message 资源键名
      * @param args 格式化参数
      */
-    public void pfw(String Message,Object... args) {Logger.getGlobal().warning(pft(Message, args));}
+    public void pfw(@NotNull String Message, Object... args) {Logger.getGlobal().warning(pft(Message, args));}
     
     /**
      * 记录格式化警告日志（公共静态方法）
      * @param Message 资源键名
      * @param args 格式化参数
      */
-    public static void fw(String Message,Object... args) {Logger.getGlobal().warning(new i18nHelper().pft(Message, args));}
+    public static void fw(@NotNull String Message, Object... args) {Logger.getGlobal().warning(new i18nHelper().pft(Message, args));}
 }

@@ -1,29 +1,26 @@
 package com.wenkrang.faUtilities.Moudle.FaCommand.FaCmdInterpreter;
 
-import com.wenkrang.faUtilities.Moudle.FaCommand.ParamHandler.FaParam;
-import com.wenkrang.faUtilities.Moudle.FaCommand.Helper.CmdHandleHelper;
-import com.wenkrang.faUtilities.Moudle.FaCommand.Helper.CmdNodeHelper;
 import com.wenkrang.faUtilities.Moudle.FaCommand.AnnotationHandler.FaAnnotationHandler;
 import com.wenkrang.faUtilities.Moudle.FaCommand.FaCmd;
 import com.wenkrang.faUtilities.Moudle.FaCommand.FaCmdInstance;
+import com.wenkrang.faUtilities.Moudle.FaCommand.Helper.CmdHandleHelper;
+import com.wenkrang.faUtilities.Moudle.FaCommand.Helper.CmdNodeHelper;
+import com.wenkrang.faUtilities.Moudle.FaCommand.ParamHandler.FaParam;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 
+import static com.wenkrang.faUtilities.Helper.i18nHelper.fw;
 import static com.wenkrang.faUtilities.Moudle.FaCommand.Helper.CmdHandleHelper.handleRootCommand;
-import static com.wenkrang.faUtilities.Helper.i18nHelper.t;
 
 public class FaCmdInterpreter {
     private final FaCmdInstance faCmdInstance;
@@ -37,7 +34,7 @@ public class FaCmdInterpreter {
 
     private ArrayList<FaAnnotationHandler> annotationHandlers = new ArrayList<>();
 
-    public static ArrayList<String> getCompleteParam(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
+    public static @NotNull ArrayList<String> getCompleteParam(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
         // 还原完整的命令参数列表
         ArrayList<String> params = new ArrayList<>();
         params.add(commandLabel);
@@ -46,9 +43,9 @@ public class FaCmdInterpreter {
         return params;
     }
 
-    public static List<Object> convertParams(
+    public static @NotNull List<Object> convertParams(
             @NotNull CommandSender sender
-            , Method method, String[] args, String node) {
+            , @NotNull Method method, String @NotNull [] args, @NotNull String node) {
         // 准备参数转换器和实际参数
         FaParam faChecker = new FaParam();
 
@@ -120,6 +117,7 @@ public class FaCmdInterpreter {
      */
     public boolean interpret(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
         // 命令执行器的args，由于Spigot没传根命令，需要自己加一下commandLabel
+        // 这里构建完整参数列表
 
         new BukkitRunnable() {
             @Override
@@ -131,18 +129,34 @@ public class FaCmdInterpreter {
                     // 创建命令节点解析器
                     FaGuesser faGuesser = new FaGuesser(faCmdInstance);
 
-                    // 猜测可能的命令节点
-//                    ArrayList<String> Nodes = new ArrayList<>(faGuesser.guessNodes(params, params.size()));
-//
-//                    // 检查是否存在命令冲突（多个匹配节点）
-//                    if (Nodes.size() > 1) {
-//                        Logger.getGlobal().warning(t("FaCommand.Error.Interpreter.Conflict"));
-//                    }
-//
-//                    if (Nodes.isEmpty()) return;
-//
-//                    String node = Nodes.getFirst();
+                    List<FaCmd> faCmds = faGuesser.guessFaCmd(params, FaGuesser.guessMode.full);
 
+                    // 命令冲突
+                    if (faCmds.size() > 1) {
+                        fw("FaCommand.Error.Interpreter.Conflict", faCmds.toString());
+                    }
+
+                    Optional<FaCmd> faCmd = faCmds.stream().findFirst();
+
+                    // 命令存在
+                    if (faCmd.isPresent()) {
+                        Method method = faCmd.get().getMethod();
+
+                        // 转换为方法参数
+                        List<Object> objects = convertParams(sender, method, params.toArray(String[]::new), faCmd.get().getNode());
+
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    // 执行方法
+                                    method.invoke(faCmd.get(), objects.toArray());
+                                } catch (Exception e) {
+                                    Logger.getGlobal().warning(e.getMessage());
+                                }
+                            }
+                        }.runTask(faCmdInstance.getPlugin());
+                    }
 
                 }catch (Exception e) {
                     Logger.getGlobal().warning(e.getMessage());
@@ -152,19 +166,36 @@ public class FaCmdInterpreter {
         return true;
     }
 
-    public boolean removeItemsWithTooFewParameters(String node,Method method,String[] args) {
-        return Arrays.stream(method.getParameters())
-                .filter(i -> i.getType() != FaCmdContext.class).count()
-                + CmdNodeHelper.separateNode(node).size()
-                <
-                args.length;
-    }
-
-    public List<String> tabComplete(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
-        // 这里的args就是完整的参数，包括""（没输入但写了空格）
+    public @Nullable List<String> tabComplete(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
+        // 这里的args就是完整（吗？）的参数，包括""（没输入但写了空格）
         // Spigot是直接split了空格然后传过来
 
-        return null;
+        // 也是分成三种情况
+        // 1. 根命令为空（本补全器不处理，因为Bukkit会自己处理）
+        // 2. 子命令为空
+        // 3. 参数为空
+        // 这里2和3可以一起处理，因为只要根命令不为空，补全器会获取完整用法列表，再根据输入，选择列表中的项
+
+        ArrayList<String> cArgs = getCompleteParam(sender, commandLabel, args);
+
+        // 跳过根命令为空的情况
+        if (cArgs.isEmpty()) {return null;}
+
+        // 构建猜测器
+        FaGuesser faGuesser = new FaGuesser(faCmdInstance);
+
+        // 获取命令，使用模糊模式
+        List<FaCmd> faCmds = faGuesser.guessFaCmd(cArgs, FaGuesser.guessMode.fuzzy);
+
+        // 然后获取所有命令的用法
+        FaParam faParam = new FaParam();
+
+        // 获取用法，然后返回
+        return faCmds.stream()
+                .map(faParam::getUsage)
+                .filter(i -> i.length >= cArgs.size())
+                .map(i -> i[cArgs.size() - 1])
+                .toList();
     }
 
     public FaCmdInstance getFaCmdInstance() {

@@ -3,6 +3,7 @@ package com.wenkrang.faUtilities.Moudle.FaCommand;
 import com.wenkrang.faUtilities.Moudle.FaCommand.FaCmdInterpreter.FaCmdInterpreter;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -18,7 +19,7 @@ public class FaCmd {
     private String node;
     private Method method;
 
-    public FaCmd(FaCmdInterpreter faCmdInterpreter) {
+    public FaCmd(@NotNull FaCmdInterpreter faCmdInterpreter) {
         interpreter = faCmdInterpreter;
         commandMap = faCmdInterpreter.getFaCmdInstance().getCommandManager().getCommandMap();
     }

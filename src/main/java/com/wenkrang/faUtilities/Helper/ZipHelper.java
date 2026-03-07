@@ -1,5 +1,8 @@
 package com.wenkrang.faUtilities.Helper;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -19,7 +22,7 @@ public class ZipHelper {
      * @param file 待检测的文件对象，可以为null
      * @return 如果文件存在且为ZIP格式则返回true，否则返回false
      */
-    public static boolean isZipFile(File file) {
+    public static boolean isZipFile(@Nullable File file) {
         if (file == null || !file.isFile()) return false;
 
         try (FileInputStream fis = new FileInputStream(file)) {
@@ -40,7 +43,7 @@ public class ZipHelper {
      * @param Dir  解压目录
      * @throws IOException 抛出IO异常
      */
-    public static void unzip(File file, File Dir) throws IOException {
+    public static void unzip(@NotNull File file, File Dir) throws IOException {
         try (ZipInputStream zis = new ZipInputStream(new FileInputStream(file))) {
             ZipEntry zipEntry;
             while ((zipEntry = zis.getNextEntry()) != null) {

@@ -21,9 +21,9 @@ import java.util.UUID;
  * 负责加载JAR文件、创建类加载器、启动插件等操作
  */
 public class ContainerManager {
-    private final Plugin plugin;
-    private final File temp;
-    private ArrayList<FaContainer> containers = new ArrayList<>();
+    private final @NotNull Plugin plugin;
+    private final @NotNull File temp;
+    private @NotNull ArrayList<FaContainer> containers = new ArrayList<>();
 
     /**
      * 创建一个新的FaContainer容器实例
@@ -31,7 +31,7 @@ public class ContainerManager {
      * @return 新创建的FaContainer实例
      * @throws IOException 文件操作异常
      */
-    public FaContainer createContainer() throws IOException {
+    public @NotNull FaContainer createContainer() throws IOException {
         FaContainer faContainer = new FaContainer(null, UUID.randomUUID(), null, null);
         containers.add(faContainer);
         return faContainer;
@@ -44,7 +44,7 @@ public class ContainerManager {
      * @param faContainer 目标容器
      * @throws IOException 文件操作异常
      */
-    public void loadJar(File file, FaContainer faContainer) throws IOException {
+    public void loadJar(@NotNull File file, @NotNull FaContainer faContainer) throws IOException {
         //检查所加载的文件是否是Jar
         if (ZipHelper.isZipFile(file) && file.getName().substring(file.getName().lastIndexOf(".")).equals(".jar")) {
             //新建容器临时目录
@@ -77,7 +77,7 @@ public class ContainerManager {
      * @throws InvocationTargetException     方法调用异常
      * @throws IllegalAccessException      访问权限异常
      */
-    public void bootstrap(FaContainer faContainer) throws IOException, InvalidConfigurationException, ClassNotFoundException, InstantiationException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public void bootstrap(@NotNull FaContainer faContainer) throws IOException, InvalidConfigurationException, ClassNotFoundException, InstantiationException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         //获取主类
         YamlConfiguration yamlConfiguration = new YamlConfiguration();
         yamlConfiguration.load(new File(faContainer.getRunFolder(), "plugin.yml"));

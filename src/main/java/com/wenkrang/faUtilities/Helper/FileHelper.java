@@ -1,5 +1,7 @@
 package com.wenkrang.faUtilities.Helper;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 
 import static org.bukkit.Bukkit.getLogger;
@@ -10,7 +12,7 @@ public class FileHelper {
      *
      * @param target 目标目录
      */
-    public static void mkdirsWithLog(File target) {
+    public static void mkdirsWithLog(@NotNull File target) {
         if (!target.mkdirs()) {
             getLogger().warning("the temp directory can't be created");
         }

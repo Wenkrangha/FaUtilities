@@ -1,8 +1,8 @@
 package com.wenkrang.faUtilities.Moudle.FaCommand.FaCmdInterpreter;
 
 import com.wenkrang.faUtilities.Moudle.FaCommand.FaCmd;
-import com.wenkrang.faUtilities.Moudle.FaCommand.Helper.CmdNodeHelper;
 import com.wenkrang.faUtilities.Moudle.FaCommand.FaCmdInstance;
+import com.wenkrang.faUtilities.Moudle.FaCommand.Helper.CmdNodeHelper;
 import com.wenkrang.faUtilities.Moudle.FaCommand.ParamHandler.FaParam;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,7 +39,11 @@ public record FaGuesser(FaCmdInstance faCmdInstance) {
     }
 
 
-
+    public Parameter @NotNull [] skipContext(Parameter @NotNull [] parameters){
+        return Arrays.stream(parameters)
+                .filter(i -> !i.getType().equals(FaCmdContext.class))
+                .toArray(Parameter[]::new);
+    }
 
     /**
      * 根据参数筛选出最终的候选命令列表。
@@ -47,7 +51,7 @@ public record FaGuesser(FaCmdInstance faCmdInstance) {
      * @param args 实际参数列表
      * @return 符合条件的命令列表
      */
-    public List<FaCmd> guessFaCmd(@NotNull List<String> args,guessMode mode) {
+    public @NotNull List<FaCmd> guessFaCmd(@NotNull List<String> args, @NotNull guessMode mode) {
         // 猜测节点
         // 首先分出参数中的命令节点和参数
         // 命令节点是主命令和子命令，参数是方法参数
@@ -57,11 +61,12 @@ public record FaGuesser(FaCmdInstance faCmdInstance) {
 
         // 1.主命令空
         // 由于主命令是空的，所以全部匹配，没必要浪费算力
+
         if (args.isEmpty())
             return mode.equals(guessMode.fuzzy) ?
                 new ArrayList<>(faCmdInstance.getFaCmds())
                 :
-                null;
+                faCmdInstance.getFaCmd(args.getFirst());
 
         // 2.子命令空（不完整）
         // 所有参数拼在一起
@@ -74,22 +79,21 @@ public record FaGuesser(FaCmdInstance faCmdInstance) {
         while (counter < convertedArgs.length()) {
             // 逐个进行检测，直到没有匹配的命令，即进入参数阶段
             int finalCounter = counter;
-            if (faCmdInstance.getNodes().stream().noneMatch(i -> i.startsWith(convertedArgs.substring(0, finalCounter)))) {
+            String substring = convertedArgs.substring(0, finalCounter);
+
+            if (faCmdInstance.getNodes().stream()
+                    .noneMatch(node -> node.startsWith(substring) && node.length() >= substring.length()))
                 break;
-            }
 
             counter++;
         }
-        
-        counter -= 1;
 
         // 这里获取结果
         String prefix = convertedArgs.substring(0, counter);
         if (prefix.charAt(prefix.length() - 1) == '.') prefix = prefix.substring(0, prefix.length() - 1);
 
         // 真正的参数
-        List<String> realArgs = CmdNodeHelper.removeNode(prefix, args);
-
+        List<String> realArgs = CmdNodeHelper.removeEmpty(CmdNodeHelper.removeNode(prefix, args));
         // 到这里，我们就获得到了节点和参数
         // 3.如果没有参数
         final String finalPrefix = prefix;
@@ -108,9 +112,11 @@ public record FaGuesser(FaCmdInstance faCmdInstance) {
             Method method = cmd.getMethod();
 
             // 如果精确匹配的话，后面可以省了
-            if (method.getParameterCount() != realArgs.size() && mode.equals(guessMode.full)) continue;
+            if (skipContext(method.getParameters()).length != realArgs.size()
+                    && mode.equals(guessMode.full))
+                continue;
 
-            Parameter[] parameters = method.getParameters();
+            Parameter[] parameters = skipContext(method.getParameters());
             FaParam faParam = new FaParam();
             // 这里显式转换，因为没法静态猜测
             // 方法的参数类型
@@ -118,7 +124,7 @@ public record FaGuesser(FaCmdInstance faCmdInstance) {
             // 输入的参数类型
             List<Set<Type>> argsTypes = realArgs.stream().map(faParam::check).toList();
 
-            if(IntStream.range(0,Math.min(parameters.length,realArgs.size()))
+            if (IntStream.range(0,Math.min(skipContext(parameters).length,realArgs.size()))
                     .allMatch(i -> argsTypes.get(i).contains(methodParamTypes.get(i)))) {
                 result.add(cmd);
             }
@@ -128,7 +134,7 @@ public record FaGuesser(FaCmdInstance faCmdInstance) {
         return result;
     }
 
-    public static enum guessMode {
+    public enum guessMode {
         /**
          * 完全匹配
          */

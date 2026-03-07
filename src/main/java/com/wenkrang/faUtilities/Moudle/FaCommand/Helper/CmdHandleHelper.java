@@ -4,7 +4,6 @@ import com.wenkrang.faUtilities.Moudle.FaCommand.FaCmd;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -27,7 +26,7 @@ public class CmdHandleHelper {
      * @param rootCommand 根命令名称
      * @param command FaCmd命令对象
      */
-    public static void handleRootCommand(String rootCommand, FaCmd command) {
+    public static void handleRootCommand(@NotNull String rootCommand, @NotNull FaCmd command) {
         // 检查根命令是否注册
         if (isUnregistered(rootCommand)) {
             // 创建新的命令实例并设置执行逻辑
