@@ -13,11 +13,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Logger;
+import java.util.stream.IntStream;
 
 import static com.wenkrang.faUtilities.Helper.i18nHelper.fw;
 import static com.wenkrang.faUtilities.Helper.i18nHelper.t;
@@ -44,28 +42,49 @@ public class FaCmdInterpreter {
         return params;
     }
 
-    public static @NotNull List<Object> convertParams(
+    public static @NotNull Object[] convertParams(
             @NotNull CommandSender sender
             , @NotNull Method method, String @NotNull [] args, @NotNull String node) {
         // 准备参数转换器和实际参数
         FaParam faChecker = new FaParam();
 
-        ArrayList<Object> convertedArgs = new ArrayList<>();
+
 
 
         String[] removedNodeArgs = CmdNodeHelper.removeNode(node, Arrays.stream(args).toList()).toArray(String[]::new);
         // 转换参数类型
 
-        int argIndex = 0; // 添加参数索引计数器
-        for (int i = 0; i < method.getParameters().length; i++) {
-            if (method.getParameters()[i].getType().equals(FaCmdContext.class)) {
-                convertedArgs.add(new FaCmdContext(sender, Arrays.stream(args).skip(1).toArray(String[]::new)));
-                continue;
+        Object[] convertedArgs = new Object[method.getParameterCount()];
+
+        // 设置FaCmdContext
+        IntStream.range(0, method.getParameterCount())
+                .forEach(i -> {
+                    if(method.getParameters()[i].getType().equals(FaCmdContext.class))
+                        convertedArgs[i] = new FaCmdContext(sender, Arrays.stream(args).skip(1).toArray(String[]::new));
+                });
+        // 获取真正的参数位
+        List<Integer> nonNull = IntStream.range(0, method.getParameterCount())
+                .filter(i -> convertedArgs[i] != null)
+                .boxed().toList();
+        // 转换参数
+        for (int i = 0;i < nonNull.size(); i++) {
+            if (i >= removedNodeArgs.length) {
+                break;
             }
-            // 使用argIndex而不是i来访问realArgs
-            convertedArgs.add(faChecker.parse(removedNodeArgs[argIndex], method.getParameters()[i].getType()));
-            argIndex++; // 只有非FaCmdHandle参数才增加索引
+            convertedArgs[nonNull.get(i)] = faChecker.parse(removedNodeArgs[i], method.getParameters()[nonNull.get(i)].getType());
         }
+
+
+//        int argIndex = 0; // 添加参数索引计数器
+//        for (int i = 0; i < method.getParameters().length; i++) {
+//            if (method.getParameters()[i].getType().equals(FaCmdContext.class)) {
+//                convertedArgs.add(new FaCmdContext(sender, Arrays.stream(args).skip(1).toArray(String[]::new)));
+//                continue;
+//            }
+//            // 使用argIndex而不是i来访问realArgs
+//            convertedArgs.add(faChecker.parse(removedNodeArgs[argIndex], method.getParameters()[i].getType()));
+//            argIndex++; // 只有非FaCmdHandle参数才增加索引
+//        }
 
         return convertedArgs;
     }
@@ -155,14 +174,14 @@ public class FaCmdInterpreter {
                         Method method = faCmd.get().getMethod();
 
                         // 转换为方法参数
-                        List<Object> objects = convertParams(sender, method, params.toArray(String[]::new), faCmd.get().getNode());
+                        Object[] objects = convertParams(sender, method, params.toArray(String[]::new), faCmd.get().getNode());
 
                         new BukkitRunnable() {
                             @Override
                             public void run() {
                                 try {
                                     // 执行方法
-                                    method.invoke(faCmd.get(), objects.toArray());
+                                    method.invoke(faCmd.get(), objects);
                                 } catch (Exception e) {
                                     Logger.getGlobal().warning(e.getMessage());
                                 }

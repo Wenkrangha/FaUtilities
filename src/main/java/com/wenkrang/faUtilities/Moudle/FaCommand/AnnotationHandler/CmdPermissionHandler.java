@@ -15,6 +15,6 @@ public class CmdPermissionHandler implements FaAnnotationHandler{
 
     @Override
     public Class<? extends Annotation> getAnnotationClass() {
-        return null;
+        return CmdPermission.class;
     }
 }
