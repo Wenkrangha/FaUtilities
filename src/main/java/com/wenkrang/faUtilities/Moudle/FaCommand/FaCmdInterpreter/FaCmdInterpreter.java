@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 import static com.wenkrang.faUtilities.Helper.i18nHelper.fw;
+import static com.wenkrang.faUtilities.Helper.i18nHelper.t;
 import static com.wenkrang.faUtilities.Moudle.FaCommand.Helper.CmdHandleHelper.handleRootCommand;
 
 public class FaCmdInterpreter {
@@ -140,6 +141,17 @@ public class FaCmdInterpreter {
 
                     // 命令存在
                     if (faCmd.isPresent()) {
+                        // 权限检查
+                        if (faCmd.get().isRequireOP() && !sender.isOp()) {
+                            sender.sendMessage(t("FaCommand.Error.Interpreter.RequireOP"));
+                            return;
+                        }
+                        // 权限检查
+                        if (!faCmd.get().getPermission().isEmpty() && !sender.hasPermission(faCmd.get().getPermission())) {
+                            sender.sendMessage(t("FaCommand.Error.Interpreter.NoPermission"));
+                            return;
+                        }
+
                         Method method = faCmd.get().getMethod();
 
                         // 转换为方法参数
@@ -192,6 +204,8 @@ public class FaCmdInterpreter {
 
         // 获取用法，然后返回
         return faCmds.stream()
+                .filter(i -> !(i.isRequireOP() && !sender.isOp())) // 跳过权限检查失败的
+                .filter(i -> !(!i.getPermission().isEmpty() && !sender.hasPermission(i.getPermission())))
                 .map(faParam::getUsage)
                 .filter(i -> i.length >= cArgs.size())
                 .map(i -> i[cArgs.size() - 1])

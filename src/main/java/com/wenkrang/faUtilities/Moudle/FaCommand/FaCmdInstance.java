@@ -3,6 +3,8 @@ package com.wenkrang.faUtilities.Moudle.FaCommand;
 import com.wenkrang.faUtilities.Helper.ClassHelper;
 import com.wenkrang.faUtilities.Manager.CommandManager;
 import com.wenkrang.faUtilities.Moudle.FaCommand.AnnotationHandler.CmdNodeHandler;
+import com.wenkrang.faUtilities.Moudle.FaCommand.AnnotationHandler.CmdPermissionHandler;
+import com.wenkrang.faUtilities.Moudle.FaCommand.AnnotationHandler.RequireOPHandler;
 import com.wenkrang.faUtilities.Moudle.FaCommand.FaCmdInterpreter.FaCmdInterpreter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -72,6 +74,8 @@ public class FaCmdInstance {
         faCmdInstance.faCmdInterpreter = new FaCmdInterpreter(faCmdInstance, plugin);
 
         faCmdInstance.faCmdInterpreter.addAnnotationHandlers(new CmdNodeHandler());
+        faCmdInstance.faCmdInterpreter.addAnnotationHandlers(new CmdPermissionHandler());
+        faCmdInstance.faCmdInterpreter.addAnnotationHandlers(new RequireOPHandler());
 
         return faCmdInstance;
     }

@@ -18,11 +18,13 @@ public class FaCmd {
     private FaCmdInterpreter interpreter;
     private String node;
     private Method method;
+    private boolean requireOP;
 
     public FaCmd(@NotNull FaCmdInterpreter faCmdInterpreter) {
         interpreter = faCmdInterpreter;
         commandMap = faCmdInterpreter.getFaCmdInstance().getCommandManager().getCommandMap();
     }
+
 
     public void setMethod(Method m) {method = m;}
 
@@ -104,5 +106,11 @@ public class FaCmd {
         this.permission = permission;
     }
 
+    public boolean isRequireOP() {
+        return requireOP;
+    }
 
+    public void setRequireOP(boolean requireOP) {
+        this.requireOP = requireOP;
+    }
 }
