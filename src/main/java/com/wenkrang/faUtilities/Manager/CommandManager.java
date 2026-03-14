@@ -90,6 +90,7 @@ public class CommandManager {
         // 类型基本检查
         if (knownCommandsField.get(commandMap) instanceof Map<?,?>){
             // 获取实例
+            @SuppressWarnings("unchecked")
             Map<String, Command> knownCommands = (Map<String, Command>) knownCommandsField.get(commandMap);
             // 移除命令
             knownCommands.remove(string);

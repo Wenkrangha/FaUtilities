@@ -1,6 +1,6 @@
 package com.wenkrang.faUtilities.Moudle.FaCommand.Helper;
 
-import com.wenkrang.faUtilities.Moudle.FaCommand.Annotation.CmdNode;
+import com.wenkrang.faUtilities.Moudle.FaCommand.Annotation.Cmd;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
@@ -54,7 +54,7 @@ public class CmdNodeHelper {
      * @return 如果方法被CmdNode注解标记则返回true，否则返回false
      */
     public static boolean isCmdNode(@NotNull Method method) {
-        return method.getAnnotation(CmdNode.class) != null;
+        return method.getAnnotation(Cmd.class) != null;
     }
 
     /**

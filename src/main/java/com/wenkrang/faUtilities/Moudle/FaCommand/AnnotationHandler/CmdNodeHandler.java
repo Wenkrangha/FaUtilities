@@ -1,6 +1,6 @@
 package com.wenkrang.faUtilities.Moudle.FaCommand.AnnotationHandler;
 
-import com.wenkrang.faUtilities.Moudle.FaCommand.Annotation.CmdNode;
+import com.wenkrang.faUtilities.Moudle.FaCommand.Annotation.Cmd;
 import com.wenkrang.faUtilities.Moudle.FaCommand.FaCmd;
 import com.wenkrang.faUtilities.Moudle.FaCommand.Helper.CmdNodeHelper;
 import org.jetbrains.annotations.NotNull;
@@ -20,12 +20,12 @@ import static org.bukkit.Bukkit.getLogger;
 public class CmdNodeHandler implements FaAnnotationHandler {
     @Override
     public void handle(@NotNull FaCmd command, @NotNull Method method) {
-        CmdNode cmdNode = method.getAnnotation(CmdNode.class); // 获取命令节点
+        Cmd cmd = method.getAnnotation(Cmd.class); // 获取命令节点
 
         if (!Modifier.isStatic(method.getModifiers()))
             throw new RuntimeException(ft("FaCommand.Error.Interpreter.NotStatic", method.getName()));
 
-        String node = cmdNode.value(); // 获取挂载的命令节点
+        String node = cmd.value(); // 获取挂载的命令节点
 
         // 检查命令节点是否合规
         if (CmdNodeHelper.check(node)) {
@@ -40,7 +40,7 @@ public class CmdNodeHandler implements FaAnnotationHandler {
 
     @Override
     public @NotNull Class<? extends Annotation> getAnnotationClass() {
-        return CmdNode.class;
+        return Cmd.class;
     }
 
 

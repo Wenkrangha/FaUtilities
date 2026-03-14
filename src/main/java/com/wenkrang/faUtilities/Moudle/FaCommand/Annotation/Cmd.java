@@ -14,7 +14,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-public @interface CmdNode {
+public @interface Cmd {
     /**
      * 命令节点路径，使用点号分隔
      * 

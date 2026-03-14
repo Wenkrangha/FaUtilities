@@ -1,6 +1,7 @@
 package com.wenkrang.faUtilities;
 
-import com.wenkrang.faUtilities.Moudle.FaCommand.Annotation.CmdNode;
+import com.wenkrang.faUtilities.Moudle.FaCommand.Annotation.Cmd;
+import com.wenkrang.faUtilities.Moudle.FaCommand.Annotation.ParamDes;
 import com.wenkrang.faUtilities.Moudle.FaCommand.FaCmdInstance;
 import com.wenkrang.faUtilities.Moudle.FaCommand.FaCmdInterpreter.FaCmdContext;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -36,34 +37,21 @@ public final class FaUtilities extends JavaPlugin {
         faCmdInstance.close();
     }
 
-    /**
-     * 测试命令：HelloWorld
-     * 输出问候信息到控制台
-     * 
-     * @param faCmdContext 命令上下文
-     * @param name 参数名称
-     */
-    @CmdNode("fautilities.HelloWorld")
-    public static void helloWorld(FaCmdContext faCmdContext,String name) {
+
+    @Cmd("fautilities.HelloWorld")
+    public static void helloWorld(FaCmdContext faCmdContext
+                                        ,@ParamDes("name") String name) {
         System.out.println("Hello World!");
         System.out.println(faCmdContext.sender().getName());
         System.out.println(name);
     }
 
-    /**
-     * 测试命令：HelloWorld2（带年龄参数）
-     * 输出更详细的问候信息到控制台
-     * 
-     * @param faCmdContext 命令上下文
-     * @param name 参数名称
-     * @param age 参数年龄
-     */
-    @CmdNode("fautilities.HelloWorld2")
-    public static void helloWorld(FaCmdContext faCmdContext,String name,int age) {
+    @Cmd("fautilities.HelloWorld2")
+    public static void helloWorld(FaCmdContext faCmdContext,String name,boolean bool) {
         System.out.println("Hello World!");
         System.out.println(faCmdContext.sender().getName());
         System.out.println(name);
-        System.out.println(age);
+        System.out.println(bool);
     }
 
 

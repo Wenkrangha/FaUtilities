@@ -1,5 +1,7 @@
 package com.wenkrang.faUtilities.Moudle.FaParam.JavaParam;
 
+import com.wenkrang.faUtilities.Moudle.FaCommand.Annotation.DesProvider;
+import com.wenkrang.faUtilities.Moudle.FaCommand.FaCmdInterpreter.FaCmdContext;
 import com.wenkrang.faUtilities.Moudle.FaParam.SimpleParam;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -11,7 +13,7 @@ import java.util.Set;
  * BooleanParam 用于处理布尔类型的参数。
  * 支持 true/false 的不区分大小写输入。
  */
-public class BooleanParam implements SimpleParam {
+public class BooleanParam implements SimpleParam, DesProvider {
     @Override
     public @NotNull Set<Type> getType() {
         return Set.of(Boolean.class, boolean.class);
@@ -31,5 +33,11 @@ public class BooleanParam implements SimpleParam {
     @Override
     public @Nullable String getName(Type type) {
         return getType().contains(type) ? "Boolean" : null;
+    }
+
+    @Override
+    public @NotNull String[] getDes(FaCmdContext faCmdContext) {
+        String[] des = {"true", "false"};;
+        return des;
     }
 }

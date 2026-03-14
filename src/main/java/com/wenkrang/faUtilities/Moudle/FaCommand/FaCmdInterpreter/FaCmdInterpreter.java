@@ -16,6 +16,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static com.wenkrang.faUtilities.Helper.i18nHelper.fw;
 import static com.wenkrang.faUtilities.Helper.i18nHelper.t;
@@ -221,13 +222,24 @@ public class FaCmdInterpreter {
         // 然后获取所有命令的用法
         FaParam faParam = new FaParam();
 
-        // 获取用法，然后返回
-        return faCmds.stream()
+        List<Object @NotNull []> usages = faCmds.stream()
                 .filter(i -> !(i.isRequireOP() && !sender.isOp())) // 跳过权限检查失败的
-                .filter(i -> !(!i.getPermission().isEmpty() && !sender.hasPermission(i.getPermission())))
-                .map(faParam::getUsage)
+                .filter(i -> !(i.getPermission() != null && !sender.hasPermission(i.getPermission())))
+                .map(i -> faParam.getUsage(i, new FaCmdContext(sender, args))).toList();
+
+         return usages.stream()
                 .filter(i -> i.length >= cArgs.size())
                 .map(i -> i[cArgs.size() - 1])
+                .filter(Objects::nonNull)
+                .flatMap(i -> {
+                    if (i instanceof String str) {
+                        return Stream.of(str);
+                    } else if (i instanceof String[] strs) {
+                        return Arrays.stream(strs);
+                    } else {
+                        return Stream.empty();
+                    }
+                })
                 .toList();
     }
 
