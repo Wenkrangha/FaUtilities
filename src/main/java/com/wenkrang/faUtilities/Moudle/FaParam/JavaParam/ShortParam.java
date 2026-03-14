@@ -1,22 +1,26 @@
-package com.wenkrang.faUtilities.Moudle.FaCommand.ParamHandler;
+package com.wenkrang.faUtilities.Moudle.FaParam.JavaParam;
 
+import com.wenkrang.faUtilities.Moudle.FaParam.SimpleParam;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
 import java.util.Set;
 
-public class IntParam implements SimpleParam {
-
+/**
+ * ShortParam 用于处理短整型参数。
+ * 支持解析范围在 -32768 到 32767 之间的整数值。
+ */
+public class ShortParam implements SimpleParam {
     @Override
     public @NotNull Set<Type> getType() {
-        return Set.of(Integer.class, int.class); // 返回整数对应的类型
+        return Set.of(Short.class, short.class);
     }
 
     @Override
     public boolean check(@NotNull String param) {
         try {
-            Integer.parseInt(param);
+            Short.parseShort(param);
             return true;
         } catch (NumberFormatException e) {
             return false;
@@ -25,11 +29,11 @@ public class IntParam implements SimpleParam {
 
     @Override
     public @NotNull Object convert(@NotNull String param) {
-        return Integer.parseInt(param);
+        return Short.parseShort(param);
     }
 
     @Override
     public @Nullable String getName(Type type) {
-        return getType().contains(type) ? "Integer" : null;
+        return getType().contains(type) ? "Short" : null;
     }
 }

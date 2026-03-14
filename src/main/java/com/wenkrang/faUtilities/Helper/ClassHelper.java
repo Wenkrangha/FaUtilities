@@ -13,9 +13,17 @@ import java.util.logging.Logger;
 import static com.wenkrang.faUtilities.Helper.i18nHelper.ft;
 
 /**
- * 帮助操作类的帮助类
+ * 类操作帮助类
+ * 用于扫描和获取项目中的所有类，支持松散目录和 JAR 包两种形式
  */
 public class ClassHelper {
+    /**
+     * 获取指定类所在包中的所有类
+     * 自动检测是松散目录还是 JAR 包格式
+     *
+     * @param clazz 参考类对象
+     * @return 类列表
+     */
     public static @NotNull ArrayList<Class<?>> getClasses(@NotNull Class<?> clazz) {
         ArrayList<Class<?>> classes = new ArrayList<>();
 

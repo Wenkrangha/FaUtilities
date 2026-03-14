@@ -1,11 +1,16 @@
-package com.wenkrang.faUtilities.Moudle.FaCommand.ParamHandler;
+package com.wenkrang.faUtilities.Moudle.FaParam.JavaParam;
 
+import com.wenkrang.faUtilities.Moudle.FaParam.SimpleParam;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
 import java.util.Set;
 
+/**
+ * StringParam 用于处理字符串类型的参数。
+ * 接受任何字符串输入，始终返回成功。
+ */
 public class StringParam implements SimpleParam {
     @Override
     public @NotNull Set<Type> getType() {

@@ -82,7 +82,9 @@ public class FaCmdInstance {
 
     public void close() {
         for (FaCmd faCmd : faCmds) {
-            if (faCmd.getCommand().isRegistered()) faCmd.getCommand().unregister(commandManager.getCommandMap());
+            try {
+                if (faCmd.getCommand().isRegistered()) commandManager.unregister(faCmd.getCommand().getLabel());
+            }catch (Exception ignored){}
         }
     }
 

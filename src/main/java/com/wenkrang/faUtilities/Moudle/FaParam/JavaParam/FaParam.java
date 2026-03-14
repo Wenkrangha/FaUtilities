@@ -1,8 +1,9 @@
-package com.wenkrang.faUtilities.Moudle.FaCommand.ParamHandler;
+package com.wenkrang.faUtilities.Moudle.FaParam.JavaParam;
 
 import com.wenkrang.faUtilities.Moudle.FaCommand.FaCmd;
 import com.wenkrang.faUtilities.Moudle.FaCommand.FaCmdInterpreter.FaCmdContext;
 import com.wenkrang.faUtilities.Moudle.FaCommand.Helper.CmdNodeHelper;
+import com.wenkrang.faUtilities.Moudle.FaParam.SimpleParam;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

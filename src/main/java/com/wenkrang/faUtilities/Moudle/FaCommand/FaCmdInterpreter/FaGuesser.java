@@ -3,7 +3,7 @@ package com.wenkrang.faUtilities.Moudle.FaCommand.FaCmdInterpreter;
 import com.wenkrang.faUtilities.Moudle.FaCommand.FaCmd;
 import com.wenkrang.faUtilities.Moudle.FaCommand.FaCmdInstance;
 import com.wenkrang.faUtilities.Moudle.FaCommand.Helper.CmdNodeHelper;
-import com.wenkrang.faUtilities.Moudle.FaCommand.ParamHandler.FaParam;
+import com.wenkrang.faUtilities.Moudle.FaParam.JavaParam.FaParam;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;

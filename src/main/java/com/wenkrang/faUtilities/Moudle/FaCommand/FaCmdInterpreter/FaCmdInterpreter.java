@@ -5,7 +5,7 @@ import com.wenkrang.faUtilities.Moudle.FaCommand.FaCmd;
 import com.wenkrang.faUtilities.Moudle.FaCommand.FaCmdInstance;
 import com.wenkrang.faUtilities.Moudle.FaCommand.Helper.CmdHandleHelper;
 import com.wenkrang.faUtilities.Moudle.FaCommand.Helper.CmdNodeHelper;
-import com.wenkrang.faUtilities.Moudle.FaCommand.ParamHandler.FaParam;
+import com.wenkrang.faUtilities.Moudle.FaParam.JavaParam.FaParam;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;

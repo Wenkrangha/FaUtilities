@@ -13,6 +13,10 @@ import static com.wenkrang.faUtilities.Helper.i18nHelper.ft;
 import static com.wenkrang.faUtilities.Helper.i18nHelper.t;
 import static org.bukkit.Bukkit.getLogger;
 
+/**
+ * CmdNode 注解处理器
+ * 负责处理 @CmdNode 注解，提取命令节点路径并设置到 FaCmd 对象中
+ */
 public class CmdNodeHandler implements FaAnnotationHandler {
     @Override
     public void handle(@NotNull FaCmd command, @NotNull Method method) {

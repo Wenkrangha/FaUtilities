@@ -11,8 +11,12 @@ import java.util.Arrays;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+/**
+ * ZIP 文件操作帮助类
+ * 提供 ZIP 文件检测、解压等功能
+ */
 public class ZipHelper {
-    // ZIP文件的标准文件头标识字节数组
+    // ZIP 文件标准文件头标识字节数组（PK 签名）
     private static final byte[] ZIP_HEADER = {0x50, 0x4B, 0x03, 0x04};
 
     /**

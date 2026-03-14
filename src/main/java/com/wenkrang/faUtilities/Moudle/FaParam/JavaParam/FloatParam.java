@@ -1,11 +1,16 @@
-package com.wenkrang.faUtilities.Moudle.FaCommand.ParamHandler;
+package com.wenkrang.faUtilities.Moudle.FaParam.JavaParam;
 
+import com.wenkrang.faUtilities.Moudle.FaParam.SimpleParam;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
 import java.util.Set;
 
+/**
+ * FloatParam 用于处理单精度浮点数类型的参数。
+ * 支持解析 float 和 Float 类型的值，排除 NaN 和无穷大。
+ */
 public class FloatParam implements SimpleParam {
     @Override
     public @NotNull Set<Type> getType() {

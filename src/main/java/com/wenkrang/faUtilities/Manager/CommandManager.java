@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
 import static com.wenkrang.faUtilities.Helper.i18nHelper.t;
 import static org.bukkit.Bukkit.getLogger;
@@ -23,6 +24,7 @@ public class CommandManager {
 
 
     private CommandMap commandMap;
+    private Field bukkitCommandMap;
 
     /**
      * 构造函数，通过反射获取 Bukkit 的 CommandMap 实例。
@@ -30,7 +32,7 @@ public class CommandManager {
     public CommandManager() {
         try {
             // 获取 CommandMap
-            final Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+            bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
             bukkitCommandMap.setAccessible(true);
             commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
         } catch (NoSuchFieldException | IllegalAccessException e) {
@@ -78,6 +80,20 @@ public class CommandManager {
      */
     public boolean register(@NotNull String fallbackPrefix, @NotNull Command command) {
         return commandMap.register(fallbackPrefix, command);
+    }
+
+    public void unregister(String string) throws NoSuchFieldException, IllegalAccessException {
+        // 这里获取CommandMap里面的KnownCommands的反射
+        Field knownCommandsField = commandMap.getClass().getDeclaredField("knownCommands");
+        // 允许访问
+        knownCommandsField.setAccessible(true);
+        // 类型基本检查
+        if (knownCommandsField.get(commandMap) instanceof Map<?,?>){
+            // 获取实例
+            Map<String, Command> knownCommands = (Map<String, Command>) knownCommandsField.get(commandMap);
+            // 移除命令
+            knownCommands.remove(string);
+        }
     }
 
     /**
