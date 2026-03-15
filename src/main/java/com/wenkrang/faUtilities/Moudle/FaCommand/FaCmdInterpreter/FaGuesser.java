@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * FaGuesser 类用于根据给定的参数猜测匹配的命令节点。
@@ -99,8 +100,25 @@ public record FaGuesser(FaCmdInstance faCmdInstance) {
         final String finalPrefix = prefix;
         if (realArgs.isEmpty()) {
             // 模糊模式这里就可以返回了
-            if (mode.equals(guessMode.fuzzy))
-                return faCmdInstance.getFaCmds().stream().filter(i -> i.getNode().startsWith(finalPrefix)).toList();
+            // 但是我们需要考虑一个问题
+            // 当玩家确认了上一个子命令时，下一个子命令必须是上一个子命令的子命令
+            // 如应只返回test.test，而不是test.test和test.test2
+            // test2 startsWith test
+            if (mode.equals(guessMode.fuzzy)) {
+                if (args.getLast().isEmpty()) {
+                    // 最后一个参数为空，说明用户输入了空格但未输入具体内容
+                    // 应该返回当前前缀的直接子命令
+                    return Stream.concat(faCmdInstance.getFaCmd(finalPrefix).stream(),
+                            faCmdInstance.getFaCmds().stream()
+                                    .filter(i -> i.getNode().startsWith(finalPrefix + "."))
+                    ).toList();
+                } else {
+                    // 最后一个参数不为空，进行前缀匹配
+                    return faCmdInstance.getFaCmds().stream()
+                            .filter(i -> i.getNode().startsWith(finalPrefix))
+                            .toList();
+                }
+            }
         }
 
         // 参数匹配

@@ -222,25 +222,28 @@ public class FaCmdInterpreter {
         // 然后获取所有命令的用法
         FaParam faParam = new FaParam();
 
-        List<Object @NotNull []> usages = faCmds.stream()
+        List<Object> usages = faCmds.stream()
                 .filter(i -> !(i.isRequireOP() && !sender.isOp())) // 跳过权限检查失败的
                 .filter(i -> !(i.getPermission() != null && !sender.hasPermission(i.getPermission())))
-                .map(i -> faParam.getUsage(i, new FaCmdContext(sender, args))).toList();
-
-         return usages.stream()
+                .map(i -> faParam.getUsage(i, new FaCmdContext(sender, args)))
                 .filter(i -> i.length >= cArgs.size())
                 .map(i -> i[cArgs.size() - 1])
                 .filter(Objects::nonNull)
-                .flatMap(i -> {
-                    if (i instanceof String str) {
-                        return Stream.of(str);
-                    } else if (i instanceof String[] strs) {
-                        return Arrays.stream(strs);
-                    } else {
-                        return Stream.empty();
-                    }
-                })
                 .toList();
+
+        ArrayList<String> result = new ArrayList<>();
+
+        for (Object object : usages) {
+            if (object instanceof String str) {
+                result.add(str);
+            } else if (object instanceof String[] strs) {
+                result.addAll(List.of(strs));
+            } else if (object instanceof ArrayList<?> strs) {
+                result.addAll(strs.stream().map(String::valueOf).toList());
+            }
+        }
+
+        return result;
     }
 
     public FaCmdInstance getFaCmdInstance() {

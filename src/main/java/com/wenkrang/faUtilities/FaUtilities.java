@@ -37,22 +37,4 @@ public final class FaUtilities extends JavaPlugin {
         faCmdInstance.close();
     }
 
-
-    @Cmd("fautilities.HelloWorld")
-    public static void helloWorld(FaCmdContext faCmdContext
-                                        ,@ParamDes("name") String name) {
-        System.out.println("Hello World!");
-        System.out.println(faCmdContext.sender().getName());
-        System.out.println(name);
-    }
-
-    @Cmd("fautilities.HelloWorld2")
-    public static void helloWorld(FaCmdContext faCmdContext,String name,boolean bool) {
-        System.out.println("Hello World!");
-        System.out.println(faCmdContext.sender().getName());
-        System.out.println(name);
-        System.out.println(bool);
-    }
-
-
 }

@@ -26,6 +26,10 @@ public class FaParam {
         simpleParams.add(new IntParam());
         simpleParams.add(new FloatParam());
         simpleParams.add(new LongParam());
+        simpleParams.add(new BooleanParam());
+        simpleParams.add(new ShortParam());
+        simpleParams.add(new ByteParam());
+        simpleParams.add(new CharParam());
     }
 
     /**
@@ -87,24 +91,32 @@ public class FaParam {
                             } else if (i.getAnnotation(ParamArrayDes.class) != null) {
                                 return i.getAnnotation(ParamArrayDes.class).value();
                             } else {
-                                List<String> list = simpleParams.stream()
-                                        .filter(j -> j.getType().contains(i.getType()))
-                                        .map(j -> {
-                                            // 检查参数是否有自带的补全器
-                                            if (j instanceof DesProvider) {
-                                                return Arrays.stream(((DesProvider) j).getDes(faCmdContext));
-                                            } else {
-                                                // 没有就直接生成参数
-                                                return "<" + j.getName(i.getType()) + ">";
-                                            }
-                                        })
-                                        .map(String::valueOf)
-                                        .toList();
+                                // 准备结果列表
+                                ArrayList<String> result = new ArrayList<>();
 
-                                if (list.isEmpty()) {
-                                    return "<" + i.getName() + ">";
+                                // 获取符合的处理器
+                                List<SimpleParam> handlers =
+                                        simpleParams.stream()
+                                                .filter(j -> j.getType().contains(i.getType()))
+                                                .toList();
+
+                                // 历遍处理器
+                                for (SimpleParam j : handlers) {
+                                    // 检查处理器是否是提供描述的
+                                    if (j instanceof DesProvider value) {
+                                        @NotNull String[] des = value.getDes(faCmdContext);
+                                        result.addAll(Arrays.asList(des));
+                                    } else {
+                                        // 没有描述就显示参数名称
+                                        result.add("<" + j.getName(i.getType()) + ">");
+                                    }
+                                }
+
+                                // 如果连参数名称为空，则返回参数类型名称（完全限定名）
+                                if (result.isEmpty()) {
+                                    return "<" + i.getType().getName() + ">";
                                 } else {
-                                    return list.getFirst();
+                                    return result;
                                 }
                             }
                         }
