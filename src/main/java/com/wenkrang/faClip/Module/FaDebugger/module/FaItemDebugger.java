@@ -2,9 +2,7 @@ package com.wenkrang.faClip.Module.FaDebugger.module;
 
 import com.wenkrang.faClip.FaClip;
 import com.wenkrang.faClip.Helper.ResourceHelper;
-import com.wenkrang.faClip.Module.FaCommand.Annotation.Cmd;
-import com.wenkrang.faClip.Module.FaCommand.Annotation.Debug;
-import com.wenkrang.faClip.Module.FaCommand.Annotation.RequireOP;
+import com.wenkrang.faClip.Module.FaCommand.Annotation.*;
 import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.FaCmdContext;
 import com.wenkrang.faClip.Module.FaItem.FaItem;
 import com.wenkrang.faClip.Module.FaItem.FaItemInstance;
@@ -20,6 +18,10 @@ import java.util.List;
 import java.util.Map;
 
 public class FaItemDebugger {
+    @Cmd("fatest")
+    @OnlyForHelp
+    @Help("测试命令")
+    public static void fatest(){}
 
     /**
      * 从 resources 加载 test.item，解析后给予玩家

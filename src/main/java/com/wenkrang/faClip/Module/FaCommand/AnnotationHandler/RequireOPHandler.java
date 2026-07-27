@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
 /**
  * 处理 RequireOP 注解的处理器
  */
-public class RequireOPHandler implements FaAnnotationHandler {
+public class RequireOPHandler implements CmdAnnotationHandler {
     @Override
     public void handle(@NotNull FaCmd command, @NotNull Method method) {
         command.setRequireOP(true);

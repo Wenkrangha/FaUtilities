@@ -6,7 +6,7 @@ import com.wenkrang.faClip.Module.FaCommand.FaCmd;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
-public class CmdOnlyForHelpHandler implements FaAnnotationHandler{
+public class CmdOnlyForHelpHandler implements CmdAnnotationHandler {
     @Override
     public void handle(FaCmd command, Method method) {
         command.setOnlyForHelp(true);

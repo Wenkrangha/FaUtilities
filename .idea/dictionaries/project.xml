@@ -2,6 +2,8 @@
   <dictionary name="project">
     <words>
       <w>Cmds</w>
+      <w>Intf</w>
+      <w>Intfs</w>
     </words>
   </dictionary>
 </component>

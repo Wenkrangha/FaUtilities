@@ -1,6 +1,7 @@
 package com.wenkrang.faClip.Module.FaCommand.Helper;
 
 import com.wenkrang.faClip.Module.FaCommand.FaCmd;
+import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.FaCmdInterpreter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -26,7 +27,7 @@ public class CmdHandleHelper {
      * @param rootCommand 根命令名称
      * @param command FaCmd命令对象
      */
-    public static void handleRootCommand(@NotNull String rootCommand, @NotNull FaCmd command) {
+    public static void handleRootCommand(@NotNull String rootCommand, @NotNull FaCmd command, @NotNull FaCmdInterpreter interpreter) {
         // 检查根命令是否注册
         if (isUnregistered(rootCommand)) {
             // 创建新的命令实例并设置执行逻辑
@@ -34,13 +35,13 @@ public class CmdHandleHelper {
                 @Override
                 public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
                     //调用解释器处理
-                    return command.getInterpreter().interpret(sender, commandLabel, args);
+                    return interpreter.interpret(sender, commandLabel, args);
                 }
 
                 @Override
                 public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args) throws IllegalArgumentException {
                     //调用解释器处理
-                    return command.getInterpreter().tabComplete(sender, alias, args);
+                    return interpreter.tabComplete(sender, alias, args);
                 }
             };
 

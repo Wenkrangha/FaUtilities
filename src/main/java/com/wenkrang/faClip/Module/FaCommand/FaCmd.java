@@ -1,6 +1,7 @@
 package com.wenkrang.faClip.Module.FaCommand;
 
 import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.FaCmdInterpreter;
+import com.wenkrang.faClip.Module.FaInterface.FaIntf;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.Plugin;
@@ -14,8 +15,12 @@ import java.util.List;
  * 用于存储和管理单个命令的所有属性和配置信息
  */
 public class FaCmd {
+    /** 对应的接口 */
+    private FaIntf faIntf;
     /** 所属插件 */
     private Plugin plugin;
+    /** 所属命令实例 */
+    private FaCmdInstance faCmdInstance;
     /** 命令名称 */
     private String name;
     /** 命令标签 */
@@ -28,12 +33,8 @@ public class FaCmd {
     protected String description;
     /** 权限节点 */
     private String permission;
-    /** 命令解释器 */
-    private FaCmdInterpreter interpreter;
     /** 命令节点路径（如：plugin.command.subcommand） */
     private String node;
-    /** 关联的执行方法 */
-    private Method method;
     /** 是否需要 OP 权限 */
     private boolean requireOP;
     /** Bukkit 命令对象 */
@@ -76,24 +77,7 @@ public class FaCmd {
      * @param faCmdInterpreter 命令解释器实例
      */
     public FaCmd(@NotNull FaCmdInterpreter faCmdInterpreter) {
-        interpreter = faCmdInterpreter;
         commandMap = faCmdInterpreter.getFaCmdInstance().getCommandManager().getCommandMap();
-    }
-
-    /**
-     * 设置命令关联的执行方法
-     * 
-     * @param m 执行方法
-     */
-    public void setMethod(Method m) {method = m;}
-
-    /**
-     * 获取命令关联的执行方法
-     * 
-     * @return 执行方法
-     */
-    public Method getMethod() {
-        return method;
     }
 
     /**
@@ -112,24 +96,6 @@ public class FaCmd {
      */
     public void setNode(String node) {
         this.node = node;
-    }
-
-    /**
-     * 获取命令解释器
-     * 
-     * @return 命令解释器
-     */
-    public FaCmdInterpreter getInterpreter() {
-        return interpreter;
-    }
-
-    /**
-     * 设置命令解释器
-     * 
-     * @param interpreter 命令解释器
-     */
-    public void setInterpreter(FaCmdInterpreter interpreter) {
-        this.interpreter = interpreter;
     }
 
     /**
@@ -282,5 +248,21 @@ public class FaCmd {
 
     public void setPlugin(Plugin plugin) {
         this.plugin = plugin;
+    }
+
+    public FaIntf getFaIntf() {
+        return faIntf;
+    }
+
+    public void setFaIntf(FaIntf faIntf) {
+        this.faIntf = faIntf;
+    }
+
+    public FaCmdInstance getFaCmdInstance() {
+        return faCmdInstance;
+    }
+
+    public void setFaCmdInstance(FaCmdInstance faCmdInstance) {
+        this.faCmdInstance = faCmdInstance;
     }
 }

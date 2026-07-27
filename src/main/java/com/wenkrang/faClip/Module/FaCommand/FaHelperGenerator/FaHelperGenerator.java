@@ -1,25 +1,39 @@
 package com.wenkrang.faClip.Module.FaCommand.FaHelperGenerator;
 
+import com.wenkrang.faClip.Module.FaCommand.Annotation.CustomDes;
+import com.wenkrang.faClip.Module.FaCommand.Annotation.DesProvider;
+import com.wenkrang.faClip.Module.FaCommand.Annotation.ParamArrayDes;
+import com.wenkrang.faClip.Module.FaCommand.Annotation.ParamDes;
 import com.wenkrang.faClip.Module.FaCommand.FaCmd;
 import com.wenkrang.faClip.Module.FaCommand.FaCmdInstance;
 import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.FaCmdContext;
-import com.wenkrang.faClip.Module.FaCommand.FaParam.FaParam;
+import com.wenkrang.faClip.Module.FaCommand.Helper.NodeHelper;
+import com.wenkrang.faClip.Module.FaInterface.FaIntf;
+import com.wenkrang.faClip.Module.FaInterface.FaParam.FaParam;
+import com.wenkrang.faClip.Module.FaInterface.FaParam.SimpleParam;
+import com.wenkrang.faClip.Module.FaMessage.Helper.Scc;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class FaHelperGenerator {
     private final FaCmdInstance faCmdInstance;
 
     public FaHelperGenerator(@NotNull FaCmdInstance Instance) {
         faCmdInstance = Instance;
+        faParam = new FaParam();
     }
 
     public FaCmdInstance getFaCmdInstance() {
         return faCmdInstance;
     }
+
+    public FaParam faParam;
 
     /**
      * 生成命令用法
@@ -31,10 +45,10 @@ public class FaHelperGenerator {
 
         FaParam faParam = new FaParam();
 
-        Object[] usage = faParam.getUsage(faCmd, new FaCmdContext(Bukkit.getConsoleSender(), new String[0]), false);
-        List<String> convert = faParam.convert(usage);
+        Object[] usage = getUsage(faCmd.getFaIntf(), new FaCmdContext(Bukkit.getConsoleSender(), new String[0]), false);
+        List<String> convert = faParam.flat(usage);
 
-        return String.join(" ", node.split("\\.")) + " " + String.join(" ", convert);
+        return String.join(" ", convert);
     }
 
 
@@ -76,7 +90,7 @@ public class FaHelperGenerator {
 
             // 添加该节点的帮助信息
             if (ExactCmd != null) {
-                msg.add(ExactCmd.getHelp() == null ? "" :  "  " + ExactCmd.getHelp());
+                msg.add(ExactCmd.getHelp() == null ? "" :  "  " + Scc.GREY + "[/]" + Scc.RESET + ExactCmd.getHelp());
                 msg.add("");
             }
 
@@ -90,7 +104,7 @@ public class FaHelperGenerator {
             // 子命令为空
             if (subCmds.isEmpty()) {
                 msg.add("");
-                msg.add("    " + generateUsage(node));
+                msg.add("  " + generateUsage(node));
                 msg.add("");
                 msg.add("-----------------------------------------------------");
                 return msg;
@@ -111,5 +125,70 @@ public class FaHelperGenerator {
         }
 
         return new ArrayList<>();
+    }
+
+    /**
+     * 获取命令的用法
+     *
+     * @param intf 命令
+     * @param faCmdContext 命令上下文
+     * @param detail 是否显示详细用法
+     * @return 命令的用法
+     */
+    public Object[] getUsage(@NotNull FaIntf intf, @NotNull FaCmdContext faCmdContext, boolean detail) {
+        // 切割节点
+        List<String> node = NodeHelper.separateNode(intf.getNode());
+
+        // 获取命令的参数名称
+        List<Object> paramNames = Arrays.stream(intf.getMethod().getParameters()) // 获取命令的方法参数
+                .filter(i -> !i.getType().equals(FaCmdContext.class)) // 过滤掉 FaCmdContext 参数
+                .map(i ->
+                        {
+                            if (i.getAnnotation(CustomDes.class) != null) {
+                                try {
+                                    DesProvider value = i.getAnnotation(CustomDes.class).value().getDeclaredConstructor().newInstance();
+                                    return (Object) value.getDes(faCmdContext);
+                                } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                                         NoSuchMethodException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            } else if (i.getAnnotation(ParamDes.class) != null) {
+                                return i.getAnnotation(ParamDes.class).value();
+                            } else if (i.getAnnotation(ParamArrayDes.class) != null && detail) {
+                                return i.getAnnotation(ParamArrayDes.class).value();
+                            } else {
+                                // 准备结果列表
+                                ArrayList<String> result = new ArrayList<>();
+
+                                // 获取符合的处理器
+                                List<SimpleParam> handlers =
+                                        faParam.getSimpleParams().stream()
+                                                .filter(j -> j.getType().contains(i.getType()))
+                                                .toList();
+
+                                // 历遍处理器
+                                for (SimpleParam j : handlers) {
+                                    // 检查处理器是否是提供描述的
+                                    if (j instanceof DesProvider value && detail) {
+                                        @NotNull String[] des = value.getDes(faCmdContext);
+                                        result.addAll(Arrays.asList(des));
+                                    } else {
+                                        // 没有描述就显示参数名称
+                                        result.add("<" + j.getName(i.getType()) + ">");
+                                    }
+                                }
+
+                                // 如果连参数名称为空，则返回参数类型名称（完全限定名）
+                                if (result.isEmpty()) {
+                                    return "<" + i.getType().getName() + ">";
+                                } else {
+                                    return result;
+                                }
+                            }
+                        }
+                ).toList();
+
+        // 把节点和参数名称拼接起来
+        return Stream.concat(node.stream(), paramNames.stream()).toArray(Object[]::new);
     }
 }

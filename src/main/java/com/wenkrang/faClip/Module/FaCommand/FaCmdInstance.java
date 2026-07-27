@@ -4,6 +4,8 @@ import com.wenkrang.faClip.Helper.ClassHelper;
 import com.wenkrang.faClip.Manager.CommandManager;
 import com.wenkrang.faClip.Module.FaCommand.AnnotationHandler.*;
 import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.FaCmdInterpreter;
+import com.wenkrang.faClip.Module.FaInterface.FaInterfaceInstance;
+import com.wenkrang.faClip.Module.FaInterface.FaIntf;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -14,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FaCmdInstance {
+    public FaInterfaceInstance faInterfaceInstance;
     private final @NotNull CommandManager commandManager;
     private final Plugin plugin;
     private ArrayList<String> nodes = new ArrayList<>();
@@ -47,6 +50,18 @@ public class FaCmdInstance {
         return faCmds.stream().filter(i -> i.getNode().equals(node)).toList();
     }
 
+    /**
+     * 根据接口获取命令
+     * @param faIntf 接口
+     * @return 查到的接口
+     */
+    public FaCmd getFaCmd(FaIntf faIntf) {
+        return faCmds.stream()
+                .filter(i -> i.getFaIntf().equals(faIntf))
+                .findFirst()
+                .orElse(null);
+    }
+
     public @NotNull ArrayList<FaCmd> getFaCmds() {
         return faCmds;
     }
@@ -71,12 +86,14 @@ public class FaCmdInstance {
     public static @NotNull FaCmdInstance create(Plugin plugin) {
         FaCmdInstance faCmdInstance = new FaCmdInstance(plugin);
         faCmdInstance.faCmdInterpreter = new FaCmdInterpreter(faCmdInstance, plugin);
-
         faCmdInstance.faCmdInterpreter.addAnnotationHandlers(new CmdNodeHandler());
         faCmdInstance.faCmdInterpreter.addAnnotationHandlers(new CmdPermissionHandler());
         faCmdInstance.faCmdInterpreter.addAnnotationHandlers(new RequireOPHandler());
         faCmdInstance.faCmdInterpreter.addAnnotationHandlers(new CmdHelpHandler());
         faCmdInstance.faCmdInterpreter.addAnnotationHandlers(new CmdOnlyForHelpHandler());
+        faCmdInstance.faCmdInterpreter.addAnnotationHandlers(new CmdPlayerHandler());
+
+        faCmdInstance.faInterfaceInstance = new FaInterfaceInstance(plugin);
 
         return faCmdInstance;
     }

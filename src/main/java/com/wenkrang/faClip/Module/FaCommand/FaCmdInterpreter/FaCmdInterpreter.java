@@ -2,28 +2,41 @@ package com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter;
 
 import com.wenkrang.faClip.FaClip;
 import com.wenkrang.faClip.Module.FaCommand.Annotation.Debug;
-import com.wenkrang.faClip.Module.FaCommand.AnnotationHandler.FaAnnotationHandler;
+import com.wenkrang.faClip.Module.FaCommand.AnnotationHandler.CmdAnnotationHandler;
 import com.wenkrang.faClip.Module.FaCommand.FaCmd;
 import com.wenkrang.faClip.Module.FaCommand.FaCmdInstance;
+import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.SimpleStage;
+import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.interpreter.conflictCheckStage;
+import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.interpreter.emptyCheckStage;
+import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.interpreter.onlyForHelpStage;
+import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.interpreter.opCheckStage;
+import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.interpreter.permissionCheckStage;
+import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.interpreter.playerCheckStage;
+import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.tabComplete.tabOpCheckStage;
+import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.tabComplete.tabPermissionCheckStage;
+import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.tabComplete.tabPlayerCheckStage;
 import com.wenkrang.faClip.Module.FaCommand.FaHelperGenerator.FaHelperGenerator;
-import com.wenkrang.faClip.Module.FaCommand.FaParam.FaParam;
+import com.wenkrang.faClip.Module.FaCommand.Helper.CmdParamHelper;
+import com.wenkrang.faClip.Module.FaInterface.FaIntf;
+import com.wenkrang.faClip.Module.FaInterface.FaParam.FaParam;
 import com.wenkrang.faClip.Module.FaCommand.Helper.CmdHandleHelper;
-import com.wenkrang.faClip.Module.FaCommand.Helper.CmdNodeHelper;
-import com.wenkrang.faClip.Module.FaMessage.Fm;
-import com.wenkrang.faClip.Module.FaMessage.Helper.i18nHelper;
+import com.wenkrang.faClip.Module.FaCommand.Helper.NodeHelper;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.stream.IntStream;
 
 import static com.wenkrang.faClip.Module.FaCommand.Helper.CmdHandleHelper.handleRootCommand;
-import static com.wenkrang.faClip.Module.FaMessage.Helper.i18nHelper.t;
 
 public class FaCmdInterpreter {
+    // 解释器管线
+    private final ArrayList<SimpleStage> interpreterPipe = new ArrayList<>();
+
+    // 补全管线
+    private final ArrayList<SimpleStage> tabPipe = new ArrayList<>();
+
     private final FaCmdInstance faCmdInstance;
 
     private final Plugin plugin;
@@ -31,89 +44,67 @@ public class FaCmdInterpreter {
     public FaCmdInterpreter(FaCmdInstance faCmdInstance, Plugin p) {
         this.faCmdInstance = faCmdInstance;
         this.plugin = p;
+        initPipes();
     }
 
-    private ArrayList<FaAnnotationHandler> annotationHandlers = new ArrayList<>();
+    public void addInterpreterStage(SimpleStage stage) {
+        interpreterPipe.add(stage);
+    }
+    
+    public void addTabCompleteStage(SimpleStage stage) {
+        tabPipe.add(stage);
+    }
+    
+    /**
+     * 初始化解释器管线和补全管线，注册所有检查阶段
+     */
+    private void initPipes() {
+        // 解释器管线：空检查 -> 冲突检查 -> OP检查 -> 权限检查 -> 玩家检查 -> 仅帮助检查
+        addInterpreterStage(new emptyCheckStage());
+        addInterpreterStage(new conflictCheckStage());
+        addInterpreterStage(new opCheckStage());
+        addInterpreterStage(new permissionCheckStage());
+        addInterpreterStage(new playerCheckStage());
+        addInterpreterStage(new onlyForHelpStage());
 
-    public static @NotNull ArrayList<String> getCompleteParam(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
-        // 还原完整的命令参数列表
-        ArrayList<String> params = new ArrayList<>();
-        params.add(commandLabel);
-        params.addAll(List.of(args));
-
-        return params;
+        // 补全管线：OP检查 -> 权限检查 -> 玩家检查
+        addTabCompleteStage(new tabOpCheckStage());
+        addTabCompleteStage(new tabPermissionCheckStage());
+        addTabCompleteStage(new tabPlayerCheckStage());
     }
 
-    public static @NotNull Object[] convertParams(
-            @NotNull CommandSender sender
-            , @NotNull Method method, String @NotNull [] args, @NotNull String node) {
-        // 准备参数转换器和实际参数
-        FaParam faChecker = new FaParam();
+    private ArrayList<CmdAnnotationHandler> annotationHandlers = new ArrayList<>();
 
-        String[] removedNodeArgs = CmdNodeHelper.removeNode(node, Arrays.stream(args).toList()).toArray(String[]::new);
-
-        // 转换参数类型
-        Object[] convertedArgs = new Object[method.getParameterCount()];
-
-        // 设置FaCmdContext
-        IntStream.range(0, method.getParameterCount())
-                .forEach(i -> {
-                    if(method.getParameters()[i].getType().equals(FaCmdContext.class))
-                        convertedArgs[i] = new FaCmdContext(sender, Arrays.stream(args).skip(1).toArray(String[]::new));
-                });
-        // 获取需要填充的参数位（空位置）
-        List<Integer> nullPositions = IntStream.range(0, method.getParameterCount())
-                .filter(i -> convertedArgs[i] == null)
-                .boxed().toList();
-        // 转换参数
-        for (int i = 0;i < nullPositions.size(); i++) {
-            if (i >= removedNodeArgs.length) {
-                break;
-            }
-            Object parse = faChecker.parse(removedNodeArgs[i], method.getParameters()[nullPositions.get(i)].getType());
-            if (parse == null) {
-                Fm.waring(t("FaCommand.Error.Interpreter.ArgsNPEWarning"));
-            }
-            convertedArgs[nullPositions.get(i)] = parse;
-        }
-
-
-//        int argIndex = 0; // 添加参数索引计数器
-//        for (int i = 0; i < method.getParameters().length; i++) {
-//            if (method.getParameters()[i].getType().equals(FaCmdContext.class)) {
-//                convertedArgs.add(new FaCmdContext(sender, Arrays.stream(args).skip(1).toArray(String[]::new)));
-//                continue;
-//            }
-//            // 使用argIndex而不是i来访问realArgs
-//            convertedArgs.add(faChecker.parse(removedNodeArgs[argIndex], method.getParameters()[i].getType()));
-//            argIndex++; // 只有非FaCmdHandle参数才增加索引
-//        }
-
-        return convertedArgs;
-    }
-
-    public void addAnnotationHandlers(FaAnnotationHandler annotationHandler) {
+    public void addAnnotationHandlers(CmdAnnotationHandler annotationHandler) {
         this.annotationHandlers.add(annotationHandler);
     }
 
-    public void setAnnotationHandlers(ArrayList<FaAnnotationHandler> annotationHandlers) {
+    public void setAnnotationHandlers(ArrayList<CmdAnnotationHandler> annotationHandlers) {
         this.annotationHandlers = annotationHandlers;
     }
 
-    public ArrayList<FaAnnotationHandler> getAnnotationHandlers() {
+    public ArrayList<CmdAnnotationHandler> getAnnotationHandlers() {
         return annotationHandlers;
     }
 
     public void initialize(@NotNull Method method) {
-        if (!CmdNodeHelper.isCmdNode(method)) return;
+        if (!NodeHelper.isCmdNode(method)) return;
 
         FaCmd faCmd = new FaCmd(this);
 
         faCmd.setPlugin(faCmdInstance.getPlugin());
+        faCmd.setFaCmdInstance(faCmdInstance);
 
         annotationHandlers.stream()
                 .filter(i -> method.isAnnotationPresent(i.getAnnotationClass()))
                 .forEach(i -> i.handle(faCmd, method));
+
+        // 初始化接口
+        FaIntf faIntf = getFaCmdInstance().faInterfaceInstance.registerFaIntf(method, faCmd.getNode());
+
+        System.out.println(faIntf.getNode() + ";" + faCmd.getNode());
+
+        faCmd.setFaIntf(faIntf);
 
         // 如果没启用调试模式，就不启用调试命令
         if (method.getAnnotation(Debug.class) != null && !FaClip.debug) return;
@@ -125,10 +116,10 @@ public class FaCmdInterpreter {
         //检查命令节点是否设置
         if (faCmd.getNode() != null){
             //检查根命令是否注册
-            String rootCommand = CmdNodeHelper.getRootCommand(faCmd.getNode());
+            String rootCommand = NodeHelper.getRoot(faCmd.getNode());
 
             if (CmdHandleHelper.isUnregistered(rootCommand)) {
-                handleRootCommand(rootCommand, faCmd);
+                handleRootCommand(rootCommand, faCmd, this);
             }
 
             faCmdInstance.addFaCmd(faCmd);
@@ -144,122 +135,89 @@ public class FaCmdInterpreter {
      * @return 执行成功返回true，失败返回false
      */
     public boolean interpret(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
-        // 命令执行器的args，由于Spigot没传根命令，需要自己加一下commandLabel
-        // 这里构建完整参数列表
-
+        // 构建完整参数列表（Spigot未传根命令，需自行拼接）
+        ArrayList<String> cArgs = CmdParamHelper.getCompleteParam(sender, commandLabel, args);
 
         try {
-            // 获取完整参数列表
-            ArrayList<String> params = getCompleteParam(sender, commandLabel, args);
+            ArrayList<String> params = CmdParamHelper.getCompleteParam(sender, commandLabel, args);
+            List<FaIntf> faIntfs = faCmdInstance.faInterfaceInstance.guessIntf(params.toArray(String[]::new));
+            List<FaCmd> faCmds = faIntfs.stream().map(faCmdInstance::getFaCmd).toList();
 
-            // 创建命令节点解析器
-            FaGuesser faGuesser = new FaGuesser(faCmdInstance);
+            FaCmdContext context = new FaCmdContext(sender, args);
 
-            List<FaCmd> faCmds = faGuesser.guessFaCmd(params, FaGuesser.guessMode.full);
-
-            if (faCmds == null) return false;
-
-            // 命令冲突
-            if (faCmds.size() > 1) {
-                Fm.error(sender,t("FaCommand.Error.Interpreter.Conflict") + " " + faCmds);
-                return false;
+            // 遍历解释器管线，任意阶段返回false则终止执行
+            for (SimpleStage stage : interpreterPipe) {
+                FaCmd cmdForStage = faCmds.isEmpty() ? null : faCmds.getFirst();
+                if (!stage.check(cmdForStage, context, faCmds)) {
+                    return false;
+                }
             }
 
-            Optional<FaCmd> faCmd = faCmds.stream().findFirst();
+            FaCmd faCmd = faCmds.stream().findFirst().orElse(null);
 
-            // 命令存在
-            if (faCmd.isPresent()) {
-                // 权限检查
-                if (faCmd.get().isRequireOP() && !sender.isOp()) {
-                    Fm.log(sender, t("FaCommand.Error.Interpreter.RequireOP"));
-                    return false;
+            try {
+                // 执行方法
+                Object invoke = faCmd.getFaIntf().invoke(null, context, cArgs.toArray(String[]::new));
+                if (invoke instanceof Boolean) {
+                    return (Boolean) invoke;
                 }
-                // 权限检查
-                if (faCmd.get().getPermission() != null && !sender.hasPermission(faCmd.get().getPermission())) {
-                    Fm.log(sender, t("FaCommand.Error.Interpreter.NoPermission"));
-                    return false;
-                }
-
-                if (faCmd.get().isForPlayer() && (!(sender instanceof Player))) {
-                    Fm.error(i18nHelper.t("FaCommand.Error.Interpreter.OnlyForPlayer"));
-                    return false;
-                }
-
-                // 输出帮助
-                if (faCmd.get().isOnlyForHelp()) {
-                    FaHelperGenerator faHelperGenerator = new FaHelperGenerator(faCmdInstance);
-                    for (String help : faHelperGenerator.generate(faCmd.get().getNode())) {
-                        Fm.info(sender, help);
-                    }
-                    return false;
-                }
-
-
-                Method method = faCmd.get().getMethod();
-
-                // 转换为方法参数
-                Object[] objects = convertParams(sender, method, params.toArray(String[]::new), faCmd.get().getNode());
-
-                try {
-                    // 执行方法
-                    Object invoke = method.invoke(faCmd.get(), objects);
-                    if (invoke instanceof Boolean) {
-                        return (Boolean) invoke;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            } else {
-                // 命令不存在
-                Fm.log(sender, t("FaCommand.Error.Interpreter.NotFound"));
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-
         return true;
     }
 
-    public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
-        // 这里的args就是完整（吗？）的参数，包括""（没输入但写了空格）
-        // Spigot是直接split了空格然后传过来
-
-        // 也是分成三种情况
-        // 1. 根命令为空（本补全器不处理，因为Bukkit会自己处理）
-        // 2. 子命令为空
-        // 3. 参数为空
-        // 这里2和3可以一起处理，因为只要根命令不为空，补全器会获取完整用法列表，再根据输入，选择列表中的项
-
-        ArrayList<String> cArgs = getCompleteParam(sender, commandLabel, args);
+    public List<String> tabComplete(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
+        // Spigot直接split空格后传参
+        ArrayList<String> cArgs = CmdParamHelper.getCompleteParam(sender, commandLabel, args);
 
         // 跳过根命令为空的情况
         if (cArgs.isEmpty()) {return null;}
 
-        // 构建猜测器
-        FaGuesser faGuesser = new FaGuesser(faCmdInstance);
-
         // 获取命令，使用模糊模式
-        List<FaCmd> faCmds = faGuesser.guessFaCmd(cArgs, FaGuesser.guessMode.fuzzy);
+        List<FaCmd> faCmds = faCmdInstance
+                .faInterfaceInstance
+                .getFaIntfs()
+                .stream()
+                .filter(i -> i.fuzzyCheck(cArgs.toArray(String[]::new)))
+                .map(faCmdInstance::getFaCmd).toList();
 
-        if (faCmds == null) return new ArrayList<>();
+        if (faCmds.isEmpty()) return new ArrayList<>();
 
-        // 然后获取所有命令的用法
+        FaCmdContext context = new FaCmdContext(sender, args);
+
+        // 通过补全管线过滤命令
+        List<FaCmd> filteredCmds = new ArrayList<>();
+        for (FaCmd cmd : faCmds) {
+            boolean passed = true;
+            for (SimpleStage stage : tabPipe) {
+                if (!stage.check(cmd, context, faCmds)) {
+                    passed = false;
+                    break;
+                }
+            }
+            if (passed) filteredCmds.add(cmd);
+        }
+
+        if (filteredCmds.isEmpty()) return new ArrayList<>();
+
+        // 获取所有通过过滤的命令的用法
         FaParam faParam = new FaParam();
+        FaHelperGenerator faHelperGenerator = new FaHelperGenerator(faCmdInstance);
 
-        Object[] usages = faCmds.stream()
-                .filter(i -> !(i.isRequireOP() && !sender.isOp())) // 跳过权限检查失败的
-                .filter(i -> !(i.getPermission() != null && !sender.hasPermission(i.getPermission()))) //TODO:处理这个玩意，啥东西啊
-                .filter(i -> !i.isForPlayer() || sender instanceof Player) // 跳过身份验证失败的
-                .map(i -> faParam.getUsage(i, new FaCmdContext(sender, args), true))
+        Object[] usages = filteredCmds.stream()
+                .map(i -> faHelperGenerator.getUsage(i.getFaIntf(), context, true))
                 .filter(i -> i.length >= cArgs.size())
                 .map(i -> i[cArgs.size() - 1])
                 .filter(Objects::nonNull)
                 .toArray();
 
-        return faParam.convert(usages);
+        return faParam.flat(usages);
     }
 
     public FaCmdInstance getFaCmdInstance() {
