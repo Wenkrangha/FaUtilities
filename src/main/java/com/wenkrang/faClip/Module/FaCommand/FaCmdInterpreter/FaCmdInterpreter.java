@@ -102,8 +102,6 @@ public class FaCmdInterpreter {
         // 初始化接口
         FaIntf faIntf = getFaCmdInstance().faInterfaceInstance.registerFaIntf(method, faCmd.getNode());
 
-        System.out.println(faIntf.getNode() + ";" + faCmd.getNode());
-
         faCmd.setFaIntf(faIntf);
 
         // 如果没启用调试模式，就不启用调试命令

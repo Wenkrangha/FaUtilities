@@ -58,6 +58,7 @@ public class FaIntf {
 
         // 匹配计数器
         int match = 0;
+        int contextCounter = 0;
 
         // 获取排除FaCmdContext的参数顺序
         ArrayList<Integer> trueOrder = new ArrayList<>();
@@ -66,6 +67,7 @@ public class FaIntf {
                 trueOrder.add(i);
             }else {
                 match++;
+                contextCounter++;
             }
         }
 
@@ -79,7 +81,7 @@ public class FaIntf {
             }
         }
 
-        if (TrueArgs.size() > parameterTypes.length)
+        if (TrueArgs.size() > parameterTypes.length - contextCounter)
             return FaIntfCheckResult.NO_MATCH;
 
         if (match == parameterTypes.length) {
