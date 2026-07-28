@@ -57,7 +57,7 @@ public class FaCmdInstance {
      */
     public FaCmd getFaCmd(FaIntf faIntf) {
         return faCmds.stream()
-                .filter(i -> i.getFaIntf().equals(faIntf))
+                .filter(i -> i.getFaIntf().getId().equals(faIntf.getId()))
                 .findFirst()
                 .orElse(null);
     }

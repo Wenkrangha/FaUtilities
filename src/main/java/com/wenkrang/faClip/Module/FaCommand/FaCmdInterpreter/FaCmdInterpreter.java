@@ -178,12 +178,14 @@ public class FaCmdInterpreter {
         if (cArgs.isEmpty()) {return null;}
 
         // 获取命令，使用模糊模式
-        List<FaCmd> faCmds = faCmdInstance
-                .faInterfaceInstance
-                .getFaIntfs()
-                .stream()
-                .filter(i -> i.fuzzyCheck(cArgs.toArray(String[]::new)))
-                .map(faCmdInstance::getFaCmd).toList();
+        ArrayList<FaIntf> filteredIntfs = new ArrayList<>();
+
+        for (FaIntf faIntf : faCmdInstance.faInterfaceInstance.getFaIntfs()) {
+            if (faIntf.fuzzyCheck(cArgs.toArray(String[]::new)))
+                filteredIntfs.add(faIntf);
+        }
+
+        List<FaCmd> faCmds = filteredIntfs.stream().map(faCmdInstance::getFaCmd).toList();
 
         if (faCmds.isEmpty()) return new ArrayList<>();
 

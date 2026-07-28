@@ -11,11 +11,13 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * FaClip的接口
  */
 public class FaIntf {
+    private final String id = UUID.randomUUID().toString();
     // 接口指向的方法
     private Method method;
 
@@ -44,6 +46,10 @@ public class FaIntf {
 
     public String getNode() {
         return node;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public FaIntfCheckResult checkParam(String[] args) {
