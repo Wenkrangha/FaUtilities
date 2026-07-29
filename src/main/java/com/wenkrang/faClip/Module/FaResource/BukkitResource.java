@@ -1,5 +1,6 @@
 package com.wenkrang.faClip.Module.FaResource;
 
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 /**
@@ -8,12 +9,14 @@ import java.util.UUID;
 public class BukkitResource {
     public String name;
     public String url;
-    public UUID id = UUID.randomUUID();
+    public UUID id;
     public byte[] sha;
 
     public BukkitResource(String name, String url,String sha1) {
         this.name = name;
         this.url = url;
         sha = FaBukkitResourceManager.stringToHash(sha1);
+
+        id = UUID.nameUUIDFromBytes(sha1.getBytes(StandardCharsets.UTF_8));
     }
 }
