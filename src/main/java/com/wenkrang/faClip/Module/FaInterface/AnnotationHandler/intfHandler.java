@@ -33,10 +33,10 @@ public class intfHandler implements SimpleAnnotationHandler {
     public void handle(FaIntf faIntf, Method method) {
         Intf annotation = method.getAnnotation(Intf.class);
 
-        String node = annotation.node();
+        String node = annotation.value();
 
         // 检查
-        if (!check(method, annotation.node())) return;
+        if (!check(method, annotation.value())) return;
 
         // 检查节点是否合规
         faIntf.setMethod(method);

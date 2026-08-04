@@ -10,5 +10,5 @@ import java.lang.annotation.*;
 @Documented
 @Inherited
 public @interface Intf {
-    String node();
+    String value();
 }

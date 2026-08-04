@@ -1,9 +1,9 @@
 package com.wenkrang.faClip.Module.FaInterface;
 
-import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.FaCmdContext;
 import com.wenkrang.faClip.Module.FaCommand.Helper.NodeHelper;
 import com.wenkrang.faClip.Module.FaInterface.FaParam.FaParam;
 import com.wenkrang.faClip.Module.FaInterface.FaParam.SimpleParam;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -54,7 +54,7 @@ public class FaIntf {
 
     public FaIntfCheckResult checkParam(String[] args) {
         // 获取方法参数类型
-        Type[] parameterTypes = method.getParameterTypes();
+        Class<?>[] parameterTypes = method.getParameterTypes();
 
         // 获取真参数（删除节点部分）
         List<String> TrueArgs = NodeHelper.removeNode(node, List.of(args));
@@ -66,10 +66,10 @@ public class FaIntf {
         int match = 0;
         int contextCounter = 0;
 
-        // 获取排除FaCmdContext的参数顺序
+        // 获取排除FaIntfContext的参数顺序
         ArrayList<Integer> trueOrder = new ArrayList<>();
         for (int i = 0;i < parameterTypes.length;i++) {
-            if (!parameterTypes[i].equals(FaCmdContext.class)) {
+            if (!(FaIntfContext.class.isAssignableFrom(parameterTypes[i]))) {
                 trueOrder.add(i);
             }else {
                 match++;
@@ -158,8 +158,8 @@ public class FaIntf {
         }
 
         // 检查参数
-        Type[] parameterTypes = method.getParameterTypes();
-        List<Type> skip = Arrays.stream(parameterTypes).filter(i -> !i.equals(FaCmdContext.class)).toList();
+        Class<?>[] parameterTypes = method.getParameterTypes();
+        List<Class<?>> skip = Arrays.stream(parameterTypes).filter(i -> !(FaIntfContext.class.isAssignableFrom(i))).toList();
         // 获取真参数（删除节点部分）
         List<String> TrueArgs = NodeHelper.removeNode(node, List.of(arrayNeedCheck));
 
@@ -174,21 +174,12 @@ public class FaIntf {
         return true;
     }
 
-    public Object invoke(Object object,Object... args) {
-        try {
-            return method.invoke(object, args);
-        }catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     public ArrayList<Integer> getTrueOrder(Method method) {
-        Type[] parameterTypes = method.getParameterTypes();
+        Class<?>[] parameterTypes = method.getParameterTypes();
         ArrayList<Integer> result = new ArrayList<>();
 
         for (int i = 0;i < parameterTypes.length;i++) {
-            if (!parameterTypes[i].equals(FaCmdContext.class)) {
+            if (!(FaIntfContext.class.isAssignableFrom(parameterTypes[i]))) {
                 result.add(i);
             }
         }
@@ -196,18 +187,18 @@ public class FaIntf {
         return result;
     }
 
-    public Object invoke(Object object, FaCmdContext faCmdContext, String[] args) throws InvocationTargetException, IllegalAccessException {
-        // 获取除了FaCmdContext的真正的参数位
+    public Object invoke(Object object, FaIntfContext faIntfContext,@NotNull String[] args) throws InvocationTargetException, IllegalAccessException {
+        // 获取除了FaIntfContext的真正的参数位
         ArrayList<Integer> trueOrder = getTrueOrder(method);
         Object[] convertedArgs = new Object[method.getParameterCount()];
-        Type[] parameterTypes = method.getParameterTypes();
+        Class<?>[] parameterTypes = method.getParameterTypes();
 
         List<String> methodArgs = NodeHelper.removeNode(node, Arrays.stream(args).toList());
 
-        // 填充FaCmdContext
+        // 填充FaIntfContext
         for (int i = 0;i < method.getParameterCount();i++) {
-            if (parameterTypes[i].equals(FaCmdContext.class)) {
-                convertedArgs[i] = faCmdContext;
+            if (FaIntfContext.class.isAssignableFrom(parameterTypes[i])) {
+                convertedArgs[i] = faIntfContext;
             }
         }
 

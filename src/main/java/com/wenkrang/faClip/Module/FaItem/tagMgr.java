@@ -21,6 +21,9 @@ public class tagMgr {
 
     public tagMgr(Plugin p, ItemStack i) {
         itemMeta = i.getItemMeta();
+        if (itemMeta == null) {
+            throw new NullPointerException("ItemMeta is null");
+        }
         container = itemMeta.getPersistentDataContainer();
         plugin = p;
         itemStack = i;

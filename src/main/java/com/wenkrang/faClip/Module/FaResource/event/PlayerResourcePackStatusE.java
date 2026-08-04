@@ -27,7 +27,6 @@ public class PlayerResourcePackStatusE implements Listener {
             status == FAILED_DOWNLOAD ||
             status == FAILED_RELOAD) {
                 Player player = event.getPlayer();
-
                 // 发送消息
                 player.spigot().sendMessage(new ComponentBuilder()
                         .append(Scc.BLUE + Scc.BOLD + "[*]")

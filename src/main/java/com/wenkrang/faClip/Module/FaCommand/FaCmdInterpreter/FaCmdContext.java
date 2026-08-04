@@ -1,12 +1,23 @@
 package com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter;
 
+import com.wenkrang.faClip.Module.FaInterface.FaIntfContext;
 import org.bukkit.command.CommandSender;
 
-/**
- * 命令输入句柄
- *
- * @param sender 命令发送者
- * @param args   命令参数
- */
-public record FaCmdContext(CommandSender sender, String[] args) {
+import java.util.HashMap;
+import java.util.Map;
+
+public class FaCmdContext extends FaIntfContext {
+    public FaCmdContext(CommandSender sender, String[] args) {
+        super();
+        set("sender", sender);
+        set("args", args);
+    }
+
+    public CommandSender sender() {
+        return get("sender");
+    }
+
+    public String[] args() {
+        return get("args");
+    }
 }

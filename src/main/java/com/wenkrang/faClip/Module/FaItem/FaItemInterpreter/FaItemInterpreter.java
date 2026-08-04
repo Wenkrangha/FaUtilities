@@ -9,7 +9,7 @@ import org.bukkit.plugin.Plugin;
 import java.util.ArrayList;
 
 public class FaItemInterpreter {
-    private ArrayList<FaItemHandler> handlers = new ArrayList<>();
+    private final ArrayList<FaItemHandler> handlers = new ArrayList<>();
 
     public Plugin plugin;
 
@@ -19,6 +19,8 @@ public class FaItemInterpreter {
         handlers.add(new IdHandler());
         handlers.add(new LoreHandler());
         handlers.add(new TagHandler());
+        handlers.add(new PlayerItemClickEvent());
+        handlers.add(new PlayerInvClickEvent());
 
         plugin = p;
     }

@@ -7,8 +7,10 @@ import com.wenkrang.faClip.Module.FaCommand.Annotation.ParamDes;
 import com.wenkrang.faClip.Module.FaCommand.FaCmd;
 import com.wenkrang.faClip.Module.FaCommand.FaCmdInstance;
 import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.FaCmdContext;
+import com.wenkrang.faClip.Module.FaCommand.Helper.CmdParamHelper;
 import com.wenkrang.faClip.Module.FaCommand.Helper.NodeHelper;
 import com.wenkrang.faClip.Module.FaInterface.FaIntf;
+import com.wenkrang.faClip.Module.FaInterface.FaIntfContext;
 import com.wenkrang.faClip.Module.FaInterface.FaParam.FaParam;
 import com.wenkrang.faClip.Module.FaInterface.FaParam.SimpleParam;
 import com.wenkrang.faClip.Module.FaMessage.Helper.Scc;
@@ -46,7 +48,7 @@ public class FaHelperGenerator {
         FaParam faParam = new FaParam();
 
         Object[] usage = getUsage(faCmd.getFaIntf(), new FaCmdContext(Bukkit.getConsoleSender(), new String[0]), false);
-        List<String> convert = faParam.flat(usage);
+        List<String> convert = CmdParamHelper.flat(usage);
 
         return String.join(" ", convert);
     }
@@ -90,7 +92,7 @@ public class FaHelperGenerator {
 
             // 添加该节点的帮助信息
             if (ExactCmd != null) {
-                msg.add(ExactCmd.getHelp() == null ? "" :  "  " + Scc.GREY + "[/]" + Scc.RESET + ExactCmd.getHelp());
+                msg.add(ExactCmd.getHelp() == null ? "" :  "  " + Scc.GREY + "[/] " + Scc.RESET + ExactCmd.getHelp());
                 msg.add("");
             }
 
@@ -141,7 +143,7 @@ public class FaHelperGenerator {
 
         // 获取命令的参数名称
         List<Object> paramNames = Arrays.stream(intf.getMethod().getParameters()) // 获取命令的方法参数
-                .filter(i -> !i.getType().equals(FaCmdContext.class)) // 过滤掉 FaCmdContext 参数
+                .filter(i -> !(FaIntfContext.class.isAssignableFrom(i.getType()))) // 过滤掉 FaCmdContext 参数
                 .map(i ->
                         {
                             if (i.getAnnotation(CustomDes.class) != null) {

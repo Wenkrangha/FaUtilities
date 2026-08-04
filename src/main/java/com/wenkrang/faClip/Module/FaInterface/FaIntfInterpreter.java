@@ -67,7 +67,7 @@ public class FaIntfInterpreter {
         Intf annotation = method.getAnnotation(Intf.class);
 
         if (annotation != null) {
-            interpret(method, annotation.node());
+            return interpret(method, annotation.value());
         }
 
         return null;

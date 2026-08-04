@@ -21,6 +21,7 @@ public class FaItemDebugger {
     @Cmd("fatest")
     @OnlyForHelp
     @Help("测试命令")
+    @Debug
     public static void fatest(){}
 
     /**

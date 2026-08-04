@@ -5,6 +5,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Fm {
     /**
      * 消息输出时的前缀标识
@@ -193,5 +196,13 @@ public class Fm {
         player.sendMessage("-----------------------------------------------------------------\n\n"
                 + Scc.BOLD + title + Scc.RESET + "\n" + Scc.GREY + subtitle + Scc.RESET + "\n"
                 + body + "\n" + subBody + "\n\n" + "-----------------------------------------------------------------");
+    }
+
+    public static Set<CommandSender> getAllSenders() {
+        Set<CommandSender> senders = new HashSet<>();
+        senders.add(Bukkit.getConsoleSender());
+        senders.addAll(Bukkit.getOnlinePlayers());
+
+        return senders;
     }
 }

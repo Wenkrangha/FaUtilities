@@ -2,8 +2,13 @@ package com.wenkrang.faClip.Module.FaItem;
 
 import com.wenkrang.faClip.Helper.ResourceHelper;
 import com.wenkrang.faClip.Module.FaData.FaData;
+import com.wenkrang.faClip.Module.FaInterface.FaInterfaceInstance;
+import com.wenkrang.faClip.Module.FaInterface.FaIntfInterpreter;
 import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.FaItemInterpreter;
+import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.event.FaItemClickE;
+import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.event.FaItemInvClickE;
 import com.wenkrang.faClip.Module.FaMessage.Fm;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -28,7 +33,11 @@ public class FaItemInstance {
 
     private Plugin plugin;
 
-    private FaItemInterpreter faItemInterpreter;
+    private final FaItemInterpreter faItemInterpreter;
+
+
+
+    private final FaInterfaceInstance faInterfaceInstance;
     
     /**
      * 构造一个 FaItemInstance 实例
@@ -38,6 +47,22 @@ public class FaItemInstance {
         this.faItems = new HashMap<>();
         plugin = p;
         faItemInterpreter = new FaItemInterpreter(plugin);
+        faInterfaceInstance = new FaInterfaceInstance(plugin);
+
+        Bukkit.getPluginManager().registerEvents(new FaItemClickE(plugin, this), plugin);
+        Bukkit.getPluginManager().registerEvents(new FaItemInvClickE(plugin, this), plugin);
+    }
+
+    public void autoRegister() {
+        faInterfaceInstance.enableForAll(plugin);
+    }
+
+    public void registerHandler(Class<?>... clazz) {
+        faInterfaceInstance.enableFor(clazz);
+    }
+
+    public FaInterfaceInstance getFaInterfaceInstance() {
+        return faInterfaceInstance;
     }
 
     /**
@@ -46,7 +71,7 @@ public class FaItemInstance {
      * @return 对应的 FaItem 对象，若不存在则返回 null
      */
     public FaItem getFaItem(String key) {
-        return faItems.get(key);
+        return new FaItem(plugin, faItems.get(key).clone());
     }
 
     /**

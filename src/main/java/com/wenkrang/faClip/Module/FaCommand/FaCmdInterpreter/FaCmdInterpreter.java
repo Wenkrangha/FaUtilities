@@ -207,7 +207,6 @@ public class FaCmdInterpreter {
         if (filteredCmds.isEmpty()) return new ArrayList<>();
 
         // 获取所有通过过滤的命令的用法
-        FaParam faParam = new FaParam();
         FaHelperGenerator faHelperGenerator = new FaHelperGenerator(faCmdInstance);
 
         Object[] usages = filteredCmds.stream()
@@ -217,7 +216,9 @@ public class FaCmdInterpreter {
                 .filter(Objects::nonNull)
                 .toArray();
 
-        return faParam.flat(usages);
+        List<String> flat = CmdParamHelper.flat(usages);
+
+        return flat.stream().filter(i -> i.startsWith(cArgs.getLast())).toList();
     }
 
     public FaCmdInstance getFaCmdInstance() {

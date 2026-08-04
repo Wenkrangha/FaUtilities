@@ -1,12 +1,5 @@
 package com.wenkrang.faClip.Module.FaInterface.FaParam;
 
-import com.wenkrang.faClip.Module.FaCommand.Annotation.CustomDes;
-import com.wenkrang.faClip.Module.FaCommand.Annotation.DesProvider;
-import com.wenkrang.faClip.Module.FaCommand.Annotation.ParamArrayDes;
-import com.wenkrang.faClip.Module.FaCommand.Annotation.ParamDes;
-import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.FaCmdContext;
-import com.wenkrang.faClip.Module.FaCommand.Helper.NodeHelper;
-import com.wenkrang.faClip.Module.FaInterface.FaIntf;
 import com.wenkrang.faClip.Module.FaInterface.FaParam.BukkitParam.EffectParam;
 import com.wenkrang.faClip.Module.FaInterface.FaParam.BukkitParam.MaterialParam;
 import com.wenkrang.faClip.Module.FaInterface.FaParam.BukkitParam.PlayerParam;
@@ -14,10 +7,8 @@ import com.wenkrang.faClip.Module.FaInterface.FaParam.JavaParam.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import java.util.*;
-import java.util.stream.Stream;
 
 public class FaParam {
     private final ArrayList<SimpleParam> simpleParams = new ArrayList<>();
@@ -81,28 +72,5 @@ public class FaParam {
         return simpleParams.stream().filter(i -> i.getType().contains(type)).findFirst().orElse(null);
     }
 
-
-
-
-    /**
-     * 将对象数组扁平化为字符串列表
-     * @param objects 对象数组
-     * @return 字符串列表
-     */
-    public List<String> flat(Object[] objects) {
-        ArrayList<String> result = new ArrayList<>();
-
-        for (Object object : objects) {
-            if (object instanceof String str) {
-                result.add(str);
-            } else if (object instanceof String[] strs) {
-                result.addAll(List.of(strs));
-            } else if (object instanceof ArrayList<?> strs) {
-                result.addAll(strs.stream().map(String::valueOf).toList());
-            }
-        }
-
-        return result;
-    }
 
 }
