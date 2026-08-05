@@ -38,10 +38,6 @@ public class FaItem extends ItemStack {
         return faItem;
     }
 
-    public NamespacedKey getNamespacedKey() {
-        return namespacedKey;
-    }
-
     public tagMgr getTagMgr() {
         return new tagMgr(plugin,this);
     }

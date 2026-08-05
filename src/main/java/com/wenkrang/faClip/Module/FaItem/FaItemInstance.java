@@ -17,6 +17,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -71,7 +72,22 @@ public class FaItemInstance {
      * @return 对应的 FaItem 对象，若不存在则返回 null
      */
     public FaItem getFaItem(String key) {
-        return new FaItem(plugin, faItems.get(key).copy());
+        return faItems.get(key).copy();
+    }
+
+    /**
+     * 获取Item的FaItem ID
+     * @param i 物品
+     * @return 如果物品属于FaItem，将返回他的FaItem ID，如果不是就返回null
+     */
+    public @Nullable String getID(ItemStack i) {
+        tagMgr tagMgr = new tagMgr(plugin, i);
+
+        if (tagMgr.has("id")) {
+            return tagMgr.get("id");
+        }else {
+            return null;
+        }
     }
 
     /**
@@ -98,7 +114,7 @@ public class FaItemInstance {
         FaItem item = faItemInterpreter.interpreter(faData.getYaml());
         
         // 以物品的命名空间为键，注册到内部注册表
-        faItems.put(item.getNamespacedKey().getKey(), item);
+        faItems.put(getID(item), item);
     }
     
     /**
