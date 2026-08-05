@@ -28,7 +28,7 @@ public class FaItem extends ItemStack {
         this.namespacedKey = namespacedKey;
     }
 
-    public @NotNull FaItem clone() {
+    public @NotNull FaItem copy() {
         ItemStack clone = super.clone();
 
         FaItem faItem = new FaItem(plugin, clone);

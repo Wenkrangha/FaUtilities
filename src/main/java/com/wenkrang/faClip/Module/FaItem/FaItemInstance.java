@@ -71,7 +71,7 @@ public class FaItemInstance {
      * @return 对应的 FaItem 对象，若不存在则返回 null
      */
     public FaItem getFaItem(String key) {
-        return new FaItem(plugin, faItems.get(key).clone());
+        return new FaItem(plugin, faItems.get(key).copy());
     }
 
     /**
