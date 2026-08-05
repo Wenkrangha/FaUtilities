@@ -26,26 +26,28 @@ public class FaItemInvClickE implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent event) throws InvocationTargetException, IllegalAccessException {
-        ItemStack item = event.getInventory().getItem(event.getRawSlot());
+        if (event.getRawSlot() > 0 && event.getRawSlot() < event.getInventory().getSize()) {
+            ItemStack item = event.getInventory().getItem(event.getRawSlot());
 
-        if (item != null) {
-            tagMgr tagMgr = new tagMgr(plugin, item);
+            if (item != null) {
+                tagMgr tagMgr = new tagMgr(plugin, item);
 
-            if (tagMgr.has("event.inv_click")) {
-                String node = tagMgr.get("event.inv_click");
+                if (tagMgr.has("event.inv_click")) {
+                    String node = tagMgr.get("event.inv_click");
 
-                List<FaIntf> intf = faItemInstance.getFaInterfaceInstance().getIntf(node);
+                    List<FaIntf> intf = faItemInstance.getFaInterfaceInstance().getIntf(node);
 
-                if (!intf.isEmpty()) {
-                    if (intf.size() == 1) {
-                        FaIntfContext faIntfContext = new FaIntfContext();
-                        faIntfContext.set("event", event);
-                        faIntfContext.set("item", item);
+                    if (!intf.isEmpty()) {
+                        if (intf.size() == 1) {
+                            FaIntfContext faIntfContext = new FaIntfContext();
+                            faIntfContext.set("event", event);
+                            faIntfContext.set("item", item);
 
-                        intf.getFirst().invoke(this, faIntfContext, new String[0]);
-                    }else {
-                        Fm.error(i18nHelper.t("FaItem.Exception.FaItemInterpreter.EventConflict")
-                                + ": " + node);
+                            intf.getFirst().invoke(this, faIntfContext, new String[0]);
+                        }else {
+                            Fm.error(i18nHelper.t("FaItem.Exception.FaItemInterpreter.EventConflict")
+                                    + ": " + node);
+                        }
                     }
                 }
             }
