@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * 这是ItemStack的扩展物品类
@@ -25,6 +26,16 @@ public class FaItem extends ItemStack {
 
     public void setNamespacedKey(NamespacedKey namespacedKey) {
         this.namespacedKey = namespacedKey;
+    }
+
+    public @NotNull FaItem clone() {
+        ItemStack clone = super.clone();
+
+        FaItem faItem = new FaItem(plugin, clone);
+
+        faItem.namespacedKey = namespacedKey;
+
+        return faItem;
     }
 
     public NamespacedKey getNamespacedKey() {
