@@ -38,9 +38,12 @@ public class FaItem extends ItemStack {
         return faItem;
     }
 
-    public tagMgr getTagMgr() {
-        return new tagMgr(plugin,this);
+    public TagMgr getTagMgr() {
+        return new TagMgr(plugin,this);
     }
 
+    public void setEvent(FaItemEvent event, String node) {
+        getTagMgr().set(event.toString().toLowerCase(), node);
+    }
 }
 

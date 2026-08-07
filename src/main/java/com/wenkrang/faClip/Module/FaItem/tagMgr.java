@@ -10,7 +10,7 @@ import org.bukkit.plugin.Plugin;
 /**
  * 这是一个管理物品标签的类
  */
-public class tagMgr {
+public class TagMgr {
     private final PersistentDataContainer container;
 
     private final Plugin plugin;
@@ -19,7 +19,7 @@ public class tagMgr {
 
     private final ItemMeta itemMeta;
 
-    public tagMgr(Plugin p, ItemStack i) {
+    public TagMgr(Plugin p, ItemStack i) {
         itemMeta = i.getItemMeta();
         if (itemMeta == null) {
             throw new NullPointerException("ItemMeta is null");

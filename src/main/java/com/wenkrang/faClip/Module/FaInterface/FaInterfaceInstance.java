@@ -1,7 +1,7 @@
 package com.wenkrang.faClip.Module.FaInterface;
 
 import com.wenkrang.faClip.Helper.ClassHelper;
-import com.wenkrang.faClip.Module.FaInterface.Annotaion.Intf;
+import com.wenkrang.faClip.Module.FaInterface.Annotation.Intf;
 import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Method;

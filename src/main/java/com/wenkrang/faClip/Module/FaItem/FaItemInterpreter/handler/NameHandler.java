@@ -2,7 +2,7 @@ package com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.handler;
 
 import com.wenkrang.faClip.Module.FaItem.FaItem;
 import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.FaItemInterpreter;
-import com.wenkrang.faClip.Module.FaMessage.Helper.i18nHelper;
+import com.wenkrang.faClip.Module.FaMessage.Helper.I18nHelper;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -23,7 +23,7 @@ public class NameHandler implements FaItemHandler{
 
             faItem.setItemMeta(itemMeta);
         }else {
-            i18nHelper.fw("FaItem.Exception.FaItemInterpreter.CannotFoundNode", getNode());
+            I18nHelper.fw("FaItem.Exception.FaItemInterpreter.CannotFoundNode", getNode());
         }
     }
 }

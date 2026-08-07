@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
-import static com.wenkrang.faClip.Module.FaMessage.Fm.waring;
-import static com.wenkrang.faClip.Module.FaMessage.Helper.i18nHelper.ft;
+import static com.wenkrang.faClip.Module.FaMessage.Fm.warning;
+import static com.wenkrang.faClip.Module.FaMessage.Helper.I18nHelper.ft;
 
 public class ResourceHelper {
     // 存储资源路径而不是 URL
@@ -41,7 +41,7 @@ public class ResourceHelper {
                     .getCodeSource().getLocation().getFile();
                 scanJarFile(new File(jarPath));
             } catch (Exception e) {
-                waring(ft("FaCommand.Error.ClassHelper.CannotOpenJarFile", e.getMessage()));
+                warning(ft("FaCommand.Error.ClassHelper.CannotOpenJarFile", e.getMessage()));
             }
         }
     }

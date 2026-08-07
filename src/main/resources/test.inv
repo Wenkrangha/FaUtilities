@@ -9,5 +9,5 @@ design:
      - yyyyyyyyy
      - xxxxxxxxx
 define:
-     x: test
+     x: background_1
      y: MC.AIR

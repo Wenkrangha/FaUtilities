@@ -6,7 +6,7 @@ import com.wenkrang.faClip.Module.FaCommand.Annotation.Debug;
 import com.wenkrang.faClip.Module.FaCommand.Annotation.ForPlayer;
 import com.wenkrang.faClip.Module.FaCommand.Annotation.RequireOP;
 import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.FaCmdContext;
-import com.wenkrang.faClip.Module.FaInterface.Annotaion.Intf;
+import com.wenkrang.faClip.Module.FaInterface.Annotation.Intf;
 import com.wenkrang.faClip.Module.FaInterface.FaIntfContext;
 import com.wenkrang.faClip.Module.FaItem.FaItem;
 import com.wenkrang.faClip.Module.FaItem.FaItemInstance;

@@ -2,7 +2,7 @@ package com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.handler;
 
 import com.wenkrang.faClip.Module.FaItem.FaItem;
 import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.FaItemInterpreter;
-import com.wenkrang.faClip.Module.FaItem.tagMgr;
+import com.wenkrang.faClip.Module.FaItem.TagMgr;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -18,7 +18,7 @@ public class PlayerInvClickEvent implements FaItemHandler{
         String string = yamlConfiguration.getString(getNode());
 
         if (string != null) {
-            tagMgr tagMgr = new tagMgr(faItemInterpreter.plugin, faItem);
+            TagMgr tagMgr = new TagMgr(faItemInterpreter.plugin, faItem);
 
             tagMgr.set(getNode(), string);
         }

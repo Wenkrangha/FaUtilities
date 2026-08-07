@@ -50,7 +50,7 @@ public class FaInventoryData implements InventoryHolder {
         data.putAll(map);
     }
 
-    public Map<String,String> getAll() {
+    public Map<String, Object> getAll() {
         return data;
     }
 

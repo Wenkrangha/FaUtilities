@@ -7,9 +7,9 @@ import com.wenkrang.faClip.Module.FaMessage.Fm;
 
 import java.util.List;
 
-import static com.wenkrang.faClip.Module.FaMessage.Helper.i18nHelper.t;
+import static com.wenkrang.faClip.Module.FaMessage.Helper.I18nHelper.t;
 
-public class permissionCheckStage implements SimpleStage {
+public class PermissionCheckStage implements SimpleStage {
     @Override
     public boolean check(FaCmd cmd, FaCmdContext faCmdContext, List<FaCmd> faCmds) {
         if (cmd == null) return false;

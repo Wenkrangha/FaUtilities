@@ -81,7 +81,7 @@ public class FaItemInstance {
      * @return 如果物品属于FaItem，将返回他的FaItem ID，如果不是就返回null
      */
     public @Nullable String getID(ItemStack i) {
-        tagMgr tagMgr = new tagMgr(plugin, i);
+        TagMgr tagMgr = new TagMgr(plugin, i);
 
         if (tagMgr.has("id")) {
             return tagMgr.get("id");
@@ -141,7 +141,7 @@ public class FaItemInstance {
     public boolean equals(@NotNull ItemStack itemStack, String id) {
         if (itemStack.getItemMeta() == null) return false;
 
-        tagMgr tagMgr = new tagMgr(plugin, itemStack);
+        TagMgr tagMgr = new TagMgr(plugin, itemStack);
 
         return tagMgr.has("id") && id.equals(tagMgr.get("id"));
     }

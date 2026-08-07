@@ -2,8 +2,8 @@ package com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.handler;
 
 import com.wenkrang.faClip.Module.FaItem.FaItem;
 import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.FaItemInterpreter;
-import com.wenkrang.faClip.Module.FaItem.tagMgr;
-import com.wenkrang.faClip.Module.FaMessage.Helper.i18nHelper;
+import com.wenkrang.faClip.Module.FaItem.TagMgr;
+import com.wenkrang.faClip.Module.FaMessage.Helper.I18nHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -20,11 +20,11 @@ public class IdHandler implements FaItemHandler{
         if (id != null) {
             faItem.setNamespacedKey(new NamespacedKey(faItem.plugin, id));
 
-            tagMgr tagMgr = new tagMgr(faItemInterpreter.plugin ,faItem);
+            TagMgr tagMgr = new TagMgr(faItemInterpreter.plugin ,faItem);
 
             tagMgr.set("id", id);
         }else {
-            i18nHelper.fw("FaItem.Exception.FaItemInterpreter.CannotFoundNode", getNode());
+            I18nHelper.fw("FaItem.Exception.FaItemInterpreter.CannotFoundNode", getNode());
         }
     }
 }

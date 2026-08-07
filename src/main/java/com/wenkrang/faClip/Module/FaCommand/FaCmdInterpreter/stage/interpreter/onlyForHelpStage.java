@@ -7,7 +7,7 @@ import com.wenkrang.faClip.Module.FaCommand.FaHelperGenerator.FaHelperGenerator;
 
 import java.util.List;
 
-public class onlyForHelpStage implements SimpleStage {
+public class OnlyForHelpStage implements SimpleStage {
     @Override
     public boolean check(FaCmd cmd, FaCmdContext faCmdContext, List<FaCmd> faCmds) {
         if (cmd == null) return false;

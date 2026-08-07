@@ -6,7 +6,7 @@ import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.SimpleStage;
 
 import java.util.List;
 
-public class tabOpCheckStage implements SimpleStage {
+public class TabOpCheckStage implements SimpleStage {
     @Override
     public boolean check(FaCmd cmd, FaCmdContext faCmdContext, List<FaCmd> faCmds) {
         return !(cmd.isRequireOP() && !faCmdContext.sender().isOp());

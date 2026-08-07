@@ -3,9 +3,9 @@ package com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.event;
 import com.wenkrang.faClip.Module.FaInterface.FaIntf;
 import com.wenkrang.faClip.Module.FaInterface.FaIntfContext;
 import com.wenkrang.faClip.Module.FaItem.FaItemInstance;
-import com.wenkrang.faClip.Module.FaItem.tagMgr;
+import com.wenkrang.faClip.Module.FaItem.TagMgr;
 import com.wenkrang.faClip.Module.FaMessage.Fm;
-import com.wenkrang.faClip.Module.FaMessage.Helper.i18nHelper;
+import com.wenkrang.faClip.Module.FaMessage.Helper.I18nHelper;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -30,7 +30,7 @@ public class FaItemInvClickE implements Listener {
             ItemStack item = event.getInventory().getItem(event.getRawSlot());
 
             if (item != null) {
-                tagMgr tagMgr = new tagMgr(plugin, item);
+                TagMgr tagMgr = new TagMgr(plugin, item);
 
                 if (tagMgr.has("event.inv_click")) {
                     String node = tagMgr.get("event.inv_click");
@@ -45,7 +45,7 @@ public class FaItemInvClickE implements Listener {
 
                             intf.getFirst().invoke(this, faIntfContext, new String[0]);
                         }else {
-                            Fm.error(i18nHelper.t("FaItem.Exception.FaItemInterpreter.EventConflict")
+                            Fm.error(I18nHelper.t("FaItem.Exception.FaItemInterpreter.EventConflict")
                                     + ": " + node);
                         }
                     }

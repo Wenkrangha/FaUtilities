@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Set;
 
-public class InvDeFineHandler implements FaInvHandler {
+public class InvDefineHandler implements FaInvHandler {
     @Override
     public void handle(FaInventory faInventory, FaData faData, FaWindowInstance faWindowInstance) {
         ConfigurationSection define = faData.getSection("define");

@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,8 +20,10 @@ public class FaInventory {
 
     public String name;
 
+    public Map<String,String> events = new HashMap<>();
     public Map<String, ItemStack> define = new HashMap<>();
     public ArrayList<String> design = new ArrayList<>();
+    public Map<String, List<Integer>> tag = new HashMap<>();
 
     public boolean lock = true;
 
@@ -28,6 +31,16 @@ public class FaInventory {
         data.set("lock", lock);
         data.set("id", id);
         data.set("name", name);
+
+        // 应用事件
+        for (Map.Entry<String, String> entry : events.entrySet()) {
+            data.set("event." + entry.getKey(), entry.getValue());
+        }
+
+        // 应用标签
+        for (Map.Entry<String, List<Integer>> entry : tag.entrySet()) {
+            data.set("tag." + entry.getKey(), entry.getValue());
+        }
     }
 
     /**
@@ -39,6 +52,7 @@ public class FaInventory {
         Inventory inventory = Bukkit.createInventory(faInventoryData, size, name);
         faInventoryData.setInventory(inventory);
 
+        // 拼接设计流
         StringBuilder designBuilder = new StringBuilder();
 
         for (String d : design) {
@@ -47,10 +61,15 @@ public class FaInventory {
 
         String design = designBuilder.toString();
 
-        for (char c : design.toCharArray()) {
+        char[] charArray = design.toCharArray();
+
+        // 应用定义流
+        for (int i = 0;i < charArray.length;i++) {
+            char c = charArray[i];
+
             ItemStack itemStack = define.get(String.valueOf(c));
 
-            inventory.setItem(design.indexOf(c), itemStack);
+            inventory.setItem(i, itemStack);
         }
 
         // 设置数据

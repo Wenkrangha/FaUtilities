@@ -115,7 +115,7 @@ public class Fm {
      *
      * @param msg 要输出的警告内容
      */
-    public static void waring(String msg) {
+    public static void warning(String msg) {
         Bukkit.getConsoleSender().sendMessage(Scc.YELLOW + "[!] " + Scc.RESET + msg);
     }
 
@@ -125,7 +125,7 @@ public class Fm {
      * @param player 接收消息的玩家对象
      * @param msg 要输出的警告内容
      */
-    public static void waring(Player player, String msg) {
+    public static void warning(Player player, String msg) {
         player.sendMessage(Scc.YELLOW + "[!] " + Scc.RESET + msg);
     }
 
@@ -135,7 +135,7 @@ public class Fm {
      * @param sender 接收消息的命令发送者
      * @param msg 要输出的警告内容
      */
-    public static void waring(CommandSender sender, String msg) {
+    public static void warning(CommandSender sender, String msg) {
         sender.sendMessage(Scc.YELLOW + "[!] " + Scc.RESET + msg);
     }
 

@@ -1,6 +1,6 @@
 package com.wenkrang.faClip.Module.FaData;
 
-import com.wenkrang.faClip.Module.FaMessage.Helper.i18nHelper;
+import com.wenkrang.faClip.Module.FaMessage.Helper.I18nHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -97,7 +97,7 @@ public class FaData {
             // 初始化文件夹
             if (!(dataFolder.isDirectory() && dataFolder.exists())) {
                 if (!dataFolder.mkdirs()) {
-                    throw new RuntimeException(i18nHelper
+                    throw new RuntimeException(I18nHelper
                             .ft("FaData.Exception.FaYamlData.FolderCannotInit"
                                     , dataFolder.getName())
                     );
@@ -110,7 +110,7 @@ public class FaData {
             plugin = detectCallingPlugin();
             if (plugin == null)
                 throw new NullPointerException
-                    (i18nHelper.t("FaData.Exception.FaYamlData.PluginIsNotinitialized"));
+                    (I18nHelper.t("FaData.Exception.FaYamlData.PluginIsNotinitialized"));
             else init();
         }
     }
@@ -310,7 +310,7 @@ public class FaData {
             }
             config.save(file);
         } catch (IOException e) {
-            i18nHelper.fw("FaData.Exception.FaYamlData.DataCannotBeSaved", file.getName());
+            I18nHelper.fw("FaData.Exception.FaYamlData.DataCannotBeSaved", file.getName());
             e.printStackTrace();
         }
     }

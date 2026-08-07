@@ -4,7 +4,7 @@ import com.wenkrang.faClip.Module.FaData.FaConfig;
 import com.wenkrang.faClip.Module.FaData.FaData;
 import com.wenkrang.faClip.Module.FaDebugger.Debugger;
 import com.wenkrang.faClip.Module.FaMessage.Fm;
-import com.wenkrang.faClip.Module.FaMessage.Helper.i18nHelper;
+import com.wenkrang.faClip.Module.FaMessage.Helper.I18nHelper;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -38,7 +38,7 @@ public final class FaClip extends JavaPlugin {
         debug = faConfig.getBoolean("enableDebugger");
         if (debug){
             debugger = new Debugger();
-            Fm.info(i18nHelper.t("FaDebugger.Info.Debugger.Enable"));
+            Fm.info(I18nHelper.t("FaDebugger.Info.Debugger.Enable"));
         }
 
     }

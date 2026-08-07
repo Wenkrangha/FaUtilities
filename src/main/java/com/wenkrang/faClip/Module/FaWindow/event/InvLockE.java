@@ -1,7 +1,7 @@
 package com.wenkrang.faClip.Module.FaWindow.event;
 
 import com.wenkrang.faClip.Module.FaData.FaInventoryData;
-import com.wenkrang.faClip.Module.FaItem.tagMgr;
+import com.wenkrang.faClip.Module.FaItem.TagMgr;
 import com.wenkrang.faClip.Module.FaWindow.FaWindowInstance;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,6 +11,10 @@ import org.bukkit.inventory.ItemStack;
 
 public class InvLockE implements Listener {
     public FaWindowInstance instance;
+
+    public InvLockE(FaWindowInstance instance) {
+        this.instance = instance;
+    }
 
     @EventHandler
     public void onInv(InventoryClickEvent event) {
@@ -24,7 +28,7 @@ public class InvLockE implements Listener {
             if (rawSlot >= 0 && rawSlot < inventory.getSize()) {
                 ItemStack item = inventory.getItem(rawSlot);
                 if (item != null) {
-                    tagMgr tag = new tagMgr(instance.getPlugin(), item);
+                    TagMgr tag = new TagMgr(instance.getPlugin(), item);
 
                     if (tag.has("moveable")) {
                         return;

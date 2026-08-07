@@ -5,6 +5,7 @@ import com.wenkrang.faClip.Module.FaWindow.FaInventory;
 import com.wenkrang.faClip.Module.FaWindow.FaWindowInstance;
 import com.wenkrang.faClip.Module.FaWindow.interpreter.handler.*;
 import com.wenkrang.faClip.Module.FaWindow.interpreter.handler.basic.*;
+import com.wenkrang.faClip.Module.FaWindow.interpreter.handler.extra.InvBasicEventHandler;
 import com.wenkrang.faClip.Module.FaWindow.interpreter.handler.extra.InvLockHandler;
 
 import java.io.InputStream;
@@ -21,9 +22,10 @@ public class FaInvInterpreter {
         pipe.add(new InvIdHandler());
         pipe.add(new InvSizeHandler());
         pipe.add(new InvDesignHandler());
-        pipe.add(new InvDeFineHandler());
+        pipe.add(new InvDefineHandler());
         pipe.add(new InvNameHandler());
         pipe.add(new InvLockHandler());
+        pipe.add(new InvBasicEventHandler());
     }
 
     public FaWindowInstance getFaWindowInstance() {

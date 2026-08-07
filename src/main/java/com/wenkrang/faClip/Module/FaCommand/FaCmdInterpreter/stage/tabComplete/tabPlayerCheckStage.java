@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class tabPlayerCheckStage implements SimpleStage {
+public class TabPlayerCheckStage implements SimpleStage {
     @Override
     public boolean check(FaCmd cmd, FaCmdContext faCmdContext, List<FaCmd> faCmds) {
         return !cmd.isForPlayer() || faCmdContext.sender() instanceof Player;

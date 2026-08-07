@@ -1,8 +1,8 @@
 package com.wenkrang.faClip.Module.FaInterface;
 
-import com.wenkrang.faClip.Module.FaInterface.Annotaion.Intf;
+import com.wenkrang.faClip.Module.FaInterface.Annotation.Intf;
 import com.wenkrang.faClip.Module.FaInterface.AnnotationHandler.SimpleAnnotationHandler;
-import com.wenkrang.faClip.Module.FaInterface.AnnotationHandler.intfHandler;
+import com.wenkrang.faClip.Module.FaInterface.AnnotationHandler.IntfHandler;
 import com.wenkrang.faClip.Module.FaInterface.FaParam.FaParam;
 import com.wenkrang.faClip.Module.FaInterface.FaParam.SimpleParam;
 import org.jetbrains.annotations.Nullable;
@@ -12,7 +12,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-import static com.wenkrang.faClip.Module.FaMessage.Helper.i18nHelper.ft;
+import static com.wenkrang.faClip.Module.FaMessage.Helper.I18nHelper.ft;
 
 public class FaIntfInterpreter {
     public FaInterfaceInstance interfaceInstance;
@@ -25,7 +25,7 @@ public class FaIntfInterpreter {
         this.interfaceInstance = interfaceInstance;
         faParam = new FaParam();
 
-        annotationHandlers.add(new intfHandler());
+        annotationHandlers.add(new IntfHandler());
     }
 
     public @Nullable FaIntf interpret(Method method, String node) {
@@ -35,7 +35,7 @@ public class FaIntfInterpreter {
             FaIntf faIntf = new FaIntf(interfaceInstance);
 
             // 检查接口是否合规
-            if (!intfHandler.check(method, node)) return null;
+            if (!IntfHandler.check(method, node)) return null;
 
             faIntf.setMethod(method);
             faIntf.setNode(node);

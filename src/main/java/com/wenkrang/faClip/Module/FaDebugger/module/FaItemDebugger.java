@@ -7,7 +7,7 @@ import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.FaCmdContext;
 import com.wenkrang.faClip.Module.FaItem.FaItem;
 import com.wenkrang.faClip.Module.FaItem.FaItemInstance;
 import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.FaItemInterpreter;
-import com.wenkrang.faClip.Module.FaItem.tagMgr;
+import com.wenkrang.faClip.Module.FaItem.TagMgr;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -53,7 +53,7 @@ public class FaItemDebugger {
         }
 
         FaItem faItem = new FaItem(FaClip.plugin, itemInMainHand);
-        tagMgr tagMgr = faItem.getTagMgr();
+        TagMgr tagMgr = faItem.getTagMgr();
 
         System.out.println("[FaItemDebugger] type: " + faItem.getType());
         System.out.println("[FaItemDebugger] lore: " + faItem.getItemMeta().getLore());

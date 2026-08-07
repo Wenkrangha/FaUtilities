@@ -6,15 +6,15 @@ import com.wenkrang.faClip.Module.FaCommand.AnnotationHandler.CmdAnnotationHandl
 import com.wenkrang.faClip.Module.FaCommand.FaCmd;
 import com.wenkrang.faClip.Module.FaCommand.FaCmdInstance;
 import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.SimpleStage;
-import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.interpreter.conflictCheckStage;
-import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.interpreter.emptyCheckStage;
-import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.interpreter.onlyForHelpStage;
-import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.interpreter.opCheckStage;
-import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.interpreter.permissionCheckStage;
-import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.interpreter.playerCheckStage;
-import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.tabComplete.tabOpCheckStage;
-import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.tabComplete.tabPermissionCheckStage;
-import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.tabComplete.tabPlayerCheckStage;
+import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.interpreter.ConflictCheckStage;
+import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.interpreter.EmptyCheckStage;
+import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.interpreter.OnlyForHelpStage;
+import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.interpreter.OpCheckStage;
+import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.interpreter.PermissionCheckStage;
+import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.interpreter.PlayerCheckStage;
+import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.tabComplete.TabOpCheckStage;
+import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.tabComplete.TabPermissionCheckStage;
+import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.stage.tabComplete.TabPlayerCheckStage;
 import com.wenkrang.faClip.Module.FaCommand.FaHelperGenerator.FaHelperGenerator;
 import com.wenkrang.faClip.Module.FaCommand.Helper.CmdParamHelper;
 import com.wenkrang.faClip.Module.FaInterface.FaIntf;
@@ -60,17 +60,17 @@ public class FaCmdInterpreter {
      */
     private void initPipes() {
         // 解释器管线：空检查 -> 冲突检查 -> OP检查 -> 权限检查 -> 玩家检查 -> 仅帮助检查
-        addInterpreterStage(new emptyCheckStage());
-        addInterpreterStage(new conflictCheckStage());
-        addInterpreterStage(new opCheckStage());
-        addInterpreterStage(new permissionCheckStage());
-        addInterpreterStage(new playerCheckStage());
-        addInterpreterStage(new onlyForHelpStage());
+        addInterpreterStage(new EmptyCheckStage());
+        addInterpreterStage(new ConflictCheckStage());
+        addInterpreterStage(new OpCheckStage());
+        addInterpreterStage(new PermissionCheckStage());
+        addInterpreterStage(new PlayerCheckStage());
+        addInterpreterStage(new OnlyForHelpStage());
 
         // 补全管线：OP检查 -> 权限检查 -> 玩家检查
-        addTabCompleteStage(new tabOpCheckStage());
-        addTabCompleteStage(new tabPermissionCheckStage());
-        addTabCompleteStage(new tabPlayerCheckStage());
+        addTabCompleteStage(new TabOpCheckStage());
+        addTabCompleteStage(new TabPermissionCheckStage());
+        addTabCompleteStage(new TabPlayerCheckStage());
     }
 
     private ArrayList<CmdAnnotationHandler> annotationHandlers = new ArrayList<>();

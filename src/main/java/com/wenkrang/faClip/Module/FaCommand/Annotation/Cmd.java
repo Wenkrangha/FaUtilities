@@ -1,6 +1,6 @@
 package com.wenkrang.faClip.Module.FaCommand.Annotation;
 
-import com.wenkrang.faClip.Module.FaInterface.Annotaion.Intf;
+import com.wenkrang.faClip.Module.FaInterface.Annotation.Intf;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.*;

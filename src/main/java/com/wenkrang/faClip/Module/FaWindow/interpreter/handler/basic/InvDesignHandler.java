@@ -1,7 +1,7 @@
 package com.wenkrang.faClip.Module.FaWindow.interpreter.handler.basic;
 
 import com.wenkrang.faClip.Module.FaData.FaData;
-import com.wenkrang.faClip.Module.FaMessage.Helper.i18nHelper;
+import com.wenkrang.faClip.Module.FaMessage.Helper.I18nHelper;
 import com.wenkrang.faClip.Module.FaWindow.FaInventory;
 import com.wenkrang.faClip.Module.FaWindow.FaWindowInstance;
 import com.wenkrang.faClip.Module.FaWindow.interpreter.handler.FaInvHandler;
@@ -21,13 +21,13 @@ public class InvDesignHandler implements FaInvHandler {
             }
 
             if (count != faInventory.size) {
-                throw new RuntimeException(i18nHelper.t("FaWindow.Exception.FaInvInterpreter.DesignLengthNotEqualToSize"
+                throw new RuntimeException(I18nHelper.t("FaWindow.Exception.FaInvInterpreter.DesignLengthNotEqualToSize"
                         + faData.getFile().getPath()));
             }
 
             faInventory.design = new ArrayList<>(design);
         }else {
-            throw new RuntimeException(i18nHelper.t("FaWindow.Exception.FaInvInterpreter.DesignNotFound"
+            throw new RuntimeException(I18nHelper.t("FaWindow.Exception.FaInvInterpreter.DesignNotFound"
                     + faData.getFile().getPath()));
         }
     }

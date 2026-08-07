@@ -1,4 +1,4 @@
-package com.wenkrang.faClip.Module.FaInterface.Annotaion;
+package com.wenkrang.faClip.Module.FaInterface.Annotation;
 
 import java.lang.annotation.*;
 

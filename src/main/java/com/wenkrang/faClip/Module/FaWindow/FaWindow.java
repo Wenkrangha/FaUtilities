@@ -52,4 +52,8 @@ public class FaWindow {
     public Inventory getCurrent() {
         return current;
     }
+
+    public Player getViewer() {
+        return viewer;
+    }
 }

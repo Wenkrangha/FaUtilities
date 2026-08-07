@@ -1,7 +1,7 @@
 package com.wenkrang.faClip.Module.FaInterface.AnnotationHandler;
 
 import com.wenkrang.faClip.Module.FaCommand.Helper.NodeHelper;
-import com.wenkrang.faClip.Module.FaInterface.Annotaion.Intf;
+import com.wenkrang.faClip.Module.FaInterface.Annotation.Intf;
 import com.wenkrang.faClip.Module.FaInterface.FaIntf;
 import com.wenkrang.faClip.Module.FaMessage.Fm;
 
@@ -9,10 +9,10 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import static com.wenkrang.faClip.Module.FaMessage.Helper.i18nHelper.ft;
-import static com.wenkrang.faClip.Module.FaMessage.Helper.i18nHelper.t;
+import static com.wenkrang.faClip.Module.FaMessage.Helper.I18nHelper.ft;
+import static com.wenkrang.faClip.Module.FaMessage.Helper.I18nHelper.t;
 
-public class intfHandler implements SimpleAnnotationHandler {
+public class IntfHandler implements SimpleAnnotationHandler {
     /**
      * 检查接口注册是否合规
      * @param method
@@ -23,7 +23,7 @@ public class intfHandler implements SimpleAnnotationHandler {
         if (!Modifier.isStatic(method.getModifiers()))
             throw new RuntimeException(ft("FaInterface.Error.Interpreter.NotStatic", method.getName()));
         if (!NodeHelper.check(node)) {
-            Fm.waring(t("FaCommand.Error.Interpreter.CantUnderstand"));
+            Fm.warning(t("FaCommand.Error.Interpreter.CantUnderstand"));
             return false;
         }
         return true;

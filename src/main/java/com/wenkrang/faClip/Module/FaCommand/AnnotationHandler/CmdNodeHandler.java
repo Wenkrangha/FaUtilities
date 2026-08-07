@@ -10,8 +10,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import static com.wenkrang.faClip.Module.FaMessage.Helper.i18nHelper.ft;
-import static com.wenkrang.faClip.Module.FaMessage.Helper.i18nHelper.t;
+import static com.wenkrang.faClip.Module.FaMessage.Helper.I18nHelper.ft;
+import static com.wenkrang.faClip.Module.FaMessage.Helper.I18nHelper.t;
 
 /**
  * CmdNode 注解处理器
