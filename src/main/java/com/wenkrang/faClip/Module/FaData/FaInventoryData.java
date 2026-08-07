@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class FaInventoryData implements InventoryHolder {
 
-    private final Map<String,String> data = new HashMap<>();
+    private final Map<String,Object> data = new HashMap<>();
 
     @Override
     public @NotNull Inventory getInventory() {
@@ -22,12 +22,12 @@ public class FaInventoryData implements InventoryHolder {
         this.inventory = inventory;
     }
 
-    public void set(String key,String value) {
+    public <T> void set(String key,T value) {
         data.put(key, value);
     }
 
-    public String get(String key) {
-        return data.get(key);
+    public <T> T get(String key) {
+        return (T) data.get(key);
     }
 
     public void remove(String key) {

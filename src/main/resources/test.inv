@@ -1,0 +1,13 @@
+id: test
+name: test
+size: 54
+design:
+     - xxxxxxxxx
+     - yyyyyyyyy
+     - yyyyyyyyy
+     - yyyyyyyyy
+     - yyyyyyyyy
+     - xxxxxxxxx
+define:
+     x: test
+     y: MC.AIR

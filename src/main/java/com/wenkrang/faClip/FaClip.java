@@ -35,7 +35,6 @@ public final class FaClip extends JavaPlugin {
 
         // 获取配置
         FaConfig faConfig = new FaConfig();
-        System.out.println(faConfig.getFile());
         debug = faConfig.getBoolean("enableDebugger");
         if (debug){
             debugger = new Debugger();
