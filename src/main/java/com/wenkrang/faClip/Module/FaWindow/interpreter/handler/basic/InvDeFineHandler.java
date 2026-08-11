@@ -27,13 +27,13 @@ public class InvDefineHandler implements FaInvHandler {
                     if (value.startsWith("MC.")) {
                         Material material = Material.valueOf(value.replace("MC.", ""));
 
-                        faInventory.define.put(key, new ItemStack(material));
+                        faInventory.define(key, new ItemStack(material));
                     }else {
                         FaItemInstance faItemInstance = faWindowInstance.getFaItemInstance();
 
                         FaItem faItem = faItemInstance.getFaItem(value);
 
-                        faInventory.define.put(key, faItem.copy());
+                        faInventory.define(key, faItem.copy());
                     }
                 }
 

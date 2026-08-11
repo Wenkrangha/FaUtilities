@@ -1,8 +1,9 @@
-package com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.handler;
+package com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.handler.extra;
 
 import com.wenkrang.faClip.FaClip;
 import com.wenkrang.faClip.Module.FaItem.FaItem;
 import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.FaItemInterpreter;
+import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.handler.FaItemHandler;
 import com.wenkrang.faClip.Module.FaItem.TagMgr;
 import com.wenkrang.faClip.Module.FaMessage.Helper.I18nHelper;
 import org.bukkit.configuration.ConfigurationSection;
@@ -10,7 +11,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.util.Set;
 
-public class TagHandler implements FaItemHandler{
+public class TagHandler implements FaItemHandler {
     @Override
     public String getNode() {
         return "tag";

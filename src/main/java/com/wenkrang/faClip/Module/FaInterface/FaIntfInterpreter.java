@@ -1,8 +1,8 @@
 package com.wenkrang.faClip.Module.FaInterface;
 
 import com.wenkrang.faClip.Module.FaInterface.Annotation.Intf;
-import com.wenkrang.faClip.Module.FaInterface.AnnotationHandler.SimpleAnnotationHandler;
 import com.wenkrang.faClip.Module.FaInterface.AnnotationHandler.IntfHandler;
+import com.wenkrang.faClip.Module.FaInterface.AnnotationHandler.SimpleAnnotationHandler;
 import com.wenkrang.faClip.Module.FaInterface.FaParam.FaParam;
 import com.wenkrang.faClip.Module.FaInterface.FaParam.SimpleParam;
 import org.jetbrains.annotations.Nullable;

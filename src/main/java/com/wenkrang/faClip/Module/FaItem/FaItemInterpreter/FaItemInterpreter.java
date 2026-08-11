@@ -1,7 +1,12 @@
 package com.wenkrang.faClip.Module.FaItem.FaItemInterpreter;
 
 import com.wenkrang.faClip.Module.FaItem.FaItem;
-import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.handler.*;
+import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.handler.FaItemHandler;
+import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.handler.basic.IdHandler;
+import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.handler.basic.LoreHandler;
+import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.handler.basic.NameHandler;
+import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.handler.basic.TypeHandler;
+import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.handler.extra.*;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -21,6 +26,8 @@ public class FaItemInterpreter {
         handlers.add(new TagHandler());
         handlers.add(new PlayerItemClickEvent());
         handlers.add(new PlayerInvClickEvent());
+        handlers.add(new RefHandler());
+        handlers.add(new BackRefHandler());
 
         plugin = p;
     }

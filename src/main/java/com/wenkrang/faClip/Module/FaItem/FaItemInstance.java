@@ -3,18 +3,11 @@ package com.wenkrang.faClip.Module.FaItem;
 import com.wenkrang.faClip.Helper.ResourceHelper;
 import com.wenkrang.faClip.Module.FaData.FaData;
 import com.wenkrang.faClip.Module.FaInterface.FaInterfaceInstance;
-import com.wenkrang.faClip.Module.FaInterface.FaIntfInterpreter;
 import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.FaItemInterpreter;
 import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.event.FaItemClickE;
 import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.event.FaItemInvClickE;
-import com.wenkrang.faClip.Module.FaMessage.Fm;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,7 +25,7 @@ public class FaItemInstance {
     // 以命名空间为键、FaItem 为值的注册表
     private final Map<String,FaItem> faItems;
 
-    private Plugin plugin;
+    private final Plugin plugin;
 
     private final FaItemInterpreter faItemInterpreter;
 

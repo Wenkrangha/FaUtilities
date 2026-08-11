@@ -1,24 +1,23 @@
-package com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.handler;
+package com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.handler.extra;
 
 import com.wenkrang.faClip.Module.FaItem.FaItem;
 import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.FaItemInterpreter;
+import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.handler.FaItemHandler;
 import com.wenkrang.faClip.Module.FaItem.TagMgr;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-public class PlayerItemClickEvent implements FaItemHandler {
+public class BackRefHandler implements FaItemHandler {
     @Override
     public String getNode() {
-        return "event.item_click";
+        return "backref";
     }
 
     @Override
     public void handle(FaItem faItem, YamlConfiguration yamlConfiguration, FaItemInterpreter faItemInterpreter) {
-        String string = yamlConfiguration.getString(getNode());
+        boolean backref = yamlConfiguration.getBoolean(getNode());
 
-        if (string != null) {
-            TagMgr tagMgr = new TagMgr(faItemInterpreter.plugin, faItem);
+        TagMgr tagMgr = faItem.getTagMgr();
 
-            tagMgr.set(getNode(), string);
-        }
+        if (backref) tagMgr.set(getNode(), String.valueOf(true));
     }
 }

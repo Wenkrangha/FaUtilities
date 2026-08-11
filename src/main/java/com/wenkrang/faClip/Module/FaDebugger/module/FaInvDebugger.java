@@ -6,9 +6,7 @@ import com.wenkrang.faClip.Module.FaCommand.Annotation.Debug;
 import com.wenkrang.faClip.Module.FaCommand.Annotation.ForPlayer;
 import com.wenkrang.faClip.Module.FaCommand.Annotation.RequireOP;
 import com.wenkrang.faClip.Module.FaCommand.FaCmdInterpreter.FaCmdContext;
-import com.wenkrang.faClip.Module.FaWindow.FaWindow;
 import com.wenkrang.faClip.Module.FaWindow.FaWindowInstance;
-import org.bukkit.entity.Player;
 
 public class FaInvDebugger {
     public static FaWindowInstance faWindowInstance;
@@ -29,10 +27,6 @@ public class FaInvDebugger {
     @Debug
     @ForPlayer
     public static void open(FaCmdContext faCmdContext){
-        FaWindow test = faWindowInstance.getWin("test");
 
-        Player player = (Player) faCmdContext.sender();
-
-        test.pullUp(player);
     }
 }

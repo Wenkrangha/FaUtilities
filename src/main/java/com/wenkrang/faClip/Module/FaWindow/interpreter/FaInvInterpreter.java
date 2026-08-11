@@ -3,7 +3,7 @@ package com.wenkrang.faClip.Module.FaWindow.interpreter;
 import com.wenkrang.faClip.Module.FaData.FaData;
 import com.wenkrang.faClip.Module.FaWindow.FaInventory;
 import com.wenkrang.faClip.Module.FaWindow.FaWindowInstance;
-import com.wenkrang.faClip.Module.FaWindow.interpreter.handler.*;
+import com.wenkrang.faClip.Module.FaWindow.interpreter.handler.FaInvHandler;
 import com.wenkrang.faClip.Module.FaWindow.interpreter.handler.basic.*;
 import com.wenkrang.faClip.Module.FaWindow.interpreter.handler.extra.InvBasicEventHandler;
 import com.wenkrang.faClip.Module.FaWindow.interpreter.handler.extra.InvLockHandler;

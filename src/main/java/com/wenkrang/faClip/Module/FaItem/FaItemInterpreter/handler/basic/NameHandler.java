@@ -1,12 +1,13 @@
-package com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.handler;
+package com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.handler.basic;
 
 import com.wenkrang.faClip.Module.FaItem.FaItem;
 import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.FaItemInterpreter;
+import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.handler.FaItemHandler;
 import com.wenkrang.faClip.Module.FaMessage.Helper.I18nHelper;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class NameHandler implements FaItemHandler{
+public class NameHandler implements FaItemHandler {
     @Override
     public String getNode() {
         return "name";

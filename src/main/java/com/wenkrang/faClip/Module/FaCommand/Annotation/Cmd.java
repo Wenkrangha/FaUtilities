@@ -1,6 +1,5 @@
 package com.wenkrang.faClip.Module.FaCommand.Annotation;
 
-import com.wenkrang.faClip.Module.FaInterface.Annotation.Intf;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.*;
@@ -8,7 +7,7 @@ import java.lang.annotation.*;
 /**
  * 命令节点注解
  * 用于标记命令处理方法，指定其在命令树中的节点路径
- * 
+ * <p>
  * 示例：@CmdNode("plugin.command.subcommand")
  */
 @Target(ElementType.METHOD)

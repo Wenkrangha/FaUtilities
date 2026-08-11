@@ -1,13 +1,12 @@
-package com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.handler;
+package com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.handler.extra;
 
 import com.wenkrang.faClip.Module.FaItem.FaItem;
 import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.FaItemInterpreter;
+import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.handler.FaItemHandler;
 import com.wenkrang.faClip.Module.FaItem.TagMgr;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.meta.ItemMeta;
 
-public class PlayerInvClickEvent implements FaItemHandler{
+public class PlayerInvClickEvent implements FaItemHandler {
     @Override
     public String getNode() {
         return "event.inv_click";

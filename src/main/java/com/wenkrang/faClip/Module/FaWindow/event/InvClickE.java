@@ -5,7 +5,6 @@ import com.wenkrang.faClip.Module.FaWindow.interpreter.handler.extra.InvBasicEve
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 
 public class InvClickE implements Listener {

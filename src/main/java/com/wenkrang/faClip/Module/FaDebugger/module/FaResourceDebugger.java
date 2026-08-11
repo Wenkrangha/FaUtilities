@@ -10,8 +10,6 @@ import com.wenkrang.faClip.Module.FaResource.BukkitResource;
 import com.wenkrang.faClip.Module.FaResource.FaBukkitResourceManager;
 import org.bukkit.entity.Player;
 
-import java.util.UUID;
-
 public class FaResourceDebugger {
     @Cmd("fatest.resource")
     @RequireOP

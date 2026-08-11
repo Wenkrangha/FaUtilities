@@ -6,7 +6,6 @@ import com.wenkrang.faClip.Module.FaWindow.FaInventory;
 import com.wenkrang.faClip.Module.FaWindow.FaWindowInstance;
 import com.wenkrang.faClip.Module.FaWindow.interpreter.handler.FaInvHandler;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class InvDesignHandler implements FaInvHandler {
@@ -25,7 +24,7 @@ public class InvDesignHandler implements FaInvHandler {
                         + faData.getFile().getPath()));
             }
 
-            faInventory.design = new ArrayList<>(design);
+            faInventory.design(design);
         }else {
             throw new RuntimeException(I18nHelper.t("FaWindow.Exception.FaInvInterpreter.DesignNotFound"
                     + faData.getFile().getPath()));

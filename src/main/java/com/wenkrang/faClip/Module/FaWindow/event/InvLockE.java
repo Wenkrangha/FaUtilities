@@ -3,6 +3,7 @@ package com.wenkrang.faClip.Module.FaWindow.event;
 import com.wenkrang.faClip.Module.FaData.FaInventoryData;
 import com.wenkrang.faClip.Module.FaItem.TagMgr;
 import com.wenkrang.faClip.Module.FaWindow.FaWindowInstance;
+import com.wenkrang.faClip.Module.FaWindow.helper.WinDataGetter;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -19,7 +20,7 @@ public class InvLockE implements Listener {
     @EventHandler
     public void onInv(InventoryClickEvent event) {
         Inventory inventory = event.getInventory();
-        if (instance.isFaInventory(inventory)) {
+        if (WinDataGetter.isFaInventory(inventory)) {
             // 获取物品栏数据
             FaInventoryData faInventoryData = (FaInventoryData) inventory.getHolder();
 
@@ -28,8 +29,10 @@ public class InvLockE implements Listener {
             if (rawSlot >= 0 && rawSlot < inventory.getSize()) {
                 ItemStack item = inventory.getItem(rawSlot);
                 if (item != null) {
+                    // 获取标签数据
                     TagMgr tag = new TagMgr(instance.getPlugin(), item);
 
+                    // 如果有可动标签就忽略
                     if (tag.has("moveable")) {
                         return;
                     }

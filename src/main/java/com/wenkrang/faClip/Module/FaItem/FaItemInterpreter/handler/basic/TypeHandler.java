@@ -1,7 +1,8 @@
-package com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.handler;
+package com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.handler.basic;
 
 import com.wenkrang.faClip.Module.FaItem.FaItem;
 import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.FaItemInterpreter;
+import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.handler.FaItemHandler;
 import com.wenkrang.faClip.Module.FaMessage.Helper.I18nHelper;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;

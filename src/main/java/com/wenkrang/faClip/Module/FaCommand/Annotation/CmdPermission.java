@@ -6,7 +6,7 @@ import java.lang.annotation.*;
 /**
  * 命令权限注解
  * 用于标记命令处理方法，指定执行该命令所需的权限节点
- * 
+ * <p>
  * 示例：@CmdPermission("plugin.command.use")
  */
 @Target(ElementType.METHOD)

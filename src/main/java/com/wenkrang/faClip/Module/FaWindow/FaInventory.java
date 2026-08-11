@@ -1,8 +1,5 @@
 package com.wenkrang.faClip.Module.FaWindow;
 
-import com.wenkrang.faClip.Module.FaData.FaInventoryData;
-import org.bukkit.Bukkit;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -20,61 +17,71 @@ public class FaInventory {
 
     public String name;
 
-    public Map<String,String> events = new HashMap<>();
-    public Map<String, ItemStack> define = new HashMap<>();
-    public ArrayList<String> design = new ArrayList<>();
-    public Map<String, List<Integer>> tag = new HashMap<>();
+    public Map<String, String> getEvents() {
+        return events;
+    }
+
+    // 事件
+    private Map<String,String> events = new HashMap<>();
+    // 定义
+    private Map<String, ItemStack> define = new HashMap<>();
+
+    public ArrayList<String> getDesign() {
+        return design;
+    }
+
+    // 设计
+    private final ArrayList<String> design = new ArrayList<>();
 
     public boolean lock = true;
 
-    public void setData(FaInventoryData data) {
-        data.set("lock", lock);
-        data.set("id", id);
-        data.set("name", name);
+    /**
+     * 深拷贝构造，复制模板生成完全独立的新实例
+     * 其中ItemStack通过clone深拷贝，其余字段为不可变类型可直接赋值
+     * @param src 被复制的源对象
+     */
+    public FaInventory(FaInventory src) {
+        this.id = src.id;
+        this.size = src.size;
+        this.name = src.name;
+        this.lock = src.lock;
 
-        // 应用事件
-        for (Map.Entry<String, String> entry : events.entrySet()) {
-            data.set("event." + entry.getKey(), entry.getValue());
-        }
+        this.events = new HashMap<>(src.events);
+        design(src.design);
 
-        // 应用标签
-        for (Map.Entry<String, List<Integer>> entry : tag.entrySet()) {
-            data.set("tag." + entry.getKey(), entry.getValue());
+        this.define = new HashMap<>();
+        for (Map.Entry<String, ItemStack> entry : src.define.entrySet()) {
+            this.define.put(entry.getKey(), entry.getValue() == null ? null : entry.getValue().clone());
         }
     }
 
-    /**
-     * 渲染界面
-     * @return 返回
-     */
-    public Inventory render() {
-        FaInventoryData faInventoryData = new FaInventoryData();
-        Inventory inventory = Bukkit.createInventory(faInventoryData, size, name);
-        faInventoryData.setInventory(inventory);
+    public FaInventory() {
+    }
 
-        // 拼接设计流
-        StringBuilder designBuilder = new StringBuilder();
+    public FaInventory clone() {
+        return new FaInventory(this);
+    }
 
-        for (String d : design) {
-            designBuilder.append(d);
+    public FaInventory(int size, String title) {
+        this.size = size;
+        this.name = title;
+    }
+
+    public void event(String eventID, String intf) {
+        this.events.put(eventID, intf);
+    }
+
+    public void define(String key, ItemStack item) {
+        this.define.put(key, item);
+    }
+
+    public void design(List<String> design) {
+        for (int i = 0;i < design.size();i++) {
+            this.design.set(i, design.get(i));
         }
+    }
 
-        String design = designBuilder.toString();
-
-        char[] charArray = design.toCharArray();
-
-        // 应用定义流
-        for (int i = 0;i < charArray.length;i++) {
-            char c = charArray[i];
-
-            ItemStack itemStack = define.get(String.valueOf(c));
-
-            inventory.setItem(i, itemStack);
-        }
-
-        // 设置数据
-        setData(faInventoryData);
-
-        return inventory;
+    public ItemStack getDefine(String key) {
+        return this.define.get(key);
     }
 }

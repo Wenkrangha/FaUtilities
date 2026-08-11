@@ -1,20 +1,14 @@
 package com.wenkrang.faClip.Module.FaWindow;
 
 import com.wenkrang.faClip.Helper.ResourceHelper;
-import com.wenkrang.faClip.Module.FaData.FaInventoryData;
 import com.wenkrang.faClip.Module.FaInterface.FaInterfaceInstance;
 import com.wenkrang.faClip.Module.FaItem.FaItemInstance;
-import com.wenkrang.faClip.Module.FaWindow.event.InvCloseE;
-import com.wenkrang.faClip.Module.FaWindow.event.InvInitE;
-import com.wenkrang.faClip.Module.FaWindow.event.InvLockE;
+import com.wenkrang.faClip.Module.FaWindow.event.*;
 import com.wenkrang.faClip.Module.FaWindow.interpreter.FaInvInterpreter;
 import org.bukkit.Bukkit;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,6 +59,9 @@ public class FaWindowInstance {
         Bukkit.getPluginManager().registerEvents(new InvLockE(this), plugin);
         Bukkit.getPluginManager().registerEvents(new InvInitE(this), plugin);
         Bukkit.getPluginManager().registerEvents(new InvCloseE(this), plugin);
+        Bukkit.getPluginManager().registerEvents(new InvClickE(this), plugin);
+        Bukkit.getPluginManager().registerEvents(new InvRefE(this), plugin);
+        Bukkit.getPluginManager().registerEvents(new InvBackRefE(this), plugin);
     }
 
     public void loadAll() {
@@ -77,64 +74,19 @@ public class FaWindowInstance {
         }
     }
 
-    public FaWindow getWin(String s) {
-        FaWindow faWindow = new FaWindow();
-
-        FaInventory faInventory = inventories.get(s);
-
-        faWindow.setEntryInv(faInventory);
-
-        return faWindow;
-    }
 
     public FaInvInterpreter getFaInvInterpreter() {
         return faInvInterpreter;
     }
 
-    /**
-     * 获取物品栏ID（如果是FaInventory的话）
-     * 如果不是FaInventory则返回null
-     * @param inventory 物品栏
-     * @return 物品栏ID
-     */
-    public @Nullable String getID(Inventory inventory) {
-        String result = null;
+    public @Nullable FaInventory getFaInventory(String id) {
+        FaInventory faInventory = inventories.get(id);
 
-        InventoryHolder holder = inventory.getHolder();
-        if (holder != null) {
-            if (holder instanceof FaInventoryData faInventoryData) {
-                if (faInventoryData.has("id")) {
-                    result = faInventoryData.get("id");
-                }
-            }
+        if (faInventory != null) {
+            return faInventory.clone();
         }
 
-        return result;
+        return null;
     }
 
-    /**
-     * 判断物品栏是否是FaInventory
-     * @param inventory 物品栏
-     * @return 是否是FaInventory
-     */
-    public boolean isFaInventory(Inventory inventory) {
-        return getID(inventory) != null;
-    }
-
-    public @Nullable List<Integer> getTag(Inventory inv,String Tag) {
-        List<Integer> result = null;
-
-        // 判断物品栏是否是FaInventory
-        if (isFaInventory(inv)) {
-            // 获取物品栏数据
-            FaInventoryData data = (FaInventoryData) inv.getHolder();
-
-            // 判断数据是否存在且包含指定标签
-            if (data != null && data.has(Tag)) {
-                result = data.get(Tag);
-            }
-        }
-
-        return result;
-    }
 }

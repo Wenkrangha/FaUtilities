@@ -2,16 +2,10 @@ package com.wenkrang.faClip.Module.FaCommand.AnnotationHandler;
 
 import com.wenkrang.faClip.Module.FaCommand.Annotation.Cmd;
 import com.wenkrang.faClip.Module.FaCommand.FaCmd;
-import com.wenkrang.faClip.Module.FaCommand.Helper.NodeHelper;
-import com.wenkrang.faClip.Module.FaMessage.Fm;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-
-import static com.wenkrang.faClip.Module.FaMessage.Helper.I18nHelper.ft;
-import static com.wenkrang.faClip.Module.FaMessage.Helper.I18nHelper.t;
 
 /**
  * CmdNode 注解处理器

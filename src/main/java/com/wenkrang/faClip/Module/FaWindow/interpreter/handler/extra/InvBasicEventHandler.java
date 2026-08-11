@@ -7,6 +7,7 @@ import com.wenkrang.faClip.Module.FaInterface.FaIntf;
 import com.wenkrang.faClip.Module.FaInterface.FaIntfContext;
 import com.wenkrang.faClip.Module.FaWindow.FaInventory;
 import com.wenkrang.faClip.Module.FaWindow.FaWindowInstance;
+import com.wenkrang.faClip.Module.FaWindow.helper.WinDataGetter;
 import com.wenkrang.faClip.Module.FaWindow.interpreter.handler.FaInvHandler;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
@@ -20,7 +21,7 @@ public class InvBasicEventHandler implements FaInvHandler {
 
     public static void invoke(Event event, Inventory inventory, String name, FaWindowInstance faWindowInstance) {
         // 检查是否为FaInventory
-        if (faWindowInstance.isFaInventory(inventory)) {
+        if (WinDataGetter.isFaInventory(inventory)) {
             FaInventoryData faInventoryData = (FaInventoryData) inventory.getHolder();
 
             // 检查是否有指定的事件
@@ -43,6 +44,8 @@ public class InvBasicEventHandler implements FaInvHandler {
                     // 设置事件
                     faIntfContext.set("event", event);
 
+                    faIntfContext.set("win", WinDataGetter.getFaWin(inventory));
+
                     // 调用FaIntf
                     try {
                         first.invoke(null, faIntfContext, new String[0]);
@@ -60,7 +63,7 @@ public class InvBasicEventHandler implements FaInvHandler {
             String node = faData.getString("event." + event);
 
             if (node != null) {
-                faInventory.events.put(event, node);
+                faInventory.getEvents().put(event, node);
             }
         }
     }
