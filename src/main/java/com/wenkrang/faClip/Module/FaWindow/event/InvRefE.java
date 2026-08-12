@@ -5,7 +5,7 @@ import com.wenkrang.faClip.Module.FaItem.TagMgr;
 import com.wenkrang.faClip.Module.FaWindow.FaInventory;
 import com.wenkrang.faClip.Module.FaWindow.FaWindow;
 import com.wenkrang.faClip.Module.FaWindow.FaWindowInstance;
-import com.wenkrang.faClip.Module.FaWindow.helper.WinDataGetter;
+import com.wenkrang.faClip.Module.FaWindow.helper.WinDataHelper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -49,8 +49,8 @@ public class InvRefE implements Listener {
 
             if (faInventory != null) {
                 // 判断是否有窗口
-                if (WinDataGetter.isFaInventory(inv)) {
-                    FaInventoryData data = WinDataGetter.getData(inv);
+                if (WinDataHelper.isFaInventory(inv)) {
+                    FaInventoryData data = WinDataHelper.getData(inv);
 
                     if (data != null && data.has("win")) {
                         FaWindow win = data.get("win");

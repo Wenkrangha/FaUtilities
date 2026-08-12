@@ -1,7 +1,7 @@
 package com.wenkrang.faClip.Module.FaData;
 
+import com.wenkrang.faClip.Helper.PluginHelper;
 import com.wenkrang.faClip.Module.FaMessage.Helper.I18nHelper;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -54,36 +54,6 @@ public class FaData {
     // ==================== 插件实例自动发现 ====================
 
     /**
-     * 通过调用栈分析，自动获取调用方所属的插件实例
-     * <p>原理：每个 Bukkit 插件有独立的 PluginClassLoader，
-     * 通过 StackWalker 找到第一个非 FaClip 包的调用者类，
-     * 再匹配其 ClassLoader 即可定位插件</p>
-     * @return 调用方的插件实例，找不到时返回 null
-     */
-    @Nullable
-    public static Plugin detectCallingPlugin() {
-        Class<?> callerClass = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE)
-                .walk(frames -> frames
-                        .map(StackWalker.StackFrame::getDeclaringClass)
-                        .filter(c -> !c.getName().startsWith("com.wenkrang.faClip")
-                                && !c.getName().startsWith("java.")
-                                && !c.getName().startsWith("jdk."))
-                        .findFirst()
-                )
-                .orElse(null);
-
-        if (callerClass == null) return null;
-
-        ClassLoader callerLoader = callerClass.getClassLoader();
-        for (Plugin p : Bukkit.getPluginManager().getPlugins()) {
-            if (p.getClass().getClassLoader() == callerLoader) {
-                return p;
-            }
-        }
-        return null;
-    }
-
-    /**
      * 用指定节点名初始化 FaYamlData
      * <p>节点必须以 "/" 分割</p>
      * <p>eg. "playerData/stuff/xxxxxxxxxxxxxx-xxxxxxxxxxxxx-xxxxxxxxxxxxx-xxxxxxxxxxxxxxx"</p>
@@ -107,7 +77,7 @@ public class FaData {
             file = new File(dataFolder, Node + ".yaml");
             init();
         } else {
-            plugin = detectCallingPlugin();
+            plugin = PluginHelper.detectCallingPlugin();
             if (plugin == null)
                 throw new NullPointerException
                     (I18nHelper.t("FaData.Exception.FaYamlData.PluginIsNotinitialized"));

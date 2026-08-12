@@ -6,10 +6,9 @@ import com.wenkrang.faClip.Module.FaInterface.FaInterfaceInstance;
 import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.FaItemInterpreter;
 import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.event.FaItemClickE;
 import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.event.FaItemInvClickE;
+import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.helper.ItemDataHelper;
 import org.bukkit.Bukkit;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStream;
@@ -64,23 +63,10 @@ public class FaItemInstance {
      * @param key 命名空间键名
      * @return 对应的 FaItem 对象，若不存在则返回 null
      */
-    public FaItem getFaItem(String key) {
-        return faItems.get(key).copy();
-    }
+    public @Nullable FaItem getFaItem(String key) {
+        FaItem faItem = faItems.get(key);
 
-    /**
-     * 获取Item的FaItem ID
-     * @param i 物品
-     * @return 如果物品属于FaItem，将返回他的FaItem ID，如果不是就返回null
-     */
-    public @Nullable String getID(ItemStack i) {
-        TagMgr tagMgr = new TagMgr(plugin, i);
-
-        if (tagMgr.has("id")) {
-            return tagMgr.get("id");
-        }else {
-            return null;
-        }
+        return faItem == null ? null : faItem.copy();
     }
 
     /**
@@ -107,7 +93,7 @@ public class FaItemInstance {
         FaItem item = faItemInterpreter.interpreter(faData.getYaml());
         
         // 以物品的命名空间为键，注册到内部注册表
-        faItems.put(getID(item), item);
+        faItems.put(ItemDataHelper.getID(item), item);
     }
     
     /**
@@ -122,21 +108,6 @@ public class FaItemInstance {
         for (String item : items) {
             load(item);
         }
-    }
-
-    /**
-     * 判断物品是否等于指定 ID
-     *
-     * @param itemStack 要判断的物品
-     * @param id        要判断的 ID
-     * @return 是否等于指定 ID
-     */
-    public boolean equals(@NotNull ItemStack itemStack, String id) {
-        if (itemStack.getItemMeta() == null) return false;
-
-        TagMgr tagMgr = new TagMgr(plugin, itemStack);
-
-        return tagMgr.has("id") && id.equals(tagMgr.get("id"));
     }
 
     public Map<String,FaItem> getAll() {

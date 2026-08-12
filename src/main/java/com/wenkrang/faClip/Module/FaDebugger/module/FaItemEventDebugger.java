@@ -10,6 +10,7 @@ import com.wenkrang.faClip.Module.FaInterface.Annotation.Intf;
 import com.wenkrang.faClip.Module.FaInterface.FaIntfContext;
 import com.wenkrang.faClip.Module.FaItem.FaItem;
 import com.wenkrang.faClip.Module.FaItem.FaItemInstance;
+import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.helper.ItemDataHelper;
 import com.wenkrang.faClip.Module.FaMessage.Fm;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -51,7 +52,7 @@ public class FaItemEventDebugger {
 
         ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
 
-        String id = faItemInstance.getID(itemInMainHand);
+        String id = ItemDataHelper.getID(itemInMainHand);
 
         if (id != null) {
             Fm.info(faCmdContext.sender(), id);

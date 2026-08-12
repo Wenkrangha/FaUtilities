@@ -1,5 +1,6 @@
 package com.wenkrang.faClip.Module.FaData;
 
+import com.wenkrang.faClip.Helper.PluginHelper;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -22,7 +23,7 @@ public class FaPlayerTempData {
      * 如果插件未正常初始化，进行插件追踪
      */
     public static void init() {
-        if (plugin == null) plugin = FaData.detectCallingPlugin();
+        if (plugin == null) plugin = PluginHelper.detectCallingPlugin();
     }
 
     public static void set(Player player, String Key, String Value) {

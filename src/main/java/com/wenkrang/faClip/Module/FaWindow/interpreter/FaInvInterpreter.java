@@ -7,6 +7,8 @@ import com.wenkrang.faClip.Module.FaWindow.interpreter.handler.FaInvHandler;
 import com.wenkrang.faClip.Module.FaWindow.interpreter.handler.basic.*;
 import com.wenkrang.faClip.Module.FaWindow.interpreter.handler.extra.InvBasicEventHandler;
 import com.wenkrang.faClip.Module.FaWindow.interpreter.handler.extra.InvLockHandler;
+import com.wenkrang.faClip.Module.FaWindow.interpreter.handler.extra.InvMoveableHandler;
+import com.wenkrang.faClip.Module.FaWindow.interpreter.handler.extra.InvNoteHandler;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -25,7 +27,9 @@ public class FaInvInterpreter {
         pipe.add(new InvDefineHandler());
         pipe.add(new InvNameHandler());
         pipe.add(new InvLockHandler());
+        pipe.add(new InvNoteHandler());
         pipe.add(new InvBasicEventHandler());
+        pipe.add(new InvMoveableHandler());
     }
 
     public FaWindowInstance getFaWindowInstance() {
@@ -37,7 +41,7 @@ public class FaInvInterpreter {
 
         FaData data = new FaData(resource);
 
-        FaInventory faInventory = new FaInventory();
+        FaInventory faInventory = new FaInventory(faWindowInstance);
 
         pipe.forEach(handler -> handler.handle(faInventory, data, faWindowInstance));
 

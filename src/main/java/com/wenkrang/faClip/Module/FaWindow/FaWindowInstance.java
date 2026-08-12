@@ -1,17 +1,22 @@
 package com.wenkrang.faClip.Module.FaWindow;
 
 import com.wenkrang.faClip.Helper.ResourceHelper;
+import com.wenkrang.faClip.Module.FaData.FaInventoryData;
 import com.wenkrang.faClip.Module.FaInterface.FaInterfaceInstance;
 import com.wenkrang.faClip.Module.FaItem.FaItemInstance;
 import com.wenkrang.faClip.Module.FaWindow.event.*;
 import com.wenkrang.faClip.Module.FaWindow.interpreter.FaInvInterpreter;
 import org.bukkit.Bukkit;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.wenkrang.faClip.Module.FaWindow.helper.WinDataHelper.getDesignArray;
 
 public class FaWindowInstance {
     private final Plugin plugin;
@@ -89,4 +94,64 @@ public class FaWindowInstance {
         return null;
     }
 
+    /**
+     * 设置界面数据
+     * @param inv 界面
+     * @param data 界面数据
+     */
+    public void setData(FaInventory inv, FaInventoryData data, FaWindow faWindow) {
+        // 基本信息
+        data.set("id", inv.id);
+        data.set("name", inv.name);
+
+        // 设计
+        data.set("design", inv.getDesign());
+        // 定义
+        data.set("define", inv.getDefine());
+
+        // 功能
+        data.set("lock", inv.lock);
+
+        // 应用事件
+        for (Map.Entry<String, String> entry : inv.getEvents().entrySet()) {
+            data.set("event." + entry.getKey(), entry.getValue());
+        }
+
+        // 应用标签
+        data.set("note", inv.getAllNote());
+
+        // 设置可动格
+        data.set("moveable", inv.getMoveableSlots());
+
+        data.set("win", faWindow);
+    }
+
+
+
+    /**
+     * 渲染界面
+     * @return 返回
+     */
+    public Inventory render(FaInventory inv) {
+        // 从初始化数据
+        FaInventoryData faInventoryData = new FaInventoryData();
+        Inventory inventory = Bukkit.createInventory(faInventoryData, inv.size, inv.name);
+        faInventoryData.setInventory(inventory);
+
+        char[] charArray = getDesignArray(inv.getDesign());
+
+        // 应用定义流
+        for (int i = 0;i < charArray.length;i++) {
+            char c = charArray[i];
+
+            ItemStack itemStack = inv.getDefine(String.valueOf(c));
+
+            inventory.setItem(i, itemStack.clone());
+        }
+
+        // 覆盖物品
+        inv.getOverride().forEach(inventory::setItem);
+
+        return inventory;
+    }
 }

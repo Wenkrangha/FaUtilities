@@ -7,7 +7,7 @@ import com.wenkrang.faClip.Module.FaInterface.FaIntf;
 import com.wenkrang.faClip.Module.FaInterface.FaIntfContext;
 import com.wenkrang.faClip.Module.FaWindow.FaInventory;
 import com.wenkrang.faClip.Module.FaWindow.FaWindowInstance;
-import com.wenkrang.faClip.Module.FaWindow.helper.WinDataGetter;
+import com.wenkrang.faClip.Module.FaWindow.helper.WinDataHelper;
 import com.wenkrang.faClip.Module.FaWindow.interpreter.handler.FaInvHandler;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
@@ -21,12 +21,12 @@ public class InvBasicEventHandler implements FaInvHandler {
 
     public static void invoke(Event event, Inventory inventory, String name, FaWindowInstance faWindowInstance) {
         // 检查是否为FaInventory
-        if (WinDataGetter.isFaInventory(inventory)) {
+        if (WinDataHelper.isFaInventory(inventory)) {
             FaInventoryData faInventoryData = (FaInventoryData) inventory.getHolder();
 
             // 检查是否有指定的事件
-            if (faInventoryData != null && faInventoryData.has(name)) {
-                String node = faInventoryData.get(name);
+            if (faInventoryData != null && faInventoryData.has("event." + name)) {
+                String node = faInventoryData.get("event." + name);
 
                 // 获取FaInterfaceInstance
                 FaInterfaceInstance faInterfaceInstance = faWindowInstance.getFaInterfaceInstance();
@@ -44,7 +44,7 @@ public class InvBasicEventHandler implements FaInvHandler {
                     // 设置事件
                     faIntfContext.set("event", event);
 
-                    faIntfContext.set("win", WinDataGetter.getFaWin(inventory));
+                    faIntfContext.set("win", WinDataHelper.getFaWin(inventory));
 
                     // 调用FaIntf
                     try {

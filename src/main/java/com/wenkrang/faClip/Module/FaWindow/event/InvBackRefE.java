@@ -4,7 +4,7 @@ import com.wenkrang.faClip.Module.FaData.FaInventoryData;
 import com.wenkrang.faClip.Module.FaItem.TagMgr;
 import com.wenkrang.faClip.Module.FaWindow.FaWindow;
 import com.wenkrang.faClip.Module.FaWindow.FaWindowInstance;
-import com.wenkrang.faClip.Module.FaWindow.helper.WinDataGetter;
+import com.wenkrang.faClip.Module.FaWindow.helper.WinDataHelper;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -30,9 +30,9 @@ public class InvBackRefE implements Listener {
 
             // 检查backref标签的值是否为true
             if (Boolean.parseBoolean(s)) {
-                FaWindow faWin = WinDataGetter.getFaWin(inv);
+                FaWindow faWin = WinDataHelper.getFaWin(inv);
 
-                FaInventoryData data = WinDataGetter.getData(inv);
+                FaInventoryData data = WinDataHelper.getData(inv);
 
                 if (data != null && data.has("backref")) {
                     Inventory backref = data.get("backref");

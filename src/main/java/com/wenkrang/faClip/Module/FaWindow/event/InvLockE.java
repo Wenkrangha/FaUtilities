@@ -1,14 +1,17 @@
 package com.wenkrang.faClip.Module.FaWindow.event;
 
 import com.wenkrang.faClip.Module.FaData.FaInventoryData;
-import com.wenkrang.faClip.Module.FaItem.TagMgr;
+import com.wenkrang.faClip.Module.FaItem.FaItemInterpreter.helper.ItemDataHelper;
 import com.wenkrang.faClip.Module.FaWindow.FaWindowInstance;
-import com.wenkrang.faClip.Module.FaWindow.helper.WinDataGetter;
+import com.wenkrang.faClip.Module.FaWindow.helper.WinDataHelper;
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
 
 public class InvLockE implements Listener {
     public FaWindowInstance instance;
@@ -20,7 +23,7 @@ public class InvLockE implements Listener {
     @EventHandler
     public void onInv(InventoryClickEvent event) {
         Inventory inventory = event.getInventory();
-        if (WinDataGetter.isFaInventory(inventory)) {
+        if (WinDataHelper.isFaInventory(inventory)) {
             // 获取物品栏数据
             FaInventoryData faInventoryData = (FaInventoryData) inventory.getHolder();
 
@@ -28,21 +31,37 @@ public class InvLockE implements Listener {
 
             if (rawSlot >= 0 && rawSlot < inventory.getSize()) {
                 ItemStack item = inventory.getItem(rawSlot);
-                if (item != null) {
-                    // 获取标签数据
-                    TagMgr tag = new TagMgr(instance.getPlugin(), item);
 
-                    // 如果有可动标签就忽略
-                    if (tag.has("moveable")) {
+                // 检查物品是否可移动
+                if (item != null) {
+                    if (ItemDataHelper.isMoveable(item)) {
                         return;
                     }
-                }
-            }
 
-            // 检查物品栏是否锁定
-            if (faInventoryData != null && faInventoryData.has("lock")) {
-                if (faInventoryData.get("lock")) {
-                    event.setCancelled(true);
+                    // 检查鼠标物品是否可动
+                    if (item.getType() == Material.AIR) {
+                        if (event.getCursor() != null && ItemDataHelper.isMoveable(event.getCursor())) {
+                            return;
+                        }
+                    }
+                }
+
+                if (faInventoryData != null) {
+                    // 检查格子是否为可动格
+                    if (faInventoryData.has("moveable")) {
+                        List<Integer> moveable = WinDataHelper.getMoveable(inventory);
+
+                        if (moveable.contains(rawSlot)) {
+                            return;
+                        }
+                    }
+
+                    // 检查物品栏是否锁定
+                    if (faInventoryData.has("lock")) {
+                        if (faInventoryData.get("lock")) {
+                            event.setCancelled(true);
+                        }
+                    }
                 }
             }
         }

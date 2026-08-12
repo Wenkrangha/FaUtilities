@@ -1,5 +1,6 @@
 package com.wenkrang.faClip.Module.FaData;
 
+import com.wenkrang.faClip.Helper.PluginHelper;
 import com.wenkrang.faClip.Module.FaMessage.Helper.I18nHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -36,7 +37,7 @@ public class FaItemData extends FaData{
      */
     public static NamespacedKey getKey() {
         if (FaData.plugin == null) {
-            plugin = detectCallingPlugin();
+            plugin = PluginHelper.detectCallingPlugin();
         }
 
         if (plugin == null) throw new NullPointerException(

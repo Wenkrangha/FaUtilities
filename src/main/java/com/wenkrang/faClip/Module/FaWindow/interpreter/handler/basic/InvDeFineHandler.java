@@ -3,6 +3,7 @@ package com.wenkrang.faClip.Module.FaWindow.interpreter.handler.basic;
 import com.wenkrang.faClip.Module.FaData.FaData;
 import com.wenkrang.faClip.Module.FaItem.FaItem;
 import com.wenkrang.faClip.Module.FaItem.FaItemInstance;
+import com.wenkrang.faClip.Module.FaMessage.Fm;
 import com.wenkrang.faClip.Module.FaWindow.FaInventory;
 import com.wenkrang.faClip.Module.FaWindow.FaWindowInstance;
 import com.wenkrang.faClip.Module.FaWindow.interpreter.handler.FaInvHandler;
@@ -33,7 +34,11 @@ public class InvDefineHandler implements FaInvHandler {
 
                         FaItem faItem = faItemInstance.getFaItem(value);
 
-                        faInventory.define(key, faItem.copy());
+                        if (faItem != null) {
+                            faInventory.define(key, faItem);
+                        }else {
+                            Fm.warning("FaInventory define 引用了不存在的物品: " + value);
+                        }
                     }
                 }
 

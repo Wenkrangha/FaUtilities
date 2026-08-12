@@ -5,9 +5,13 @@ import com.wenkrang.faClip.Module.FaWindow.FaInventory;
 import com.wenkrang.faClip.Module.FaWindow.FaWindowInstance;
 import com.wenkrang.faClip.Module.FaWindow.interpreter.handler.FaInvHandler;
 
-public class InvLockHandler implements FaInvHandler {
+public class InvMoveableHandler implements FaInvHandler {
     @Override
     public void handle(FaInventory faInventory, FaData faData, FaWindowInstance faWindowInstance) {
-        faInventory.lock = faData.getBoolean("lock");
+        if (faData.has("moveable")) {
+            Object o = faData.get("moveable");
+
+            faInventory.setMoveableSlots(o);
+        }
     }
 }

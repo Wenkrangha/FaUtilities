@@ -1,7 +1,7 @@
 package com.wenkrang.faClip.Module.FaWindow;
 
 import com.wenkrang.faClip.Module.FaData.FaInventoryData;
-import com.wenkrang.faClip.Module.FaWindow.helper.WinDataGetter;
+import com.wenkrang.faClip.Module.FaWindow.helper.WinDataHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -9,8 +9,11 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.wenkrang.faClip.Module.FaWindow.helper.WinDataHelper.getDesignArray;
 
 public class FaWindow {
     public FaWindowInstance faWindowInstance;
@@ -36,62 +39,10 @@ public class FaWindow {
         this.faWindowInstance = faWindowInstance;
     }
 
-    /**
-     * 设置界面数据
-     * @param inv 界面
-     * @param data 界面数据
-     */
-    public void setData(FaInventory inv,FaInventoryData data) {
-        data.set("lock", inv.lock);
-        data.set("id", inv.id);
-        data.set("name", inv.name);
 
-        // 应用事件
-        for (Map.Entry<String, String> entry : inv.getEvents().entrySet()) {
-            data.set("event." + entry.getKey(), entry.getValue());
-        }
-
-        data.set("win", this);
-    }
-
-    /**
-     * 渲染界面
-     * @return 返回
-     */
-    public Inventory render(FaInventory inv) {
-        // 从初始化数据
-        FaInventoryData faInventoryData = new FaInventoryData();
-        Inventory inventory = Bukkit.createInventory(faInventoryData, inv.size, inv.name);
-        faInventoryData.setInventory(inventory);
-
-        // 拼接设计流
-        StringBuilder designBuilder = new StringBuilder();
-
-        for (String d : inv.getDesign()) {
-            designBuilder.append(d);
-        }
-
-        String design = designBuilder.toString();
-
-        char[] charArray = design.toCharArray();
-
-        // 应用定义流
-        for (int i = 0;i < charArray.length;i++) {
-            char c = charArray[i];
-
-            ItemStack itemStack = inv.getDefine(String.valueOf(c));
-
-            inventory.setItem(i, itemStack.clone());
-        }
-
-        // 设置数据
-        setData(inv, faInventoryData);
-
-        return inventory;
-    }
 
     public void setBackRef(Inventory inventory) {
-        FaInventoryData data = WinDataGetter.getData(inventory);
+        FaInventoryData data = WinDataHelper.getData(inventory);
 
         if (data != null && !data.has("backref")) {
             data.set("backref", current);
@@ -100,15 +51,22 @@ public class FaWindow {
 
     public FaInventoryData open(FaInventory faInventory) {
         // 渲染界面
-        Inventory render = render(faInventory);
+        Inventory render = faWindowInstance.render(faInventory);
 
+        // 设置数据
+        FaInventoryData data = WinDataHelper.getData(render);
+        assert data != null;
+        faWindowInstance.setData(faInventory, data, this);
+
+        // 打开物品栏
         viewer.openInventory(render);
 
+        // 设置回指
         setBackRef(render);
 
         current = render;
 
-        return WinDataGetter.getData(render);
+        return data;
     }
 
     public @Nullable FaInventoryData open(Inventory inventory) {
