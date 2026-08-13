@@ -1,5 +1,4 @@
 id: test
 type: GLASS
 name: Test
-event:
-  inv_click: "fatest.event.test"
+isolate: true

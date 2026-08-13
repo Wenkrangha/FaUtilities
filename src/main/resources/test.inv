@@ -10,7 +10,7 @@ design:
      - yyyyyyyyy
      - zzzzzzzzz
      - zzzzzzzzz
-     - xxxxxxxxx
+     - xccxxxxxx
 define:
      x: background_1
      y: MC.AIR
@@ -19,6 +19,4 @@ define:
      b: moveable
 moveable: [y,z]
 note:
-   button:
-        - 45
-        - 46
+   button: c

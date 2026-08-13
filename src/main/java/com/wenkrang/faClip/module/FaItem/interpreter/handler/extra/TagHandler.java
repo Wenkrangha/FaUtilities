@@ -1,0 +1,48 @@
+package com.wenkrang.faClip.module.FaItem.interpreter.handler.extra;
+
+import com.wenkrang.faClip.FaClip;
+import com.wenkrang.faClip.module.FaItem.FaItem;
+import com.wenkrang.faClip.module.FaItem.interpreter.FaItemInterpreter;
+import com.wenkrang.faClip.module.FaItem.interpreter.handler.FaItemHandler;
+import com.wenkrang.faClip.module.FaItem.TagMgr;
+import com.wenkrang.faClip.module.FaMessage.Helper.I18nHelper;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import java.util.Set;
+
+public class TagHandler implements FaItemHandler {
+    @Override
+    public String getNode() {
+        return "tag";
+    }
+
+    @Override
+    public void handle(FaItem faItem, YamlConfiguration yamlConfiguration, FaItemInterpreter faItemInterpreter) {
+        try {
+            // 获取标签管理器
+            TagMgr tagMgr = faItem.getTagMgr();
+
+            // 获取配置节点
+            ConfigurationSection configurationSection = yamlConfiguration.getConfigurationSection(getNode());
+
+            // NPE
+            if (configurationSection != null) {
+                // 获取所有节点
+                Set<String> keys = configurationSection.getKeys(false);
+
+                // 历遍
+                for (String key : keys) {
+                    // 获取节点下的值
+                    String value = configurationSection.getString(key);
+
+                    // 写入物品的Tag
+                    tagMgr.set(key, value);
+                }
+            }
+        } catch (Exception e) {
+            I18nHelper.fw("FaItem.Exception.FaItemInterpreter.CannotFoundNode", getNode());
+            if (FaClip.debugger != null) e.printStackTrace();
+        }
+    }
+}
