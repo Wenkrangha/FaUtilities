@@ -1,5 +1,6 @@
 package com.wenkrang.faClip.module.FaCommand.helper;
 
+import com.wenkrang.faClip.module.FaMessage.exception.FaException;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,12 +26,16 @@ public class CmdParamHelper {
         ArrayList<String> result = new ArrayList<>();
 
         for (Object object : objects) {
-            if (object instanceof String str) {
-                result.add(str);
-            } else if (object instanceof String[] strs) {
-                result.addAll(List.of(strs));
-            } else if (object instanceof ArrayList<?> strs) {
-                result.addAll(strs.stream().map(String::valueOf).toList());
+            if (object == null)
+                throw new FaException("FaCommand.Error.Interpreter.ArgsNPEWarning");
+
+            switch (object) {
+                case String str -> result.add(str);
+                case String[] strs -> result.addAll(List.of(strs));
+                case ArrayList<?> strs -> result.addAll(strs.stream().map(String::valueOf).toList());
+                default ->
+                        throw new FaException("FaClip.Error.CmdParamHelper.UnknownType"
+                                , object.getClass().getTypeName());
             }
         }
 

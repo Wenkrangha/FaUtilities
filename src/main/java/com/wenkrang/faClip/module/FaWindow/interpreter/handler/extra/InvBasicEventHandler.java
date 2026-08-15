@@ -5,6 +5,10 @@ import com.wenkrang.faClip.module.FaData.FaInventoryData;
 import com.wenkrang.faClip.module.FaInterface.FaInterfaceInstance;
 import com.wenkrang.faClip.module.FaInterface.FaIntf;
 import com.wenkrang.faClip.module.FaInterface.FaIntfContext;
+import com.wenkrang.faClip.module.FaMessage.Fm;
+import com.wenkrang.faClip.module.FaMessage.exception.FaException;
+import com.wenkrang.faClip.module.FaMessage.exception.FaWindowException;
+import com.wenkrang.faClip.module.FaMessage.helper.I18nHelper;
 import com.wenkrang.faClip.module.FaWindow.FaInventory;
 import com.wenkrang.faClip.module.FaWindow.FaWindowInstance;
 import com.wenkrang.faClip.module.FaWindow.helper.WinDataHelper;
@@ -49,9 +53,18 @@ public class InvBasicEventHandler implements FaInvHandler {
                     // 调用FaIntf
                     try {
                         first.invoke(null, faIntfContext, new String[0]);
-                    } catch (InvocationTargetException | IllegalAccessException e) {
-                        throw new RuntimeException(e);
+                    } catch (InvocationTargetException e) {
+                        // 解包业务方法抛出的异常：FaException 原样上抛，其余包装为 FaWindowException
+                        Throwable cause = e.getCause() != null ? e.getCause() : e;
+                        if (cause instanceof FaException faException) throw faException;
+                        throw new FaWindowException("FaWindow.Error.Event.InvokeFailed", cause,
+                                name, cause.getMessage());
+                    } catch (IllegalAccessException e) {
+                        throw new FaWindowException("FaWindow.Error.Event.InvokeFailed", e,
+                                name, e.getMessage());
                     }
+                }else {
+                    Fm.warning(I18nHelper.ft("FaInterface.Exception.Instance.IntfNotFound", node));
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.wenkrang.faClip.module.FaResource;
 
+import com.wenkrang.faClip.module.FaMessage.exception.FaResourceException;
 import com.wenkrang.faClip.module.FaResource.event.PlayerResourcePackStatusE;
 import com.wenkrang.faClip.module.FaResource.event.ResourceCommandPreprocessE;
 import org.bukkit.Bukkit;
@@ -72,18 +73,18 @@ public class FaBukkitResourceManager {
      *
      * @param hex 输入的十六进制字符串
      * @return 对应的字节数组
-     * @throws IllegalArgumentException 当输入字符串格式非法时抛出此异常
+     * @throws FaResourceException 当输入字符串格式非法时抛出此异常
      */
     public static byte[] stringToHash(String hex) {
         if (hex == null || hex.length() % 2 != 0) {
-            throw new IllegalArgumentException("Hex string must have even length: " + hex);
+            throw new FaResourceException("FaResource.Error.Hash.InvalidHexLength", hex);
         }
         byte[] data = new byte[hex.length() / 2];
         for (int i = 0; i < hex.length(); i += 2) {
             int high = Character.digit(hex.charAt(i), 16);
             int low = Character.digit(hex.charAt(i + 1), 16);
             if (high == -1 || low == -1) {
-                throw new IllegalArgumentException("Invalid hex character in: " + hex);
+                throw new FaResourceException("FaResource.Error.Hash.InvalidHexCharacter", hex);
             }
             data[i / 2] = (byte) ((high << 4) | low);
         }

@@ -4,7 +4,7 @@ import com.wenkrang.faClip.module.FaData.FaConfig;
 import com.wenkrang.faClip.module.FaData.FaData;
 import com.wenkrang.faClip.module.FaDebugger.Debugger;
 import com.wenkrang.faClip.module.FaMessage.Fm;
-import com.wenkrang.faClip.module.FaMessage.Helper.I18nHelper;
+import com.wenkrang.faClip.module.FaMessage.helper.I18nHelper;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 

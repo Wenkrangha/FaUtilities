@@ -1,5 +1,7 @@
 package com.wenkrang.faClip.module.FaWindow.tool;
 
+import com.wenkrang.faClip.module.FaMessage.exception.FaWindowException;
+
 import java.util.List;
 
 public class FaPaginator<T> {
@@ -11,10 +13,10 @@ public class FaPaginator<T> {
 
     public FaPaginator(List<T> list, int sizeEveryPage) {
         if (list == null) {
-            throw new IllegalArgumentException("list must not be null");
+            throw new FaWindowException("FaWindow.Error.Paginator.ListNull");
         }
         if (sizeEveryPage <= 0) {
-            throw new IllegalArgumentException("sizeEveryPage must be > 0");
+            throw new FaWindowException("FaWindow.Error.Paginator.InvalidPageSize", sizeEveryPage);
         }
         this.list = list;
         this.sizeEveryPage = sizeEveryPage;

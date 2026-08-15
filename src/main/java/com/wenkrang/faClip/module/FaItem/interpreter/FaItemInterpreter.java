@@ -1,5 +1,6 @@
 package com.wenkrang.faClip.module.FaItem.interpreter;
 
+import com.wenkrang.faClip.module.FaData.FaData;
 import com.wenkrang.faClip.module.FaItem.FaItem;
 import com.wenkrang.faClip.module.FaItem.interpreter.handler.FaItemHandler;
 import com.wenkrang.faClip.module.FaItem.interpreter.handler.basic.IdHandler;
@@ -19,6 +20,8 @@ public class FaItemInterpreter {
     public Plugin plugin;
 
     public FaItemInterpreter(Plugin p) {
+        handlers.add(new TemplateHandler());
+
         handlers.add(new TypeHandler());
         handlers.add(new NameHandler());
         handlers.add(new IdHandler());
@@ -34,11 +37,11 @@ public class FaItemInterpreter {
         plugin = p;
     }
 
-    public FaItem interpreter(YamlConfiguration yamlConfiguration) {
+    public FaItem interpreter(FaData faData) {
         FaItem faItem = new FaItem(plugin, Material.AIR);
 
         for (FaItemHandler faItemHandler : handlers) {
-            faItemHandler.handle(faItem, yamlConfiguration, this);
+            faItemHandler.handle(faItem, faData, this);
         }
 
         return faItem;

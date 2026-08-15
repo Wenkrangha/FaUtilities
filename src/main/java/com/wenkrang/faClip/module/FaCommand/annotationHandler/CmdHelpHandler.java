@@ -8,10 +8,9 @@ import java.lang.reflect.Method;
 
 public class CmdHelpHandler implements CmdAnnotationHandler {
     @Override
-    public void handle(FaCmd command, Method method) {
+    public void handle(FaCmd.Builder builder, Method method) {
         String value = method.getAnnotation(Help.class).value();
-
-        command.setHelp(value);
+        builder.help(value);
     }
 
     @Override

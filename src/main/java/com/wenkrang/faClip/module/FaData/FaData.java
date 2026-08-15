@@ -1,7 +1,7 @@
 package com.wenkrang.faClip.module.FaData;
 
 import com.wenkrang.faClip.helper.PluginHelper;
-import com.wenkrang.faClip.module.FaMessage.Helper.I18nHelper;
+import com.wenkrang.faClip.module.FaMessage.exception.FaDataException;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -67,9 +67,8 @@ public class FaData {
             // 初始化文件夹
             if (!(dataFolder.isDirectory() && dataFolder.exists())) {
                 if (!dataFolder.mkdirs()) {
-                    throw new RuntimeException(I18nHelper
-                            .ft("FaData.Exception.FaYamlData.FolderCannotInit"
-                                    , dataFolder.getName())
+                    throw new FaDataException("FaData.Exception.FaYamlData.FolderCannotInit"
+                            , dataFolder.getName()
                     );
                 }
             }
@@ -79,8 +78,7 @@ public class FaData {
         } else {
             plugin = PluginHelper.detectCallingPlugin();
             if (plugin == null)
-                throw new NullPointerException
-                    (I18nHelper.t("FaData.Exception.FaYamlData.PluginIsNotinitialized"));
+                throw new FaDataException("FaData.Exception.FaYamlData.PluginIsNotinitialized");
             else init();
         }
     }
@@ -101,6 +99,14 @@ public class FaData {
      */
     public static void init(Plugin p) {
         plugin = p;
+    }
+
+    public static @NotNull FaData getPluginResource(String path, Plugin plugin) {
+        InputStream resource = plugin.getResource(path);
+        if (resource == null)
+            throw new FaDataException("FaData.Exception.FaYamlData.ResourceNotFound", path);
+
+        return new FaData(resource);
     }
 
     /**
@@ -272,6 +278,10 @@ public class FaData {
      * <p>会自动创建不存在的父目录</p>
      */
     public void save() {
+        // 从 InputStream 初始化的 FaData 无关联文件，不能保存
+        if (file == null)
+            throw new FaDataException("FaData.Exception.FaYamlData.FileNotAssociated");
+
         try {
             // 确保父目录存在
             File parent = file.getParentFile();
@@ -280,7 +290,7 @@ public class FaData {
             }
             config.save(file);
         } catch (IOException e) {
-            throw new RuntimeException(I18nHelper.ft("FaData.Exception.FaYamlData.DataCannotBeSaved", file.getName()));
+            throw new FaDataException("FaData.Exception.FaYamlData.DataCannotBeSaved", e, file.getName());
         }
     }
 
@@ -370,5 +380,17 @@ public class FaData {
      */
     public boolean isEmpty() {
         return config.getKeys(false).isEmpty();
+    }
+
+    // ==================== 模板操作 ====================
+    public void template(FaData templateData) {
+        if (templateData != null) {
+            // 将模板中当前缺失的键补全进去
+            for (String key : templateData.getKeys(true)) {
+                if (!has(key)) {
+                    set(key, templateData.get(key));
+                }
+            }
+        }
     }
 }

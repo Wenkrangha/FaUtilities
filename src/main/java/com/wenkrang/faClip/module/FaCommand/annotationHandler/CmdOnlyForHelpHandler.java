@@ -8,8 +8,8 @@ import java.lang.reflect.Method;
 
 public class CmdOnlyForHelpHandler implements CmdAnnotationHandler {
     @Override
-    public void handle(FaCmd command, Method method) {
-        command.setOnlyForHelp(true);
+    public void handle(FaCmd.Builder builder, Method method) {
+        builder.onlyForHelp();
     }
 
     @Override

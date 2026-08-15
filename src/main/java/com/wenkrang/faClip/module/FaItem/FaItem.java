@@ -66,5 +66,13 @@ public class FaItem extends ItemStack {
         }
         return false;
     }
+
+    public String getTemplate() {
+        return getTagMgr().get("template");
+    }
+
+    public void setTemplate(String template) {
+        getTagMgr().set("template", template);
+    }
 }
 

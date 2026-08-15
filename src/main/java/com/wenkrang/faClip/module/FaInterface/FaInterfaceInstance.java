@@ -3,6 +3,7 @@ package com.wenkrang.faClip.module.FaInterface;
 import com.wenkrang.faClip.helper.ClassHelper;
 import com.wenkrang.faClip.module.FaInterface.annotation.Intf;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -27,12 +28,12 @@ public class FaInterfaceInstance {
         faIntfInterpreter = new FaIntfInterpreter(this);
     }
 
-    public FaIntf registerFaIntf(Method method,String node) {
+    public FaIntf registerFaIntf(@NotNull Method method,@NotNull String node) {
         FaIntf intf = faIntfInterpreter.interpret(method, node);
         faIntfs.add(intf);
         return intf;
     }
-    public void registerFaIntf(Method method) {
+    public void registerFaIntf(@NotNull Method method) {
         faIntfs.add(faIntfInterpreter.interpret(method));
     }
     public ArrayList<FaIntf> getFaIntfs() {
@@ -73,7 +74,7 @@ public class FaInterfaceInstance {
      * @param node 节点
      * @return 匹配的接口
      */
-    public List<FaIntf> getIntf(String node) {
+    public @NotNull List<FaIntf> getIntf(String node) {
         return faIntfs.stream().filter(i -> i.getNode().equalsIgnoreCase(node)).toList();
     }
 }

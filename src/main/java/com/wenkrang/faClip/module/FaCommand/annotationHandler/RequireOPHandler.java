@@ -12,8 +12,8 @@ import java.lang.reflect.Method;
  */
 public class RequireOPHandler implements CmdAnnotationHandler {
     @Override
-    public void handle(@NotNull FaCmd command, @NotNull Method method) {
-        command.setRequireOP(true);
+    public void handle(@NotNull FaCmd.Builder builder, @NotNull Method method) {
+        builder.requireOP();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.wenkrang.faClip.helper;
 
+import com.wenkrang.faClip.module.FaMessage.exception.FaException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,7 +36,7 @@ public class ZipHelper {
                 return Arrays.equals(header, ZIP_HEADER);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new FaException("FaClip.Error.ZipHelper.ZipProcessFailed", file.getPath());
         }
         return false;
     }
@@ -54,9 +55,9 @@ public class ZipHelper {
                 File newFile = new File(Dir, zipEntry.getName());
                 if (!newFile.exists()) {
                     if (zipEntry.isDirectory()) {
-                        newFile.mkdirs();
+                        if (!newFile.mkdirs()) throw new FaException("FaClip.Error.ZipHelper.ZipProcessFailed", file.getPath());
                     } else {
-                        newFile.createNewFile();
+                        if (!newFile.createNewFile()) throw new FaException("FaClip.Error.ZipHelper.ZipProcessFailed", file.getPath());
 
                         try (FileOutputStream fo = new FileOutputStream(newFile)) {
                             byte[] buffer = new byte[1024];

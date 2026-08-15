@@ -1,4 +1,4 @@
-package com.wenkrang.faClip.module.FaMessage.Helper;
+package com.wenkrang.faClip.module.FaMessage.helper;
 
 import org.jetbrains.annotations.NotNull;
 

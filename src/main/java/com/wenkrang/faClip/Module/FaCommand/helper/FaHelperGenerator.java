@@ -1,4 +1,4 @@
-package com.wenkrang.faClip.module.FaCommand.helperGenerator;
+package com.wenkrang.faClip.module.FaCommand.helper;
 
 import com.wenkrang.faClip.module.FaCommand.annotation.CustomDes;
 import com.wenkrang.faClip.module.FaCommand.annotation.DesProvider;
@@ -7,13 +7,12 @@ import com.wenkrang.faClip.module.FaCommand.annotation.ParamDes;
 import com.wenkrang.faClip.module.FaCommand.FaCmd;
 import com.wenkrang.faClip.module.FaCommand.FaCmdInstance;
 import com.wenkrang.faClip.module.FaCommand.interpreter.FaCmdContext;
-import com.wenkrang.faClip.module.FaCommand.helper.CmdParamHelper;
-import com.wenkrang.faClip.module.FaCommand.helper.NodeHelper;
 import com.wenkrang.faClip.module.FaInterface.FaIntf;
 import com.wenkrang.faClip.module.FaInterface.FaIntfContext;
 import com.wenkrang.faClip.module.FaInterface.param.FaParam;
 import com.wenkrang.faClip.module.FaInterface.param.SimpleParam;
-import com.wenkrang.faClip.module.FaMessage.Helper.Scc;
+import com.wenkrang.faClip.module.FaMessage.exception.FaCmdException;
+import com.wenkrang.faClip.module.FaMessage.helper.Scc;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,7 +42,10 @@ public class FaHelperGenerator {
      * @return 命令用法
      */
     public String generateUsage(String node) {
-        FaCmd faCmd = getFaCmdInstance().getFaCmds().stream().filter(i -> i.getNode().equals(node)).findFirst().orElseThrow();
+        FaCmd faCmd = getFaCmdInstance().getFaCmds().stream()
+                .filter(i -> i.getNode().equals(node))
+                .findFirst()
+                .orElseThrow(() -> new FaCmdException("FaCommand.Error.Interpreter.NotFound"));
 
         FaParam faParam = new FaParam();
 
@@ -152,7 +154,8 @@ public class FaHelperGenerator {
                                     return (Object) value.getDes(faCmdContext);
                                 } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                                          NoSuchMethodException e) {
-                                    throw new RuntimeException(e);
+                                    throw new FaCmdException("FaCommand.Error.Helper.DesProviderInitFailed", e,
+                                            i.getAnnotation(CustomDes.class).value().getName());
                                 }
                             } else if (i.getAnnotation(ParamDes.class) != null) {
                                 return i.getAnnotation(ParamDes.class).value();

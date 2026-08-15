@@ -7,7 +7,7 @@ import com.wenkrang.faClip.module.FaMessage.Fm;
 
 import java.util.List;
 
-import static com.wenkrang.faClip.module.FaMessage.Helper.I18nHelper.t;
+import static com.wenkrang.faClip.module.FaMessage.helper.I18nHelper.t;
 
 public class ConflictCheckStage implements SimpleStage {
     @Override

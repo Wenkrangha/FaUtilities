@@ -3,6 +3,7 @@ package com.wenkrang.faClip.module.FaWindow;
 import com.wenkrang.faClip.helper.ResourceHelper;
 import com.wenkrang.faClip.module.FaData.FaInventoryData;
 import com.wenkrang.faClip.module.FaInterface.FaInterfaceInstance;
+import com.wenkrang.faClip.module.FaInterface.FaIntf;
 import com.wenkrang.faClip.module.FaItem.FaItemInstance;
 import com.wenkrang.faClip.module.FaWindow.event.*;
 import com.wenkrang.faClip.module.FaWindow.interpreter.FaInvInterpreter;
@@ -12,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +45,10 @@ public class FaWindowInstance {
 
     public void autoRegister() {
         faInterfaceInstance.enableForAll(plugin);
+    }
+
+    public void register(Class<?>... clazz) {
+        faInterfaceInstance.enableFor(clazz);
     }
 
     public ResourceHelper getResourceHelper() {

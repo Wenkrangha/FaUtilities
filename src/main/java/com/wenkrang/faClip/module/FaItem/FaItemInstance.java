@@ -8,7 +8,10 @@ import com.wenkrang.faClip.module.FaItem.event.FaItemClickE;
 import com.wenkrang.faClip.module.FaItem.event.FaItemInvClickE;
 import com.wenkrang.faClip.module.FaItem.event.FaItemIsolateE;
 import com.wenkrang.faClip.module.FaItem.interpreter.helper.ItemDataHelper;
+import com.wenkrang.faClip.module.FaMessage.Fm;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,8 +31,6 @@ public class FaItemInstance {
     private final Plugin plugin;
 
     private final FaItemInterpreter faItemInterpreter;
-
-
 
     private final FaInterfaceInstance faInterfaceInstance;
     
@@ -91,8 +92,8 @@ public class FaItemInstance {
         // 将资源流解析为 FaData，提取 YAML 配置
         FaData faData = new FaData(resource);
 
-        // 通过解释器将 YAML 节点解析为 FaItem 对象
-        FaItem item = faItemInterpreter.interpreter(faData.getYaml());
+        // 通过解释器将 FaData 解析为 FaItem 对象
+        FaItem item = faItemInterpreter.interpreter(faData);
         
         // 以物品的命名空间为键，注册到内部注册表
         faItems.put(ItemDataHelper.getID(item), item);
@@ -114,5 +115,52 @@ public class FaItemInstance {
 
     public Map<String,FaItem> getAll() {
         return faItems;
+    }
+
+    public @Nullable ItemStack convertDefine(String value) {
+        ItemStack item = null;
+
+        if (value != null) {
+            // 获取数量
+            int amount = 1;
+            String defineName = value;
+            if (value.contains("*")) {
+                amount = Integer.parseInt(value.split("\\*")[1]);
+                defineName = value.split("\\*")[0];
+            }
+
+            // 获取物品
+            if (defineName.startsWith("MC.")) {
+                item = new ItemStack(Material.valueOf(defineName.replace("MC.", "")));
+            }else {
+                FaItemInstance faItemInstance = this;
+
+                FaItem faItem = faItemInstance.getFaItem(defineName);
+
+                if (faItem != null) {
+                    item = faItem.copy();
+                }else {
+                    Fm.warning("define 引用了不存在的物品: " + value);
+                }
+            }
+
+            if (item != null) {
+                item.setAmount(amount);
+            }
+        }
+
+        return item;
+    }
+
+    /**
+     * 根据组名获取所有 FaItem
+     * @param key 组名
+     * @return 所有 FaItem
+     */
+    public List<FaItem> getGroup(String key) {
+        return faItems.values().stream()
+                .filter(item -> item.getGroup().contains(key))
+                .map(FaItem::copy)
+                .toList();
     }
 }

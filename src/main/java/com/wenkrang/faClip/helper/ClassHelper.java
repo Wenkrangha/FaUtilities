@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import static com.wenkrang.faClip.module.FaMessage.Fm.warning;
-import static com.wenkrang.faClip.module.FaMessage.Helper.I18nHelper.ft;
+import static com.wenkrang.faClip.module.FaMessage.helper.I18nHelper.ft;
 
 /**
  * 类操作帮助类
@@ -35,7 +35,7 @@ public class ClassHelper {
                     try {
                         return Class.forName(i, true, classLoader);
                     } catch (ClassNotFoundException e) {
-                        warning(ft("FaCommand.Error.ClassHelper.CannotGetClass", i));
+                        warning(ft("FaClip.Error.ClassHelper.CannotGetClass", i));
                     }
                     return null;
                 })

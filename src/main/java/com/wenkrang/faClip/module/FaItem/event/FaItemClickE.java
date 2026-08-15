@@ -5,7 +5,7 @@ import com.wenkrang.faClip.module.FaInterface.FaIntfContext;
 import com.wenkrang.faClip.module.FaItem.FaItemInstance;
 import com.wenkrang.faClip.module.FaItem.TagMgr;
 import com.wenkrang.faClip.module.FaMessage.Fm;
-import com.wenkrang.faClip.module.FaMessage.Helper.I18nHelper;
+import com.wenkrang.faClip.module.FaMessage.helper.I18nHelper;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -48,6 +48,8 @@ public class FaItemClickE implements Listener {
                         Fm.error(I18nHelper.t("FaItem.Exception.FaItemInterpreter.EventConflict")
                                 + ": " + node);
                     }
+                }else {
+                    Fm.warning(I18nHelper.ft("FaInterface.Exception.Instance.IntfNotFound", node));
                 }
             }
         }

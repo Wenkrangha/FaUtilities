@@ -14,6 +14,8 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Set;
 
 public class InvDefineHandler implements FaInvHandler {
+
+
     @Override
     public void handle(FaInventory faInventory, FaData faData, FaWindowInstance faWindowInstance) {
         ConfigurationSection define = faData.getSection("define");
@@ -24,24 +26,10 @@ public class InvDefineHandler implements FaInvHandler {
             for (String key : keys) {
                 String value = define.getString(key);
 
-                if (value != null) {
-                    if (value.startsWith("MC.")) {
-                        Material material = Material.valueOf(value.replace("MC.", ""));
+                // 转换物品
+                ItemStack itemStack = faWindowInstance.getFaItemInstance().convertDefine(value);
 
-                        faInventory.define(key, new ItemStack(material));
-                    }else {
-                        FaItemInstance faItemInstance = faWindowInstance.getFaItemInstance();
-
-                        FaItem faItem = faItemInstance.getFaItem(value);
-
-                        if (faItem != null) {
-                            faInventory.define(key, faItem);
-                        }else {
-                            Fm.warning("FaInventory define 引用了不存在的物品: " + value);
-                        }
-                    }
-                }
-
+                faInventory.define(key, itemStack);
             }
         }
     }

@@ -14,7 +14,7 @@ public class NodeHelper {
      * @param s 待检查的字符串，不能为空
      * @return 如果字符串只包含字母、数字和点号则返回true，否则返回false
      */
-    public static @NotNull Boolean check(@NotNull String s) {
+    public static boolean check(@NotNull String s) {
         String regex = "^[a-zA-Z0-9.]+$"; // 定义匹配规则：仅允许字母、数字和点号
         return s.matches(regex); // 使用正则表达式验证字符串是否匹配
     }

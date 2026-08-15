@@ -1,6 +1,6 @@
 package com.wenkrang.faClip.module.FaResource.event;
 
-import com.wenkrang.faClip.module.FaMessage.Helper.Scc;
+import com.wenkrang.faClip.module.FaMessage.helper.Scc;
 import com.wenkrang.faClip.module.FaResource.FaBukkitResourceManager;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;

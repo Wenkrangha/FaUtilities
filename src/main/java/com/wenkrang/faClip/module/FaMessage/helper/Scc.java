@@ -1,4 +1,4 @@
-package com.wenkrang.faClip.module.FaMessage.Helper;
+package com.wenkrang.faClip.module.FaMessage.helper;
 
 public class Scc {
     // 定义颜色代码

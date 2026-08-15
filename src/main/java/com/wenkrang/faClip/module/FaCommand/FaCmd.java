@@ -2,266 +2,259 @@ package com.wenkrang.faClip.module.FaCommand;
 
 import com.wenkrang.faClip.module.FaCommand.interpreter.FaCmdInterpreter;
 import com.wenkrang.faClip.module.FaInterface.FaIntf;
+import com.wenkrang.faClip.module.FaMessage.exception.FaCmdException;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * FaCmd 命令封装类
- * 用于存储和管理单个命令的所有属性和配置信息
+ * <p>通过 {@link Builder} 构建，构造完成后元数据不可变。
+ * 内置权限决策行为（{@link #canExecute}、{@link #getRejectReason}）</p>
  */
 public class FaCmd {
+
+    // ==================== 不可变元数据（构造时确定） ====================
+
+    /** 命令节点路径（如：plugin.command.subcommand） */
+    private final String node;
+    /** 命令名称（节点最后一段） */
+    private final String name;
+    /** 命令描述 */
+    private final String description;
+    /** 权限节点 */
+    private final String permission;
+    /** 是否需要 OP 权限 */
+    private final boolean requireOP;
+    /** 是否仅限玩家执行 */
+    private final boolean forPlayer;
+    /** 是否仅为帮助命令 */
+    private final boolean onlyForHelp;
+    /** 命令帮助信息 */
+    private final String help;
+
+    // ==================== 绑定引用（构造时确定） ====================
+
     /** 对应的接口 */
-    private FaIntf faIntf;
+    private final FaIntf faIntf;
     /** 所属插件 */
-    private Plugin plugin;
+    private final Plugin plugin;
     /** 所属命令实例 */
-    private FaCmdInstance faCmdInstance;
-    /** 命令名称 */
-    private String name;
+    private final FaCmdInstance faCmdInstance;
+    /** 命令映射实例 */
+    private final CommandMap commandMap;
+
+    // ==================== 运行时字段（注册后赋值） ====================
+
+    /** Bukkit 命令对象 */
+    private Command command;
     /** 命令标签 */
     private String label;
     /** 激活的别名列表 */
     private List<String> activeAliases;
-    /** 命令映射实例 */
-    private CommandMap commandMap;
-    /** 命令描述 */
-    protected String description;
-    /** 权限节点 */
-    private String permission;
-    /** 命令节点路径（如：plugin.command.subcommand） */
-    private String node;
-    /** 是否需要 OP 权限 */
-    private boolean requireOP;
-    /** Bukkit 命令对象 */
-    private Command command;
-    /** 是否只为帮助命令 **/
-    private boolean isOnlyForHelp;
 
-    public boolean isOnlyForHelp() {
-        return isOnlyForHelp;
+    // ==================== 构造（私有，通过 Builder） ====================
+
+    private FaCmd(Builder builder) {
+        this.node = builder.node;
+        this.name = builder.name;
+        this.description = builder.description;
+        this.permission = builder.permission;
+        this.requireOP = builder.requireOP;
+        this.forPlayer = builder.forPlayer;
+        this.onlyForHelp = builder.onlyForHelp;
+        this.help = builder.help;
+        this.faIntf = builder.faIntf;
+        this.plugin = builder.plugin;
+        this.faCmdInstance = builder.faCmdInstance;
+        this.commandMap = builder.commandMap;
     }
 
-    public void setOnlyForHelp(boolean onlyForHelp) {
-        isOnlyForHelp = onlyForHelp;
-    }
-
-    public String getHelp() {
-        return Help;
-    }
-
-    public void setHelp(String help) {
-        Help = help;
-    }
-
-    public boolean isForPlayer;
-
-    public boolean isForPlayer() {
-        return isForPlayer;
-    }
-
-    public void setForPlayer(boolean forPlayer) {
-        isForPlayer = forPlayer;
-    }
-
-    /** 命令帮助信息 */
-    private String Help;
+    // ==================== 行为方法 ====================
 
     /**
-     * 构造函数，初始化 FaCmd 实例
-     * 
-     * @param faCmdInterpreter 命令解释器实例
+     * 检查指定发送者是否有权限执行此命令
+     *
+     * @param sender 命令发送者
+     * @return 如果可以执行返回 true
      */
-    public FaCmd(@NotNull FaCmdInterpreter faCmdInterpreter) {
-        commandMap = faCmdInterpreter.getFaCmdInstance().getCommandManager().getCommandMap();
+    public boolean canExecute(@NotNull CommandSender sender) {
+        return getRejectReason(sender) == null;
     }
 
     /**
-     * 获取命令节点路径
-     * 
-     * @return 命令节点
+     * 获取指定发送者被拒绝执行的原因
+     *
+     * @param sender 命令发送者
+     * @return 拒绝原因的 i18n key，null 表示未被拒绝
      */
-    public String getNode() {
-        return node;
+    public @Nullable String getRejectReason(@NotNull CommandSender sender) {
+        if (requireOP && !sender.isOp()) return "FaCommand.Error.Interpreter.RequireOP";
+        if (permission != null && !sender.hasPermission(permission)) return "FaCommand.Error.Interpreter.NoPermission";
+        if (forPlayer && !(sender instanceof Player)) return "FaCommand.Error.Interpreter.OnlyForPlayer";
+        return null;
     }
 
     /**
-     * 设置命令节点路径
-     * 
-     * @param node 命令节点
+     * 获取命令的根节点（第一段）
+     *
+     * @return 根节点名称
      */
-    public void setNode(String node) {
-        this.node = node;
+    public @Nullable String getRootNode() {
+        return node != null ? node.split("\\.")[0] : null;
+    }
+
+    // ==================== Getter ====================
+
+    public @NotNull String getNode() { return node; }
+
+    public @Nullable String getName() { return name; }
+
+    public @Nullable String getDescription() { return description; }
+
+    public @Nullable String getPermission() { return permission; }
+
+    public boolean isRequireOP() { return requireOP; }
+
+    public boolean isForPlayer() { return forPlayer; }
+
+    public boolean isOnlyForHelp() { return onlyForHelp; }
+
+    public @Nullable String getHelp() { return help; }
+
+    public @NotNull FaIntf getFaIntf() { return faIntf; }
+
+    public Plugin getPlugin() { return plugin; }
+
+    public FaCmdInstance getFaCmdInstance() { return faCmdInstance; }
+
+    public CommandMap getCommandMap() { return commandMap; }
+
+    public @Nullable Command getCommand() { return command; }
+
+    public @Nullable String getLabel() { return label; }
+
+    public @Nullable List<String> getActiveAliases() { return activeAliases; }
+
+    // ==================== 运行时 Setter ====================
+
+    public void setCommand(Command command) { this.command = command; }
+
+    public void setLabel(String label) { this.label = label; }
+
+    public void setActiveAliases(List<String> activeAliases) { this.activeAliases = activeAliases; }
+
+    // ==================== Builder ====================
+
+    /**
+     * 创建一个 FaCmd Builder
+     *
+     * @param interpreter 命令解释器，用于获取 CommandMap 和 Plugin 等上下文
+     * @return Builder 实例
+     */
+    public static @NotNull Builder builder(@NotNull FaCmdInterpreter interpreter) {
+        return new Builder(interpreter);
     }
 
     /**
-     * 获取 Bukkit 命令对象
-     * 
-     * @return Bukkit 命令对象
+     * FaCmd 的构建器
+     * <p>注解 Handler 通过此 Builder 设置命令的元数据属性，
+     * 调用 {@link #build()} 后生成不可变的 FaCmd 实例。</p>
      */
-    public Command getCommand() {
-        return command;
-    }
+    public static class Builder {
+        private String node;
+        private String name;
+        private String description;
+        private String permission;
+        private boolean requireOP;
+        private boolean forPlayer;
+        private boolean onlyForHelp;
+        private String help;
+        private FaIntf faIntf;
 
-    /**
-     * 设置 Bukkit 命令对象
-     * 
-     * @param command Bukkit 命令对象
-     */
-    public void setCommand(Command command) {
-        this.command = command;
-    }
+        private final Plugin plugin;
+        private final FaCmdInstance faCmdInstance;
+        private final CommandMap commandMap;
 
-    /**
-     * 获取命令名称
-     * 
-     * @return 命令名称
-     */
-    public String getName() {
-        return name;
-    }
+        Builder(@NotNull FaCmdInterpreter interpreter) {
+            this.faCmdInstance = interpreter.getFaCmdInstance();
+            this.commandMap = faCmdInstance.getCommandManager().getCommandMap();
+            this.plugin = faCmdInstance.getPlugin();
+        }
 
-    /**
-     * 设置命令名称
-     * 
-     * @param name 命令名称
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
+        public @NotNull Builder node(@NotNull String node) {
+            this.node = node;
+            return this;
+        }
 
-    /**
-     * 获取命令标签
-     * 
-     * @return 命令标签
-     */
-    public String getLabel() {
-        return label;
-    }
+        public @NotNull Builder name(@NotNull String name) {
+            this.name = name;
+            return this;
+        }
 
-    /**
-     * 设置命令标签
-     * 
-     * @param label 命令标签
-     */
-    public void setLabel(String label) {
-        this.label = label;
-    }
+        public @NotNull Builder description(@NotNull String description) {
+            this.description = description;
+            return this;
+        }
 
-    /**
-     * 获取激活的别名列表
-     * 
-     * @return 别名列表
-     */
-    public List<String> getActiveAliases() {
-        return activeAliases;
-    }
+        public @NotNull Builder permission(@NotNull String permission) {
+            this.permission = permission;
+            return this;
+        }
 
-    /**
-     * 设置激活的别名列表
-     * 
-     * @param activeAliases 别名列表
-     */
-    public void setActiveAliases(List<String> activeAliases) {
-        this.activeAliases = activeAliases;
-    }
+        public @NotNull Builder requireOP() {
+            this.requireOP = true;
+            return this;
+        }
 
-    /**
-     * 获取命令映射实例
-     * 
-     * @return 命令映射实例
-     */
-    public CommandMap getCommandMap() {
-        return commandMap;
-    }
+        public @NotNull Builder forPlayer() {
+            this.forPlayer = true;
+            return this;
+        }
 
-    /**
-     * 设置命令映射实例
-     * 
-     * @param commandMap 命令映射实例
-     */
-    public void setCommandMap(CommandMap commandMap) {
-        this.commandMap = commandMap;
-    }
+        public @NotNull Builder onlyForHelp() {
+            this.onlyForHelp = true;
+            return this;
+        }
 
-    /**
-     * 获取命令描述
-     * 
-     * @return 命令描述
-     */
-    public String getDescription() {
-        return description;
-    }
+        public @NotNull Builder help(@NotNull String help) {
+            this.help = help;
+            return this;
+        }
 
-    /**
-     * 设置命令描述
-     * 
-     * @param description 命令描述
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
+        public @NotNull Builder faIntf(@NotNull FaIntf faIntf) {
+            this.faIntf = faIntf;
+            return this;
+        }
 
-    /**
-     * 获取权限节点
-     * 
-     * @return 权限节点
-     */
-    public String getPermission() {
-        return permission;
-    }
+        /**
+         * 构建 FaCmd 实例
+         *
+         * @return 不可变的 FaCmd 实例
+         * @throws NullPointerException 如果 node 未设置
+         */
+        public @NotNull FaCmd build() {
+            if (node == null) throw new FaCmdException("FaCommand.Error.Interpreter.NodeNotInit");
+            if (faIntf == null) throw new FaCmdException("FaCommand.Error.Interpreter.IntfNotFound");
 
-    /**
-     * 设置权限节点
-     * 
-     * @param permission 权限节点
-     */
-    public void setPermission(String permission) {
-        this.permission = permission;
-    }
+            return new FaCmd(this);
+        }
 
-    /**
-     * 检查是否需要 OP 权限
-     * 
-     * @return 如果需要 OP 权限返回 true
-     */
-    public boolean isRequireOP() {
-        return requireOP;
-    }
+        // ==================== Builder 内部 Getter（供 Handler 查询当前状态） ====================
 
-    /**
-     * 设置是否需要 OP 权限
-     * 
-     * @param requireOP 是否需要 OP 权限
-     */
-    public void setRequireOP(boolean requireOP) {
-        this.requireOP = requireOP;
-    }
+        public @Nullable String getNode() { return node; }
 
-    public Plugin getPlugin() {
-        return plugin;
-    }
+        public @Nullable Plugin getPlugin() { return plugin; }
 
-    public void setPlugin(Plugin plugin) {
-        this.plugin = plugin;
-    }
+        public @Nullable FaCmdInstance getFaCmdInstance() { return faCmdInstance; }
 
-    public FaIntf getFaIntf() {
-        return faIntf;
-    }
-
-    public void setFaIntf(FaIntf faIntf) {
-        this.faIntf = faIntf;
-    }
-
-    public FaCmdInstance getFaCmdInstance() {
-        return faCmdInstance;
-    }
-
-    public void setFaCmdInstance(FaCmdInstance faCmdInstance) {
-        this.faCmdInstance = faCmdInstance;
+        public @NotNull CommandMap getCommandMap() { return commandMap; }
     }
 }

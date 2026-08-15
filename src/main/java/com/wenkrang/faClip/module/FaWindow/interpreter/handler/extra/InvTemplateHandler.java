@@ -9,17 +9,11 @@ public class InvTemplateHandler implements FaInvHandler {
     @Override
     public void handle(FaInventory faInventory, FaData faData, FaWindowInstance faWindowInstance) {
         if (faData.has("template")) {
-            String templateID = faData.getString("template");
+            String templatePath = faData.getString("template");
 
-            faWindowInstance.load(templateID);
+            faData.template(FaData.getPluginResource(templatePath, faWindowInstance.getPlugin()));
 
-            FaInventory src = faWindowInstance.getFaInventory(templateID);
-
-            if (src != null) {
-                FaInventory.clone(faInventory, src);
-            }
-
-            faInventory.template = templateID;
+            faInventory.template = templatePath;
         }
     }
 }

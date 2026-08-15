@@ -8,8 +8,8 @@ import java.lang.reflect.Method;
 
 public class CmdPlayerHandler implements CmdAnnotationHandler {
     @Override
-    public void handle(FaCmd command, Method method) {
-        command.setForPlayer(true);
+    public void handle(FaCmd.Builder builder, Method method) {
+        builder.forPlayer();
     }
 
     @Override

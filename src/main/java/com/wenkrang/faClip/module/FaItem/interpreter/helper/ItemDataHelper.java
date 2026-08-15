@@ -2,6 +2,7 @@ package com.wenkrang.faClip.module.FaItem.interpreter.helper;
 
 import com.wenkrang.faClip.helper.PluginHelper;
 import com.wenkrang.faClip.module.FaItem.TagMgr;
+import com.wenkrang.faClip.module.FaMessage.exception.FaItemException;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +24,7 @@ public class ItemDataHelper {
             if (p != null) {
                 plugin = p;
             }else {
-                throw new RuntimeException("无法找到插件调用方（FaClip内部调试禁止不经过手动初始化使用ItemDataHelper）");
+                throw new FaItemException("FaItem.Exception.ItemDataHelper.PluginNotFound");
             }
         }
     }

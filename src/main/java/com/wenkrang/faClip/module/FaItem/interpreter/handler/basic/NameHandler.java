@@ -1,10 +1,10 @@
 package com.wenkrang.faClip.module.FaItem.interpreter.handler.basic;
 
+import com.wenkrang.faClip.module.FaData.FaData;
 import com.wenkrang.faClip.module.FaItem.FaItem;
 import com.wenkrang.faClip.module.FaItem.interpreter.FaItemInterpreter;
 import com.wenkrang.faClip.module.FaItem.interpreter.handler.FaItemHandler;
-import com.wenkrang.faClip.module.FaMessage.Helper.I18nHelper;
-import org.bukkit.configuration.file.YamlConfiguration;
+import com.wenkrang.faClip.module.FaMessage.helper.I18nHelper;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class NameHandler implements FaItemHandler {
@@ -14,10 +14,10 @@ public class NameHandler implements FaItemHandler {
     }
 
     @Override
-    public void handle(FaItem faItem, YamlConfiguration yamlConfiguration, FaItemInterpreter faItemInterpreter) {
+    public void handle(FaItem faItem, FaData faData, FaItemInterpreter faItemInterpreter) {
         ItemMeta itemMeta = faItem.getItemMeta();
 
-        String name = yamlConfiguration.getString(getNode());
+        String name = faData.getString(getNode());
 
         if (name != null) {
             itemMeta.setDisplayName(name);

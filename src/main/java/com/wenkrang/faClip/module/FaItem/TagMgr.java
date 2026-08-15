@@ -1,5 +1,6 @@
 package com.wenkrang.faClip.module.FaItem;
 
+import com.wenkrang.faClip.module.FaMessage.exception.FaItemException;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -22,7 +23,7 @@ public class TagMgr {
     public TagMgr(Plugin p, ItemStack i) {
         itemMeta = i.getItemMeta();
         if (itemMeta == null) {
-            throw new NullPointerException("ItemMeta is null");
+            throw new FaItemException("FaItem.Exception.TagMgr.ItemMetaNull", i.getType().name());
         }
         container = itemMeta.getPersistentDataContainer();
         plugin = p;

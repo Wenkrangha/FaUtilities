@@ -1,5 +1,6 @@
 package com.wenkrang.faClip.manager;
 
+import com.wenkrang.faClip.module.FaMessage.exception.FaCmdException;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -15,18 +16,12 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-import static com.wenkrang.faClip.module.FaMessage.Fm.warning;
-import static com.wenkrang.faClip.module.FaMessage.Helper.I18nHelper.t;
-
 /**
  * CommandManager 类用于管理 Bukkit 插件中的命令注册、分发和补全功能。
  * 通过反射获取 Bukkit 的 CommandMap 实例，并提供一系列方法来操作命令。
  */
 public class CommandManager {
-
-
-    private CommandMap commandMap;
-    private Field bukkitCommandMap;
+    private final CommandMap commandMap;
 
     private Map<String, Command> knownCommands;
 
@@ -36,17 +31,17 @@ public class CommandManager {
     public CommandManager() {
         try {
             // 获取 CommandMap
-            bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+            Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
             bukkitCommandMap.setAccessible(true);
             commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
 
             knownCommands = getKnownCommands();
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            warning(t("FaCommand.Error.CommandMap.NotFound"));
-            e.printStackTrace();
+            throw new FaCmdException("FaCommand.Error.CommandMap.NotFound");
         }
     }
 
+    @SuppressWarnings("unchecked")
     public Map<String, Command> getKnownCommands(){
         try {
             Field knownCommandsField = commandMap.getClass().getDeclaredField("knownCommands");
@@ -60,7 +55,7 @@ public class CommandManager {
 
                 knownCommands = (Map<String, Command>) getKnownCommandsMethod.invoke(commandMap);
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
-                throw new RuntimeException(ex);
+                throw new FaCmdException("FaCommand.Error.CommandMap.KnownCommandsNotFound", ex);
             }
         }
 
@@ -109,10 +104,9 @@ public class CommandManager {
         return commandMap.register(fallbackPrefix, command);
     }
 
-    public void unregister(String string) throws NoSuchFieldException, IllegalAccessException {
+    public void unregister(String string) {
         // 移除命令
         knownCommands.remove(string);
-
     }
 
     /**

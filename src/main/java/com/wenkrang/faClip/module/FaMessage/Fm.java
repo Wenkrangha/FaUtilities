@@ -1,10 +1,13 @@
 package com.wenkrang.faClip.module.FaMessage;
 
-import com.wenkrang.faClip.module.FaMessage.Helper.Scc;
+import com.wenkrang.faClip.module.FaMessage.helper.I18nHelper;
+import com.wenkrang.faClip.module.FaMessage.helper.Scc;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,6 +16,11 @@ public class Fm {
      * 消息输出时的前缀标识
      */
     public static String prefix = "[FaClip]";
+
+    /**
+     * 报错时是否输出完整堆栈（由 FaClip 主类根据 debug 配置同步）
+     */
+    public static boolean reportStackTrace = false;
 
     /**
      * 获取消息前缀
@@ -204,5 +212,46 @@ public class Fm {
         senders.addAll(Bukkit.getOnlinePlayers());
 
         return senders;
+    }
+
+    // ==================== 统一报错上报 ====================
+
+    /**
+     * 向控制台上报错误（i18n 键 + 格式化参数）
+     * <p>适用于可预期的业务错误，如配置缺失、注册失败等</p>
+     *
+     * @param key i18n 资源键
+     * @param args 格式化参数
+     */
+    public static void reportError(String key, Object... args) {
+        error(I18nHelper.ft(key, args));
+    }
+
+    /**
+     * 向控制台上报警告（i18n 键 + 格式化参数）
+     * <p>适用于不影响流程但需要关注的问题，如跳过一个非法条目</p>
+     *
+     * @param key i18n 资源键
+     * @param args 格式化参数
+     */
+    public static void reportWarning(String key, Object... args) {
+        warning(I18nHelper.ft(key, args));
+    }
+
+    /**
+     * 向控制台上报异常
+     * <p>统一替代裸 e.printStackTrace()：始终输出异常消息，
+     * 仅在 {@link #reportStackTrace} 开启时输出完整堆栈</p>
+     *
+     * @param e 要上报的异常
+     */
+    public static void reportError(Throwable e) {
+        error(e.toString());
+
+        if (reportStackTrace) {
+            StringWriter writer = new StringWriter();
+            e.printStackTrace(new PrintWriter(writer));
+            Bukkit.getConsoleSender().sendMessage(Scc.RED + writer + Scc.RESET);
+        }
     }
 }

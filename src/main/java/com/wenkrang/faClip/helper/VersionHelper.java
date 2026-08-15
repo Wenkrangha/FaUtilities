@@ -1,5 +1,6 @@
 package com.wenkrang.faClip.helper;
 
+import com.wenkrang.faClip.module.FaMessage.exception.FaException;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,10 +23,10 @@ public class VersionHelper {
                             .split("\\.");
 
             for (String s : split) {
-                if (!isNumeric(s)) throw new RuntimeException("Cannot convert String to Integer: " + s);
+                if (!isNumeric(s)) throw new FaException("FaClip.Error.VersionHelper.CannotConvertToInt", s);
             }
             for (String s : currentVersion) {
-                if (!isNumeric(s)) throw new RuntimeException("Cannot convert String to Integer: " + s);
+                if (!isNumeric(s)) throw new FaException("FaClip.Error.VersionHelper.CannotConvertToInt", s);
             }
 
             for (int i = 0;i < Math.min(split.length, currentVersion.length);i++) {

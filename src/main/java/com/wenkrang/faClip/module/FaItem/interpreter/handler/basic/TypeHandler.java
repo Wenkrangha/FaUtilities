@@ -1,11 +1,11 @@
 package com.wenkrang.faClip.module.FaItem.interpreter.handler.basic;
 
+import com.wenkrang.faClip.module.FaData.FaData;
 import com.wenkrang.faClip.module.FaItem.FaItem;
 import com.wenkrang.faClip.module.FaItem.interpreter.FaItemInterpreter;
 import com.wenkrang.faClip.module.FaItem.interpreter.handler.FaItemHandler;
-import com.wenkrang.faClip.module.FaMessage.Helper.I18nHelper;
+import com.wenkrang.faClip.module.FaMessage.helper.I18nHelper;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 public class TypeHandler implements FaItemHandler {
     @Override
@@ -14,8 +14,8 @@ public class TypeHandler implements FaItemHandler {
     }
 
     @Override
-    public void handle(FaItem faItem, YamlConfiguration yamlConfiguration, FaItemInterpreter faItemInterpreter) {
-        String type = yamlConfiguration.getString(getNode());
+    public void handle(FaItem faItem, FaData faData, FaItemInterpreter faItemInterpreter) {
+        String type = faData.getString(getNode());
 
         if (type != null) {
             Material material = Material.valueOf(type);

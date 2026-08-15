@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FaCmdInstance {
-    public FaInterfaceInstance faInterfaceInstance;
+    private final FaInterfaceInstance faInterfaceInstance;
     private final @NotNull CommandManager commandManager;
     private final Plugin plugin;
     private ArrayList<String> nodes = new ArrayList<>();
@@ -78,12 +78,12 @@ public class FaCmdInstance {
 
 
 
-    private FaCmdInstance(Plugin plugin) {
-        commandManager = new CommandManager();
+    public FaCmdInstance(Plugin plugin) {
         this.plugin = plugin;
-    }
+        commandManager = new CommandManager();
 
-    public static @NotNull FaCmdInstance create(Plugin plugin) {
+        faInterfaceInstance = new FaInterfaceInstance(plugin);
+
         FaCmdInstance faCmdInstance = new FaCmdInstance(plugin);
         faCmdInstance.faCmdInterpreter = new FaCmdInterpreter(faCmdInstance, plugin);
         faCmdInstance.faCmdInterpreter.addAnnotationHandlers(new CmdNodeHandler());
@@ -92,17 +92,12 @@ public class FaCmdInstance {
         faCmdInstance.faCmdInterpreter.addAnnotationHandlers(new CmdHelpHandler());
         faCmdInstance.faCmdInterpreter.addAnnotationHandlers(new CmdOnlyForHelpHandler());
         faCmdInstance.faCmdInterpreter.addAnnotationHandlers(new CmdPlayerHandler());
-
-        faCmdInstance.faInterfaceInstance = new FaInterfaceInstance(plugin);
-
-        return faCmdInstance;
     }
 
     public void close() {
         for (FaCmd faCmd : faCmds) {
-            try {
-                if (faCmd.getCommand().isRegistered()) commandManager.unregister(faCmd.getCommand().getLabel());
-            }catch (Exception ignored){}
+            if (faCmd.getCommand() != null && faCmd.getCommand().isRegistered())
+                commandManager.unregister(faCmd.getCommand().getLabel());
         }
     }
 
@@ -174,5 +169,9 @@ public class FaCmdInstance {
 
     public void setDebugMode(boolean debugMode) {
         DebugMode = debugMode;
+    }
+
+    public FaInterfaceInstance getFaInterfaceInstance() {
+        return faInterfaceInstance;
     }
 }

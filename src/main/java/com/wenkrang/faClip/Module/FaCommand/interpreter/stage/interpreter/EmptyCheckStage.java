@@ -7,7 +7,7 @@ import com.wenkrang.faClip.module.FaMessage.Fm;
 
 import java.util.List;
 
-import static com.wenkrang.faClip.module.FaMessage.Helper.I18nHelper.t;
+import static com.wenkrang.faClip.module.FaMessage.helper.I18nHelper.t;
 
 public class EmptyCheckStage implements SimpleStage {
     @Override
@@ -16,6 +16,7 @@ public class EmptyCheckStage implements SimpleStage {
             Fm.error(faCmdContext.sender(), t("FaCommand.Error.Interpreter.NotFound"));
             return false;
         }
+        assert cmd != null;
         return true;
     }
 }

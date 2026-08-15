@@ -1,12 +1,13 @@
 package com.wenkrang.faClip.module.FaItem.interpreter.handler.basic;
 
+import com.wenkrang.faClip.module.FaData.FaData;
 import com.wenkrang.faClip.module.FaItem.FaItem;
 import com.wenkrang.faClip.module.FaItem.interpreter.FaItemInterpreter;
 import com.wenkrang.faClip.module.FaItem.interpreter.handler.FaItemHandler;
 import com.wenkrang.faClip.module.FaItem.TagMgr;
-import com.wenkrang.faClip.module.FaMessage.Helper.I18nHelper;
+import com.wenkrang.faClip.module.FaMessage.exception.FaDataParseException;
+import com.wenkrang.faClip.module.FaMessage.helper.I18nHelper;
 import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 public class IdHandler implements FaItemHandler {
     @Override
@@ -15,8 +16,8 @@ public class IdHandler implements FaItemHandler {
     }
 
     @Override
-    public void handle(FaItem faItem, YamlConfiguration yamlConfiguration, FaItemInterpreter faItemInterpreter) {
-        String id = yamlConfiguration.getString(getNode());
+    public void handle(FaItem faItem, FaData faData, FaItemInterpreter faItemInterpreter) {
+        String id = faData.getString(getNode());
 
         if (id != null) {
             faItem.setNamespacedKey(new NamespacedKey(faItem.plugin, id));
@@ -25,7 +26,7 @@ public class IdHandler implements FaItemHandler {
 
             tagMgr.set("id", id);
         }else {
-            I18nHelper.fw("FaItem.Exception.FaItemInterpreter.CannotFoundNode", getNode());
+            throw new FaDataParseException(faData, getNode());
         }
     }
 }

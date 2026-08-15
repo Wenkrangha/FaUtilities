@@ -4,13 +4,13 @@ import com.wenkrang.faClip.module.FaCommand.helper.NodeHelper;
 import com.wenkrang.faClip.module.FaInterface.annotation.Intf;
 import com.wenkrang.faClip.module.FaInterface.FaIntf;
 import com.wenkrang.faClip.module.FaMessage.Fm;
+import com.wenkrang.faClip.module.FaMessage.exception.FaIntfException;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import static com.wenkrang.faClip.module.FaMessage.Helper.I18nHelper.ft;
-import static com.wenkrang.faClip.module.FaMessage.Helper.I18nHelper.t;
+import static com.wenkrang.faClip.module.FaMessage.helper.I18nHelper.t;
 
 public class IntfHandler implements SimpleAnnotationHandler {
     /**
@@ -21,9 +21,9 @@ public class IntfHandler implements SimpleAnnotationHandler {
      */
     public static boolean check(Method method,String node) {
         if (!Modifier.isStatic(method.getModifiers()))
-            throw new RuntimeException(ft("FaInterface.Error.Interpreter.NotStatic", method.getName()));
+            throw new FaIntfException("FaInterface.Error.Interpreter.NotStatic", method.getName());
         if (!NodeHelper.check(node)) {
-            Fm.warning(t("FaCommand.Error.Interpreter.CantUnderstand"));
+            Fm.warning(t("FaInterface.Error.Interpreter.CantUnderstand"));
             return false;
         }
         return true;

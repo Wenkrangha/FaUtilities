@@ -1,7 +1,7 @@
 package com.wenkrang.faClip.module.FaData;
 
 import com.wenkrang.faClip.helper.PluginHelper;
-import com.wenkrang.faClip.module.FaMessage.Helper.I18nHelper;
+import com.wenkrang.faClip.module.FaMessage.exception.FaDataException;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -40,8 +40,8 @@ public class FaItemData extends FaData{
             plugin = PluginHelper.detectCallingPlugin();
         }
 
-        if (plugin == null) throw new NullPointerException(
-                I18nHelper.t("FaData.Exception.FaYamlData.PluginIsNotinitialized")
+        if (plugin == null) throw new FaDataException(
+                "FaData.Exception.FaYamlData.PluginIsNotinitialized"
         );
 
         return new NamespacedKey(FaData.plugin, "FaItemData");

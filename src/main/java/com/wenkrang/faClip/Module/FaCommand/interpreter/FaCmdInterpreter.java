@@ -6,19 +6,23 @@ import com.wenkrang.faClip.module.FaCommand.annotationHandler.CmdAnnotationHandl
 import com.wenkrang.faClip.module.FaCommand.FaCmd;
 import com.wenkrang.faClip.module.FaCommand.FaCmdInstance;
 import com.wenkrang.faClip.module.FaCommand.interpreter.stage.SimpleStage;
-import com.wenkrang.faClip.module.FaCommand.interpreter.stage.interpreter.*;
-import com.wenkrang.faClip.module.FaCommand.interpreter.stage.tabComplete.TabOpCheckStage;
-import com.wenkrang.faClip.module.FaCommand.interpreter.stage.tabComplete.TabPermissionCheckStage;
-import com.wenkrang.faClip.module.FaCommand.interpreter.stage.tabComplete.TabPlayerCheckStage;
-import com.wenkrang.faClip.module.FaCommand.helperGenerator.FaHelperGenerator;
+import com.wenkrang.faClip.module.FaCommand.interpreter.stage.interpreter.AuthorizationStage;
+import com.wenkrang.faClip.module.FaCommand.interpreter.stage.interpreter.ConflictCheckStage;
+import com.wenkrang.faClip.module.FaCommand.interpreter.stage.interpreter.EmptyCheckStage;
+import com.wenkrang.faClip.module.FaCommand.interpreter.stage.interpreter.OnlyForHelpStage;
+import com.wenkrang.faClip.module.FaCommand.interpreter.stage.tabComplete.TabAuthStage;
+import com.wenkrang.faClip.module.FaCommand.helper.FaHelperGenerator;
 import com.wenkrang.faClip.module.FaCommand.helper.CmdHandleHelper;
 import com.wenkrang.faClip.module.FaCommand.helper.CmdParamHelper;
 import com.wenkrang.faClip.module.FaCommand.helper.NodeHelper;
 import com.wenkrang.faClip.module.FaInterface.FaIntf;
+import com.wenkrang.faClip.module.FaMessage.exception.FaCmdException;
+import com.wenkrang.faClip.module.FaMessage.exception.FaException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,18 +59,12 @@ public class FaCmdInterpreter {
      * 初始化解释器管线和补全管线，注册所有检查阶段
      */
     private void initPipes() {
-        // 解释器管线：空检查 -> 冲突检查 -> OP检查 -> 权限检查 -> 玩家检查 -> 仅帮助检查
         addInterpreterStage(new EmptyCheckStage());
         addInterpreterStage(new ConflictCheckStage());
-        addInterpreterStage(new OpCheckStage());
-        addInterpreterStage(new PermissionCheckStage());
-        addInterpreterStage(new PlayerCheckStage());
+        addInterpreterStage(new AuthorizationStage());
         addInterpreterStage(new OnlyForHelpStage());
 
-        // 补全管线：OP检查 -> 权限检查 -> 玩家检查
-        addTabCompleteStage(new TabOpCheckStage());
-        addTabCompleteStage(new TabPermissionCheckStage());
-        addTabCompleteStage(new TabPlayerCheckStage());
+        addTabCompleteStage(new TabAuthStage());
     }
 
     private ArrayList<CmdAnnotationHandler> annotationHandlers = new ArrayList<>();
@@ -86,19 +84,24 @@ public class FaCmdInterpreter {
     public void initialize(@NotNull Method method) {
         if (!NodeHelper.isCmdNode(method)) return;
 
-        FaCmd faCmd = new FaCmd(this);
+        // 创建 Builder
+        FaCmd.Builder builder = FaCmd.builder(this);
 
-        faCmd.setPlugin(faCmdInstance.getPlugin());
-        faCmd.setFaCmdInstance(faCmdInstance);
-
+        // 注解 Handler 填充 Builder
         annotationHandlers.stream()
                 .filter(i -> method.isAnnotationPresent(i.getAnnotationClass()))
-                .forEach(i -> i.handle(faCmd, method));
+                .forEach(i -> i.handle(builder, method));
 
-        // 初始化接口
-        FaIntf faIntf = getFaCmdInstance().faInterfaceInstance.registerFaIntf(method, faCmd.getNode());
+        // 初始化接口并设置到 Builder
+        if (builder.getNode() == null) {
+            throw new FaCmdException("FaCommand.Error.Interpreter.NodeNotInit");
+        }
 
-        faCmd.setFaIntf(faIntf);
+        FaIntf faIntf = getFaCmdInstance().getFaInterfaceInstance().registerFaIntf(method, builder.getNode());
+        builder.faIntf(faIntf);
+
+        // 构建不可变的 FaCmd
+        FaCmd faCmd = builder.build();
 
         // 如果没启用调试模式，就不启用调试命令
         if (method.getAnnotation(Debug.class) != null && !FaClip.debug) return;
@@ -108,16 +111,14 @@ public class FaCmdInterpreter {
 
     public void register(@NotNull FaCmd faCmd) {
         //检查命令节点是否设置
-        if (faCmd.getNode() != null){
-            //检查根命令是否注册
-            String rootCommand = NodeHelper.getRoot(faCmd.getNode());
+        //检查根命令是否注册
+        String rootCommand = NodeHelper.getRoot(faCmd.getNode());
 
-            if (CmdHandleHelper.isUnregistered(rootCommand)) {
-                handleRootCommand(rootCommand, faCmd, this);
-            }
-
-            faCmdInstance.addFaCmd(faCmd);
+        if (CmdHandleHelper.isUnregistered(rootCommand)) {
+            handleRootCommand(rootCommand, faCmd, this);
         }
+
+        faCmdInstance.addFaCmd(faCmd);
     }
 
     /**
@@ -133,34 +134,47 @@ public class FaCmdInterpreter {
         ArrayList<String> cArgs = CmdParamHelper.getCompleteParam(sender, commandLabel, args);
 
         try {
-            ArrayList<String> params = CmdParamHelper.getCompleteParam(sender, commandLabel, args);
-            List<FaIntf> faIntfs = faCmdInstance.faInterfaceInstance.guessIntf(params.toArray(String[]::new));
+            List<FaIntf> faIntfs = faCmdInstance.getFaInterfaceInstance().guessIntf(cArgs.toArray(String[]::new));
             List<FaCmd> faCmds = faIntfs.stream().map(faCmdInstance::getFaCmd).toList();
 
             FaCmdContext context = new FaCmdContext(sender, args);
 
+            // 只能匹配一条命令，因此getFirst()即为所求
+            // 如果匹配多条命令，管线会返回false，中断处理
+            FaCmd faCmd = faCmds.stream().findFirst().orElse(null);
+
             // 遍历解释器管线，任意阶段返回false则终止执行
             for (SimpleStage stage : interpreterPipe) {
-                FaCmd cmdForStage = faCmds.isEmpty() ? null : faCmds.getFirst();
-                if (!stage.check(cmdForStage, context, faCmds)) {
+                if (!stage.check(faCmd, context, faCmds)) {
                     return false;
                 }
             }
 
-            FaCmd faCmd = faCmds.stream().findFirst().orElse(null);
-
             try {
-                // 执行方法
-                Object invoke = faCmd.getFaIntf().invoke(null, context, cArgs.toArray(String[]::new));
-                if (invoke instanceof Boolean) {
-                    return (Boolean) invoke;
+                if (faCmd != null) {
+                    // 执行方法
+                    FaIntf faIntf = faCmd.getFaIntf();
+                    Object invoke = faIntf.invoke(null, context, cArgs.toArray(String[]::new));
+                    if (invoke instanceof Boolean) {
+                        return (Boolean) invoke;
+                    }
                 }
+            } catch (InvocationTargetException e) {
+                // 解包业务方法抛出的异常：FaException 原样上抛，其余包装为 FaCmdException
+                Throwable cause = e.getCause() != null ? e.getCause() : e;
+                if (cause instanceof FaException faException) throw faException;
+                throw new FaCmdException("FaCommand.Error.Interpreter.interpreter", cause, cause.getMessage());
+            } catch (FaException e) {
+                throw e;
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new FaCmdException("FaCommand.Error.Interpreter.interpreter", e, e.getMessage());
             }
 
+        } catch (FaException e) {
+            // FaException 已携带 i18n 消息，直接上抛，避免二次包装
+            throw e;
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new FaCmdException("FaCommand.Error.Interpreter.interpreter", e, e.getMessage());
         }
 
         return true;
@@ -176,7 +190,7 @@ public class FaCmdInterpreter {
         // 获取命令，使用模糊模式
         ArrayList<FaIntf> filteredIntfs = new ArrayList<>();
 
-        for (FaIntf faIntf : faCmdInstance.faInterfaceInstance.getFaIntfs()) {
+        for (FaIntf faIntf : faCmdInstance.getFaInterfaceInstance().getFaIntfs()) {
             if (faIntf.fuzzyCheck(cArgs.toArray(String[]::new)))
                 filteredIntfs.add(faIntf);
         }

@@ -5,14 +5,14 @@ import com.wenkrang.faClip.module.FaInterface.handler.IntfHandler;
 import com.wenkrang.faClip.module.FaInterface.handler.SimpleAnnotationHandler;
 import com.wenkrang.faClip.module.FaInterface.param.FaParam;
 import com.wenkrang.faClip.module.FaInterface.param.SimpleParam;
+import com.wenkrang.faClip.module.FaMessage.exception.FaIntfException;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-
-import static com.wenkrang.faClip.module.FaMessage.Helper.I18nHelper.ft;
 
 public class FaIntfInterpreter {
     public FaInterfaceInstance interfaceInstance;
@@ -28,14 +28,16 @@ public class FaIntfInterpreter {
         annotationHandlers.add(new IntfHandler());
     }
 
-    public @Nullable FaIntf interpret(Method method, String node) {
+    public @NotNull FaIntf interpret(@NotNull Method method,@NotNull String node) {
         // 检查是否静态
         if (Modifier.isStatic(method.getModifiers())) {
             // 初始化接口
             FaIntf faIntf = new FaIntf(interfaceInstance);
 
             // 检查接口是否合规
-            if (!IntfHandler.check(method, node)) return null;
+            if (!IntfHandler.check(method, node)) {
+                throw new FaIntfException("FaInterface.Error.Interpreter.CantUnderstand", node);
+            }
 
             faIntf.setMethod(method);
             faIntf.setNode(node);
@@ -54,12 +56,17 @@ public class FaIntfInterpreter {
 
                 SimpleParam convertor = faParam.getConvertor(parameterType);
 
+                // 检查是否支持
+                if (convertor == null) {
+                    throw new FaIntfException("FaInterface.Error.Interpreter.UnsupportedType", parameterType.getTypeName(), node);
+                }
+
                 faIntf.paramConvertors[i] = convertor;
             }
 
             return faIntf;
         } else {
-            throw new RuntimeException(ft("FaInterface.Error.Interpreter.NotStatic", method.getName()));
+            throw new FaIntfException("FaInterface.Error.Interpreter.NotStatic", method.getName());
         }
     }
 

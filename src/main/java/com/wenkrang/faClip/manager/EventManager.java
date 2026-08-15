@@ -1,6 +1,7 @@
 package com.wenkrang.faClip.manager;
 
 import com.wenkrang.faClip.helper.ClassHelper;
+import com.wenkrang.faClip.module.FaMessage.exception.FaException;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -32,43 +33,39 @@ public class EventManager {
         ArrayList<Class<?>> classes = ClassHelper.getClasses(plugin.getClass());
 
         for (Class<?> clazz : classes) {
-            try {
-                // 检查类是否为监听器
-                if (Listener.class.isAssignableFrom(clazz)
-                        && !clazz.isInterface()
-                        && !Modifier.isAbstract(clazz.getModifiers())) {
-                    // 获取构造器
-                    Constructor<?>[] constructors = clazz.getDeclaredConstructors();
+            // 检查类是否为监听器
+            if (Listener.class.isAssignableFrom(clazz)
+                    && !clazz.isInterface()
+                    && !Modifier.isAbstract(clazz.getModifiers())) {
+                // 获取构造器
+                Constructor<?>[] constructors = clazz.getDeclaredConstructors();
 
-                    // 检查是否为无参构造器
-                    // 自动注册只能注册无参构造类
-                    boolean isValid = true;
-                    for (Constructor<?> constructor : constructors) {
-                        if (constructor.getParameterCount() != 0) {
-                            isValid = false;
-                            break;
-                        }
-                    }
-
-                    if (isValid) {
-                        try {
-                            // 获取默认构造器
-                            Constructor<?> declaredConstructor = clazz.getDeclaredConstructor();
-                            declaredConstructor.setAccessible(true);
-
-                            // 构造监听器
-                            Listener listener = (Listener) declaredConstructor.newInstance();
-
-                            result.add(register(listener));
-                        } catch (InvocationTargetException | NoSuchMethodException | InstantiationException |
-                                 IllegalAccessException e) {
-                            e.printStackTrace();
-                        }
-
+                // 检查是否为无参构造器
+                // 自动注册只能注册无参构造类
+                boolean isValid = true;
+                for (Constructor<?> constructor : constructors) {
+                    if (constructor.getParameterCount() != 0) {
+                        isValid = false;
+                        break;
                     }
                 }
-            }catch (Exception e) {
-                e.printStackTrace();
+
+                if (isValid) {
+                    try {
+                        // 获取默认构造器
+                        Constructor<?> declaredConstructor = clazz.getDeclaredConstructor();
+                        declaredConstructor.setAccessible(true);
+
+                        // 构造监听器
+                        Listener listener = (Listener) declaredConstructor.newInstance();
+
+                        result.add(register(listener));
+                    } catch (InvocationTargetException | NoSuchMethodException | InstantiationException |
+                             IllegalAccessException e) {
+                        throw new FaException("FaClip.Error.EventManager.ListenerInitFailed", clazz.getName());
+                    }
+
+                }
             }
         }
 
