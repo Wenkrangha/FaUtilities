@@ -1,6 +1,6 @@
 package com.wenkrang.faClip.helper;
 
-import com.wenkrang.faClip.module.FaMessage.exception.FaException;
+import com.wenkrang.faClip.module.faMessage.exception.FaException;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 

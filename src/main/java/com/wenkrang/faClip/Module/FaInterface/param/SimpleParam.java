@@ -1,4 +1,4 @@
-package com.wenkrang.faClip.module.FaInterface.param;
+package com.wenkrang.faClip.module.faInterface.param;
 
 import org.jetbrains.annotations.Nullable;
 

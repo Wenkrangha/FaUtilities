@@ -1,13 +1,13 @@
-package com.wenkrang.faClip.module.FaCommand.interpreter.stage.interpreter;
+package com.wenkrang.faClip.module.faCommand.interpreter.stage.interpreter;
 
-import com.wenkrang.faClip.module.FaCommand.FaCmd;
-import com.wenkrang.faClip.module.FaCommand.interpreter.FaCmdContext;
-import com.wenkrang.faClip.module.FaCommand.interpreter.stage.SimpleStage;
-import com.wenkrang.faClip.module.FaMessage.Fm;
+import com.wenkrang.faClip.module.faCommand.FaCmd;
+import com.wenkrang.faClip.module.faCommand.interpreter.FaCmdContext;
+import com.wenkrang.faClip.module.faCommand.interpreter.stage.SimpleStage;
+import com.wenkrang.faClip.module.faMessage.Fm;
 
 import java.util.List;
 
-import static com.wenkrang.faClip.module.FaMessage.helper.I18nHelper.t;
+import static com.wenkrang.faClip.module.faMessage.helper.I18nHelper.t;
 
 /**
  * 统一授权检查阶段

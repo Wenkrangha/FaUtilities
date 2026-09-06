@@ -1,23 +1,23 @@
-package com.wenkrang.faClip.module.FaCommand.interpreter;
+package com.wenkrang.faClip.module.faCommand.interpreter;
 
 import com.wenkrang.faClip.FaClip;
-import com.wenkrang.faClip.module.FaCommand.annotation.Debug;
-import com.wenkrang.faClip.module.FaCommand.annotationHandler.CmdAnnotationHandler;
-import com.wenkrang.faClip.module.FaCommand.FaCmd;
-import com.wenkrang.faClip.module.FaCommand.FaCmdInstance;
-import com.wenkrang.faClip.module.FaCommand.interpreter.stage.SimpleStage;
-import com.wenkrang.faClip.module.FaCommand.interpreter.stage.interpreter.AuthorizationStage;
-import com.wenkrang.faClip.module.FaCommand.interpreter.stage.interpreter.ConflictCheckStage;
-import com.wenkrang.faClip.module.FaCommand.interpreter.stage.interpreter.EmptyCheckStage;
-import com.wenkrang.faClip.module.FaCommand.interpreter.stage.interpreter.OnlyForHelpStage;
-import com.wenkrang.faClip.module.FaCommand.interpreter.stage.tabComplete.TabAuthStage;
-import com.wenkrang.faClip.module.FaCommand.helper.FaHelperGenerator;
-import com.wenkrang.faClip.module.FaCommand.helper.CmdHandleHelper;
-import com.wenkrang.faClip.module.FaCommand.helper.CmdParamHelper;
-import com.wenkrang.faClip.module.FaCommand.helper.NodeHelper;
-import com.wenkrang.faClip.module.FaInterface.FaIntf;
-import com.wenkrang.faClip.module.FaMessage.exception.FaCmdException;
-import com.wenkrang.faClip.module.FaMessage.exception.FaException;
+import com.wenkrang.faClip.module.faCommand.annotation.Debug;
+import com.wenkrang.faClip.module.faCommand.annotationHandler.CmdAnnotationHandler;
+import com.wenkrang.faClip.module.faCommand.FaCmd;
+import com.wenkrang.faClip.module.faCommand.FaCmdInstance;
+import com.wenkrang.faClip.module.faCommand.interpreter.stage.SimpleStage;
+import com.wenkrang.faClip.module.faCommand.interpreter.stage.interpreter.AuthorizationStage;
+import com.wenkrang.faClip.module.faCommand.interpreter.stage.interpreter.ConflictCheckStage;
+import com.wenkrang.faClip.module.faCommand.interpreter.stage.interpreter.EmptyCheckStage;
+import com.wenkrang.faClip.module.faCommand.interpreter.stage.interpreter.OnlyForHelpStage;
+import com.wenkrang.faClip.module.faCommand.interpreter.stage.tabComplete.TabAuthStage;
+import com.wenkrang.faClip.module.faCommand.helper.FaHelperGenerator;
+import com.wenkrang.faClip.module.faCommand.helper.CmdHandleHelper;
+import com.wenkrang.faClip.module.faCommand.helper.CmdParamHelper;
+import com.wenkrang.faClip.module.faCommand.helper.NodeHelper;
+import com.wenkrang.faClip.module.faInterface.FaIntf;
+import com.wenkrang.faClip.module.faMessage.exception.FaCmdException;
+import com.wenkrang.faClip.module.faMessage.exception.FaException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.wenkrang.faClip.module.FaCommand.helper.CmdHandleHelper.handleRootCommand;
+import static com.wenkrang.faClip.module.faCommand.helper.CmdHandleHelper.handleRootCommand;
 
 public class FaCmdInterpreter {
     // 解释器管线

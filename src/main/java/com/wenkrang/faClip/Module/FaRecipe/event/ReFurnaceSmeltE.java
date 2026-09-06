@@ -1,6 +1,6 @@
-package com.wenkrang.faClip.module.FaRecipe.event;
+package com.wenkrang.faClip.module.faRecipe.event;
 
-import com.wenkrang.faClip.module.FaRecipe.FaRecipeInstance;
+import com.wenkrang.faClip.module.faRecipe.FaRecipeInstance;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;

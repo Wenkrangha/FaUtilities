@@ -1,7 +1,7 @@
-package com.wenkrang.faClip.module.FaInterface.param.bukkitParam.SpecialDesProvider;
+package com.wenkrang.faClip.module.faInterface.param.bukkitParam.SpecialDesProvider;
 
-import com.wenkrang.faClip.module.FaCommand.annotation.DesProvider;
-import com.wenkrang.faClip.module.FaCommand.interpreter.FaCmdContext;
+import com.wenkrang.faClip.module.faCommand.annotation.DesProvider;
+import com.wenkrang.faClip.module.faCommand.interpreter.FaCmdContext;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,6 +1,6 @@
-package com.wenkrang.faClip.module.FaInterface.param.bukkitParam;
+package com.wenkrang.faClip.module.faInterface.param.bukkitParam;
 
-import com.wenkrang.faClip.module.FaInterface.param.SimpleParam;
+import com.wenkrang.faClip.module.faInterface.param.SimpleParam;
 import org.bukkit.GameMode;
 import org.jetbrains.annotations.Nullable;
 

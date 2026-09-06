@@ -1,12 +1,12 @@
-package com.wenkrang.faClip.module.FaRecipe.event;
+package com.wenkrang.faClip.module.faRecipe.event;
 
-import com.wenkrang.faClip.module.FaInterface.FaIntf;
-import com.wenkrang.faClip.module.FaInterface.FaIntfContext;
-import com.wenkrang.faClip.module.FaMessage.Fm;
-import com.wenkrang.faClip.module.FaMessage.exception.FaException;
-import com.wenkrang.faClip.module.FaMessage.exception.FaRecipeException;
-import com.wenkrang.faClip.module.FaRecipe.FaRecipe;
-import com.wenkrang.faClip.module.FaRecipe.FaRecipeInstance;
+import com.wenkrang.faClip.module.faInterface.FaIntf;
+import com.wenkrang.faClip.module.faInterface.FaIntfContext;
+import com.wenkrang.faClip.module.faMessage.Fm;
+import com.wenkrang.faClip.module.faMessage.exception.FaException;
+import com.wenkrang.faClip.module.faMessage.exception.FaRecipeException;
+import com.wenkrang.faClip.module.faRecipe.FaRecipe;
+import com.wenkrang.faClip.module.faRecipe.FaRecipeInstance;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,7 +15,6 @@ import org.bukkit.inventory.Recipe;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import java.util.Map;
 
 public class ReCraftE implements Listener {
     private final FaRecipeInstance faRecipeInstance;

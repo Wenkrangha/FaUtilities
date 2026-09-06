@@ -1,6 +1,6 @@
-package com.wenkrang.faClip.module.FaMessage.exception;
+package com.wenkrang.faClip.module.faMessage.exception;
 
-import com.wenkrang.faClip.module.FaMessage.helper.I18nHelper;
+import com.wenkrang.faClip.module.faMessage.helper.I18nHelper;
 
 /**
  * FaClip 异常体系基类

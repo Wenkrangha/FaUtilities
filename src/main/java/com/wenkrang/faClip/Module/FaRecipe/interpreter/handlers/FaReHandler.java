@@ -1,8 +1,8 @@
-package com.wenkrang.faClip.module.FaRecipe.interpreter.handlers;
+package com.wenkrang.faClip.module.faRecipe.interpreter.handlers;
 
-import com.wenkrang.faClip.module.FaData.FaData;
-import com.wenkrang.faClip.module.FaRecipe.FaRecipe;
-import com.wenkrang.faClip.module.FaRecipe.FaRecipeInstance;
+import com.wenkrang.faClip.module.faData.FaData;
+import com.wenkrang.faClip.module.faRecipe.FaRecipe;
+import com.wenkrang.faClip.module.faRecipe.FaRecipeInstance;
 
 public interface FaReHandler {
     void handle(FaData faData, FaRecipe faRecipe, FaRecipeInstance faRecipeInstance);

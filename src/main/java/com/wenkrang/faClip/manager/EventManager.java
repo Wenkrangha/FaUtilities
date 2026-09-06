@@ -1,7 +1,7 @@
 package com.wenkrang.faClip.manager;
 
 import com.wenkrang.faClip.helper.ClassHelper;
-import com.wenkrang.faClip.module.FaMessage.exception.FaException;
+import com.wenkrang.faClip.module.faMessage.exception.FaException;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;

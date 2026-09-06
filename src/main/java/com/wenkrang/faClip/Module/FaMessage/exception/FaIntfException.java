@@ -1,4 +1,4 @@
-package com.wenkrang.faClip.module.FaMessage.exception;
+package com.wenkrang.faClip.module.faMessage.exception;
 
 /**
  * 接口模块异常

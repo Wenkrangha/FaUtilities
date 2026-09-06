@@ -1,18 +1,18 @@
-package com.wenkrang.faClip.module.FaCommand.helper;
+package com.wenkrang.faClip.module.faCommand.helper;
 
-import com.wenkrang.faClip.module.FaCommand.annotation.CustomDes;
-import com.wenkrang.faClip.module.FaCommand.annotation.DesProvider;
-import com.wenkrang.faClip.module.FaCommand.annotation.ParamArrayDes;
-import com.wenkrang.faClip.module.FaCommand.annotation.ParamDes;
-import com.wenkrang.faClip.module.FaCommand.FaCmd;
-import com.wenkrang.faClip.module.FaCommand.FaCmdInstance;
-import com.wenkrang.faClip.module.FaCommand.interpreter.FaCmdContext;
-import com.wenkrang.faClip.module.FaInterface.FaIntf;
-import com.wenkrang.faClip.module.FaInterface.FaIntfContext;
-import com.wenkrang.faClip.module.FaInterface.param.FaParam;
-import com.wenkrang.faClip.module.FaInterface.param.SimpleParam;
-import com.wenkrang.faClip.module.FaMessage.exception.FaCmdException;
-import com.wenkrang.faClip.module.FaMessage.helper.Scc;
+import com.wenkrang.faClip.module.faCommand.annotation.CustomDes;
+import com.wenkrang.faClip.module.faCommand.annotation.DesProvider;
+import com.wenkrang.faClip.module.faCommand.annotation.ParamArrayDes;
+import com.wenkrang.faClip.module.faCommand.annotation.ParamDes;
+import com.wenkrang.faClip.module.faCommand.FaCmd;
+import com.wenkrang.faClip.module.faCommand.FaCmdInstance;
+import com.wenkrang.faClip.module.faCommand.interpreter.FaCmdContext;
+import com.wenkrang.faClip.module.faInterface.FaIntf;
+import com.wenkrang.faClip.module.faInterface.FaIntfContext;
+import com.wenkrang.faClip.module.faInterface.param.FaParam;
+import com.wenkrang.faClip.module.faInterface.param.SimpleParam;
+import com.wenkrang.faClip.module.faMessage.exception.FaCmdException;
+import com.wenkrang.faClip.module.faMessage.helper.Scc;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 

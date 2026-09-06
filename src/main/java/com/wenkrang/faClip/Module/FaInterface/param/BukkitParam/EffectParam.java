@@ -1,8 +1,8 @@
-package com.wenkrang.faClip.module.FaInterface.param.bukkitParam;
+package com.wenkrang.faClip.module.faInterface.param.bukkitParam;
 
-import com.wenkrang.faClip.module.FaCommand.annotation.DesProvider;
-import com.wenkrang.faClip.module.FaCommand.interpreter.FaCmdContext;
-import com.wenkrang.faClip.module.FaInterface.param.SimpleParam;
+import com.wenkrang.faClip.module.faCommand.annotation.DesProvider;
+import com.wenkrang.faClip.module.faCommand.interpreter.FaCmdContext;
+import com.wenkrang.faClip.module.faInterface.param.SimpleParam;
 import org.bukkit.Effect;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

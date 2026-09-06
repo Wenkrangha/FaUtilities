@@ -1,6 +1,6 @@
-package com.wenkrang.faClip.module.FaInterface.param.javaParam;
+package com.wenkrang.faClip.module.faInterface.param.javaParam;
 
-import com.wenkrang.faClip.module.FaInterface.param.SimpleParam;
+import com.wenkrang.faClip.module.faInterface.param.SimpleParam;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

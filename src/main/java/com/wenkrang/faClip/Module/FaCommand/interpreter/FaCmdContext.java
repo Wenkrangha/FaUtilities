@@ -1,6 +1,6 @@
-package com.wenkrang.faClip.module.FaCommand.interpreter;
+package com.wenkrang.faClip.module.faCommand.interpreter;
 
-import com.wenkrang.faClip.module.FaInterface.FaIntfContext;
+import com.wenkrang.faClip.module.faInterface.FaIntfContext;
 import org.bukkit.command.CommandSender;
 
 public class FaCmdContext extends FaIntfContext {

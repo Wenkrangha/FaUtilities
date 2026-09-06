@@ -1,4 +1,4 @@
-package com.wenkrang.faClip.module.FaMessage.exception;
+package com.wenkrang.faClip.module.faMessage.exception;
 
 /**
  * 窗口模块运行时异常（窗口事件调用、分页工具等）

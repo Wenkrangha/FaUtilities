@@ -1,9 +1,9 @@
-package com.wenkrang.faClip.module.FaItem.interpreter.handler.extra;
+package com.wenkrang.faClip.module.faItem.interpreter.handler.extra;
 
-import com.wenkrang.faClip.module.FaData.FaData;
-import com.wenkrang.faClip.module.FaItem.FaItem;
-import com.wenkrang.faClip.module.FaItem.interpreter.FaItemInterpreter;
-import com.wenkrang.faClip.module.FaItem.interpreter.handler.FaItemHandler;
+import com.wenkrang.faClip.module.faData.FaData;
+import com.wenkrang.faClip.module.faItem.FaItem;
+import com.wenkrang.faClip.module.faItem.interpreter.FaItemInterpreter;
+import com.wenkrang.faClip.module.faItem.interpreter.handler.FaItemHandler;
 
 public class TemplateHandler implements FaItemHandler {
     @Override

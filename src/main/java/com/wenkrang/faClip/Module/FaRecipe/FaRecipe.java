@@ -1,6 +1,5 @@
-package com.wenkrang.faClip.module.FaRecipe;
+package com.wenkrang.faClip.module.faRecipe;
 
-import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.Recipe;
 
 import java.util.HashMap;

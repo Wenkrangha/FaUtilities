@@ -1,6 +1,6 @@
-package com.wenkrang.faClip.module.FaMessage.exception;
+package com.wenkrang.faClip.module.faMessage.exception;
 
-import com.wenkrang.faClip.module.FaData.FaData;
+import com.wenkrang.faClip.module.faData.FaData;
 
 /**
  * 声明式文件解析异常（.item / .inv / .re 等配置文件的字段缺失或非法）

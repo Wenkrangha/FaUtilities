@@ -1,11 +1,11 @@
-package com.wenkrang.faClip.module.FaRecipe.interpreter.handlers.typeHandler;
+package com.wenkrang.faClip.module.faRecipe.interpreter.handlers.typeHandler;
 
-import com.wenkrang.faClip.module.FaData.FaData;
-import com.wenkrang.faClip.module.FaMessage.exception.FaDataParseException;
-import com.wenkrang.faClip.module.FaRecipe.FaRecipe;
-import com.wenkrang.faClip.module.FaRecipe.FaRecipeInstance;
-import com.wenkrang.faClip.module.FaRecipe.helper.RecipeHelper;
-import com.wenkrang.faClip.module.FaRecipe.interpreter.handlers.FaReHandler;
+import com.wenkrang.faClip.module.faData.FaData;
+import com.wenkrang.faClip.module.faMessage.exception.FaDataParseException;
+import com.wenkrang.faClip.module.faRecipe.FaRecipe;
+import com.wenkrang.faClip.module.faRecipe.FaRecipeInstance;
+import com.wenkrang.faClip.module.faRecipe.helper.RecipeHelper;
+import com.wenkrang.faClip.module.faRecipe.interpreter.handlers.FaReHandler;
 import org.bukkit.inventory.CampfireRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;

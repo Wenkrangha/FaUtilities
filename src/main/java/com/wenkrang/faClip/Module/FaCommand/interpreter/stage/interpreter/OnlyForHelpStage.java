@@ -1,9 +1,9 @@
-package com.wenkrang.faClip.module.FaCommand.interpreter.stage.interpreter;
+package com.wenkrang.faClip.module.faCommand.interpreter.stage.interpreter;
 
-import com.wenkrang.faClip.module.FaCommand.FaCmd;
-import com.wenkrang.faClip.module.FaCommand.interpreter.FaCmdContext;
-import com.wenkrang.faClip.module.FaCommand.interpreter.stage.SimpleStage;
-import com.wenkrang.faClip.module.FaCommand.helper.FaHelperGenerator;
+import com.wenkrang.faClip.module.faCommand.FaCmd;
+import com.wenkrang.faClip.module.faCommand.interpreter.FaCmdContext;
+import com.wenkrang.faClip.module.faCommand.interpreter.stage.SimpleStage;
+import com.wenkrang.faClip.module.faCommand.helper.FaHelperGenerator;
 
 import java.util.List;
 

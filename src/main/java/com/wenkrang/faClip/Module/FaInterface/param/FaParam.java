@@ -1,9 +1,9 @@
-package com.wenkrang.faClip.module.FaInterface.param;
+package com.wenkrang.faClip.module.faInterface.param;
 
-import com.wenkrang.faClip.module.FaInterface.param.bukkitParam.EffectParam;
-import com.wenkrang.faClip.module.FaInterface.param.bukkitParam.MaterialParam;
-import com.wenkrang.faClip.module.FaInterface.param.bukkitParam.PlayerParam;
-import com.wenkrang.faClip.module.FaInterface.param.javaParam.*;
+import com.wenkrang.faClip.module.faInterface.param.bukkitParam.EffectParam;
+import com.wenkrang.faClip.module.faInterface.param.bukkitParam.MaterialParam;
+import com.wenkrang.faClip.module.faInterface.param.bukkitParam.PlayerParam;
+import com.wenkrang.faClip.module.faInterface.param.javaParam.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -1,0 +1,32 @@
+package com.wenkrang.faClip.module.faWindow.interpreter.handler.basic;
+
+import com.wenkrang.faClip.module.faData.FaData;
+import com.wenkrang.faClip.module.faMessage.exception.FaDataParseException;
+import com.wenkrang.faClip.module.faWindow.FaInventory;
+import com.wenkrang.faClip.module.faWindow.FaWindowInstance;
+import com.wenkrang.faClip.module.faWindow.interpreter.handler.FaInvHandler;
+
+import java.util.List;
+
+public class InvDesignHandler implements FaInvHandler {
+    @Override
+    public void handle(FaInventory faInventory, FaData faData, FaWindowInstance faWindowInstance) {
+        List<String> design = faData.getStringList("design");
+
+        if (design != null) {
+            int count = 0;
+            for (String s : design) {
+                count += s.length();
+            }
+
+            if (count != faInventory.size) {
+                throw new FaDataParseException(faData, String.valueOf(count),
+                        "FaWindow.Exception.FaInvInterpreter.DesignLengthNotEqualToSize");
+            }
+
+            faInventory.design(design);
+        }else if (!faData.has("template")) {
+            throw new FaDataParseException(faData, "design", "FaWindow.Exception.FaInvInterpreter.DesignNotFound");
+        }
+    }
+}

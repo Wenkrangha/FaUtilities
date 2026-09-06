@@ -1,10 +1,10 @@
-package com.wenkrang.faClip.module.FaRecipe.helper;
+package com.wenkrang.faClip.module.faRecipe.helper;
 
-import com.wenkrang.faClip.module.FaData.FaData;
-import com.wenkrang.faClip.module.FaItem.FaItemInstance;
-import com.wenkrang.faClip.module.FaMessage.exception.FaDataParseException;
-import com.wenkrang.faClip.module.FaRecipe.FaRecipe;
-import com.wenkrang.faClip.module.FaRecipe.FaRecipeInstance;
+import com.wenkrang.faClip.module.faData.FaData;
+import com.wenkrang.faClip.module.faItem.FaItemInstance;
+import com.wenkrang.faClip.module.faMessage.exception.FaDataParseException;
+import com.wenkrang.faClip.module.faRecipe.FaRecipe;
+import com.wenkrang.faClip.module.faRecipe.FaRecipeInstance;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;

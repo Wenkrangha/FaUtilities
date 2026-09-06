@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
-import static com.wenkrang.faClip.module.FaMessage.Fm.warning;
+import static com.wenkrang.faClip.module.faMessage.Fm.warning;
 
 /**
  * 文件操作帮助类

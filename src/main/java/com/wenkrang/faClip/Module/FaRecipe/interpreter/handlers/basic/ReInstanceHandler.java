@@ -1,9 +1,9 @@
-package com.wenkrang.faClip.module.FaRecipe.interpreter.handlers.basic;
+package com.wenkrang.faClip.module.faRecipe.interpreter.handlers.basic;
 
-import com.wenkrang.faClip.module.FaData.FaData;
-import com.wenkrang.faClip.module.FaRecipe.FaRecipe;
-import com.wenkrang.faClip.module.FaRecipe.FaRecipeInstance;
-import com.wenkrang.faClip.module.FaRecipe.interpreter.handlers.FaReHandler;
+import com.wenkrang.faClip.module.faData.FaData;
+import com.wenkrang.faClip.module.faRecipe.FaRecipe;
+import com.wenkrang.faClip.module.faRecipe.FaRecipeInstance;
+import com.wenkrang.faClip.module.faRecipe.interpreter.handlers.FaReHandler;
 
 public class ReInstanceHandler implements FaReHandler {
     @Override

@@ -1,8 +1,8 @@
-package com.wenkrang.faClip.module.FaCommand.interpreter.stage.tabComplete;
+package com.wenkrang.faClip.module.faCommand.interpreter.stage.tabComplete;
 
-import com.wenkrang.faClip.module.FaCommand.FaCmd;
-import com.wenkrang.faClip.module.FaCommand.interpreter.FaCmdContext;
-import com.wenkrang.faClip.module.FaCommand.interpreter.stage.SimpleStage;
+import com.wenkrang.faClip.module.faCommand.FaCmd;
+import com.wenkrang.faClip.module.faCommand.interpreter.FaCmdContext;
+import com.wenkrang.faClip.module.faCommand.interpreter.stage.SimpleStage;
 
 import java.util.List;
 

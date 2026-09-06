@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
-import static com.wenkrang.faClip.module.FaMessage.Fm.warning;
-import static com.wenkrang.faClip.module.FaMessage.helper.I18nHelper.ft;
+import static com.wenkrang.faClip.module.faMessage.Fm.warning;
+import static com.wenkrang.faClip.module.faMessage.helper.I18nHelper.ft;
 
 public class ResourceHelper {
     // 存储资源路径而不是 URL

@@ -1,13 +1,9 @@
-package com.wenkrang.faClip.module.FaWindow.interpreter.handler.basic;
+package com.wenkrang.faClip.module.faWindow.interpreter.handler.basic;
 
-import com.wenkrang.faClip.module.FaData.FaData;
-import com.wenkrang.faClip.module.FaItem.FaItem;
-import com.wenkrang.faClip.module.FaItem.FaItemInstance;
-import com.wenkrang.faClip.module.FaMessage.Fm;
-import com.wenkrang.faClip.module.FaWindow.FaInventory;
-import com.wenkrang.faClip.module.FaWindow.FaWindowInstance;
-import com.wenkrang.faClip.module.FaWindow.interpreter.handler.FaInvHandler;
-import org.bukkit.Material;
+import com.wenkrang.faClip.module.faData.FaData;
+import com.wenkrang.faClip.module.faWindow.FaInventory;
+import com.wenkrang.faClip.module.faWindow.FaWindowInstance;
+import com.wenkrang.faClip.module.faWindow.interpreter.handler.FaInvHandler;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 

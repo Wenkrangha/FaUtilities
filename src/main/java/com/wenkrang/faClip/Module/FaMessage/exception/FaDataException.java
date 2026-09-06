@@ -1,4 +1,4 @@
-package com.wenkrang.faClip.module.FaMessage.exception;
+package com.wenkrang.faClip.module.faMessage.exception;
 
 /**
  * 数据模块异常（数据读写、保存、插件实例缺失等）

@@ -1,15 +1,15 @@
-package com.wenkrang.faClip.module.FaRecipe.interpreter;
+package com.wenkrang.faClip.module.faRecipe.interpreter;
 
 import com.wenkrang.faClip.helper.ResourceHelper;
-import com.wenkrang.faClip.module.FaData.FaData;
-import com.wenkrang.faClip.module.FaRecipe.FaRecipe;
-import com.wenkrang.faClip.module.FaRecipe.FaRecipeInstance;
-import com.wenkrang.faClip.module.FaRecipe.interpreter.handlers.*;
-import com.wenkrang.faClip.module.FaRecipe.interpreter.handlers.basic.ReIDHandler;
-import com.wenkrang.faClip.module.FaRecipe.interpreter.handlers.basic.ReInstanceHandler;
-import com.wenkrang.faClip.module.FaRecipe.interpreter.handlers.basic.ReTypeHandler;
-import com.wenkrang.faClip.module.FaRecipe.interpreter.handlers.extra.ReTemplateHandler;
-import com.wenkrang.faClip.module.FaRecipe.interpreter.handlers.typeHandler.*;
+import com.wenkrang.faClip.module.faData.FaData;
+import com.wenkrang.faClip.module.faRecipe.FaRecipe;
+import com.wenkrang.faClip.module.faRecipe.FaRecipeInstance;
+import com.wenkrang.faClip.module.faRecipe.interpreter.handlers.*;
+import com.wenkrang.faClip.module.faRecipe.interpreter.handlers.basic.ReIDHandler;
+import com.wenkrang.faClip.module.faRecipe.interpreter.handlers.basic.ReInstanceHandler;
+import com.wenkrang.faClip.module.faRecipe.interpreter.handlers.basic.ReTypeHandler;
+import com.wenkrang.faClip.module.faRecipe.interpreter.handlers.extra.ReTemplateHandler;
+import com.wenkrang.faClip.module.faRecipe.interpreter.handlers.typeHandler.*;
 
 import java.io.InputStream;
 import java.util.ArrayList;

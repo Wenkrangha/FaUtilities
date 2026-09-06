@@ -1,6 +1,6 @@
 package com.wenkrang.faClip.manager;
 
-import com.wenkrang.faClip.module.FaMessage.exception.FaCmdException;
+import com.wenkrang.faClip.module.faMessage.exception.FaCmdException;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;

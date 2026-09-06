@@ -1,4 +1,4 @@
-package com.wenkrang.faClip.module.FaMessage.exception;
+package com.wenkrang.faClip.module.faMessage.exception;
 
 /**
  * 配方模块运行时异常（配方事件调用等）

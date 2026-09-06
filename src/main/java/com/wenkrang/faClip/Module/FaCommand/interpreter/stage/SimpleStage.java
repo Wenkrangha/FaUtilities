@@ -1,7 +1,7 @@
-package com.wenkrang.faClip.module.FaCommand.interpreter.stage;
+package com.wenkrang.faClip.module.faCommand.interpreter.stage;
 
-import com.wenkrang.faClip.module.FaCommand.FaCmd;
-import com.wenkrang.faClip.module.FaCommand.interpreter.FaCmdContext;
+import com.wenkrang.faClip.module.faCommand.FaCmd;
+import com.wenkrang.faClip.module.faCommand.interpreter.FaCmdContext;
 
 import java.util.List;
 
