@@ -11,9 +11,8 @@ public class Debugger {
     private final FaCmdInstance faCmdInstance;
 
     public Debugger() {
-        this.faCmdInstance = new FaCmdInstance(FaClip.plugin);
-
-        faCmdInstance.enableForAll(FaClip.plugin);
+        this.faCmdInstance = new FaCmdInstance(FaClip.getPlugin(FaClip.class));
+        faCmdInstance.auto();
     }
 
     public FaCmdInstance getFaCmdInstance() {

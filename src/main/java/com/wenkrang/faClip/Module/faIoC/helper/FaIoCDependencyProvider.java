@@ -16,7 +16,7 @@ import java.util.List;
 public class FaIoCDependencyProvider {
     private final FaIoCInstance ioCInstance;
 
-    private ArrayList<Class<?>> classes;
+    private final ArrayList<Class<?>> classes;
 
     public FaIoCDependencyProvider(FaIoCInstance ioCInstance) {
         this.ioCInstance = ioCInstance;

@@ -1,7 +1,9 @@
 package com.wenkrang.faClip.module.faCommand;
 
 import com.wenkrang.faClip.helper.ClassHelper;
+import com.wenkrang.faClip.helper.PluginHelper;
 import com.wenkrang.faClip.manager.CommandManager;
+import com.wenkrang.faClip.module.FaModule;
 import com.wenkrang.faClip.module.faCommand.annotationHandler.*;
 import com.wenkrang.faClip.module.faCommand.interpreter.FaCmdInterpreter;
 import com.wenkrang.faClip.module.faInterface.FaInterfaceInstance;
@@ -15,7 +17,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FaCmdInstance {
+public class FaCmdInstance implements FaModule {
     private final FaInterfaceInstance faInterfaceInstance;
     private final @NotNull CommandManager commandManager;
     private final Plugin plugin;
@@ -24,6 +26,7 @@ public class FaCmdInstance {
     private int refreshTaskId = -1;
     private FaCmdInterpreter faCmdInterpreter;
     private boolean DebugMode = false;
+    private FaModule.Status status = Status.STOPPED;
 
     public ArrayList<String> getNodes() {
         return nodes;
@@ -94,11 +97,32 @@ public class FaCmdInstance {
         faCmdInstance.faCmdInterpreter.addAnnotationHandlers(new CmdPlayerHandler());
     }
 
+    @Override
+    public void auto() {
+        status = Status.STARTING;
+
+        enableForAll();
+
+        status = Status.READY;
+    }
+
     public void close() {
         for (FaCmd faCmd : faCmds) {
             if (faCmd.getCommand() != null && faCmd.getCommand().isRegistered())
                 commandManager.unregister(faCmd.getCommand().getLabel());
         }
+
+        status = Status.STOPPED;
+    }
+
+    @Override
+    public Status status() {
+        return status;
+    }
+
+    @Override
+    public String getName() {
+        return "FaCommand";
     }
 
     /**
@@ -115,9 +139,8 @@ public class FaCmdInstance {
 
     /**
      * 启用命令类（全量调用）
-     * @param plugin 插件
      */
-    public void enableForAll(@NotNull Plugin plugin) {
+    public void enableForAll() {
         enableFor(ClassHelper.getClasses(plugin.getClass()).toArray(Class[]::new));
     }
     

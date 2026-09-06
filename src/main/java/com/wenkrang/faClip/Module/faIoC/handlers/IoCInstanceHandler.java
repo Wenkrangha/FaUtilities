@@ -2,6 +2,7 @@ package com.wenkrang.faClip.module.faIoC.handlers;
 
 import com.wenkrang.faClip.module.faIoC.FaIoCInstance;
 import com.wenkrang.faClip.module.faIoC.FaIoCObject;
+import com.wenkrang.faClip.module.faIoC.helper.FaIoCDependencyProvider;
 import com.wenkrang.faClip.module.faMessage.exception.FaIoCException;
 
 import java.lang.reflect.Constructor;
